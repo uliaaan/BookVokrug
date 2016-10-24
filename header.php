@@ -1,3 +1,5 @@
+<? include ('functions.php') ?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -53,7 +55,14 @@
             <a href="tutorial.html" class="btn btn-danger btn-simple">Tutorial</a>
           </li>
           <li>
-            <a href="#" target="_blank" class="btn btn-danger btn-fill" data-toggle="modal" data-target="#enter">Войти</a>
+          <? echo "<a href='?exit' class='btn btn-danger btn-simple'>Выйти</a>" ?>
+          </li>
+          <li>
+          <? if(!isset($_SESSION['userlogin'])) { 
+            echo "<a href='#' target='_blank' class='btn btn-danger btn-fill' data-toggle='modal' data-target='#enter'>Войти</a>"; } else {
+            echo "<a href='#'' target='_blank' class='btn btn-danger btn-fill'>$userlogin</a>";
+            }
+          ?>
           </li>
        </ul>
     </div><!-- /.navbar-collapse -->

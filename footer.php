@@ -115,26 +115,28 @@
 <div class="modal fade" id="enter" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Форма входа</h4>
-      </div>
-      <div class="modal-body">
-            <input type="text" class="form-control" placeholder="Логин"><br> 
-            <input type="password" class="form-control" placeholder="Пароль"><br>
-        <div class="forgot text-center">
-            <a href="#" class="btn btn-simple btn-danger">Забыли пароль?</a>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <div class="left-side">
-            <a href="#" target="_blank" type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-toggle="modal" data-target="#register">Регистрация</a>
-        </div>
-        <div class="divider"></div>
-        <div class="right-side">
-            <button type="button" class="btn btn-default btn-simple" >Войти</button>
-        </div>
-      </div>
+        <form method="post" action="<? echo $auth; ?>">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Форма входа</h4>
+          </div>
+          <div class="modal-body">
+                <input name="login" type="text" class="form-control" placeholder="Логин"><br> 
+                <input name="password" type="password" class="form-control" placeholder="Пароль"><br>
+            <div class="forgot text-center">
+                <a href="#" class="btn btn-simple btn-danger">Забыли пароль?</a>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="left-side">
+                <a href="#" target="_blank" type="button" class="btn btn-danger btn-simple" data-dismiss="modal" data-toggle="modal" data-target="#register">Регистрация</a>
+            </div>
+            <div class="divider"></div>
+            <div class="right-side">
+                <button name="submit_login" type="submit" class="btn btn-default btn-simple" >Войти</button>
+            </div>
+          </div>
+        </form>
     </div>
   </div>
 </div>

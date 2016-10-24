@@ -1,7 +1,7 @@
 <? include ('header.php') ?>
     <div class="demo-header demo-header-image">
             <div class="motto">
-                <h1 class="title-uppercase">Paper Kit</h1>
+                <h1 class="title-uppercase"><? ?></h1>
                 <h3>Make your mark with a new design.</h3>
             </div>
     </div>
