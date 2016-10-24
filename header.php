@@ -59,8 +59,9 @@
           </li>
           <li>
           <? if(!isset($_SESSION['userlogin'])) { 
-            echo "<a href='#' target='_blank' class='btn btn-danger btn-fill' data-toggle='modal' data-target='#enter'>Войти</a>"; } else {
-            echo "<a href='#'' target='_blank' class='btn btn-danger btn-fill'>$userlogin</a>";
+            echo "<a href='#' target='_blank' class='btn btn-danger btn-fill' data-toggle='modal' data-target='#enter'>Войти</a>"; 
+        	} else {
+            echo "<a href='/newpage.php' class='btn btn-danger btn-fill'>" .$_SESSION['userlogin']. "</a>";
             }
           ?>
           </li>

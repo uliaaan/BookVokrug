@@ -9,8 +9,6 @@
 			$result = $my_query->fetch_assoc();
 			if ($result) {
 				$_SESSION['userlogin'] = $userlogin;
-			} else {
-				echo "Неправильный";
 			}
 	}
 
@@ -19,13 +17,13 @@
 		header("Location: index.php");
 	}
 
-	function simple_query() {
+/*	function simple_query() {
 		$my_query = mysqli_query($connect, "SELECT `login` FROM `users`");
 		$result = mysqli_fetch_assoc($my_query);
 		$login = $result['login'];
 		echo $login;
 	}
-
+*/
 
 		
 		
