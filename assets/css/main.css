@@ -999,6 +999,7 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+  padding-right: 0px !important;
 }
 .footer-demo {
   position: absolute;
