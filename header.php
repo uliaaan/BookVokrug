@@ -33,7 +33,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a href="http://www.creative-tim.com">
+      <a href="/">
            <div class="logo-container">
                 <div class="logo">
                     <img src="assets/paper_img/new_logo.png" alt="Creative Tim Logo">
@@ -48,21 +48,21 @@
 <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="navigation-example-2">
       <ul class="nav navbar-nav navbar-right">
-          <li>
-            <a href="components.html" class="btn btn-danger btn-simple">Components</a>
+        <!--   <li>
+          <a href="components.html" class="btn btn-danger btn-simple">Components</a>
+        </li>
+        <li>
+          <a href="tutorial.html" class="btn btn-danger btn-simple">Tutorial</a>
+        </li> -->
+          <? if(isset($_SESSION['userlogin'])) { 
+          echo "<li>
+          <a href='/profile.php' class='btn btn-danger btn-simple'>" .$_SESSION['userlogin']. "</a>
           </li>
           <li>
-            <a href="tutorial.html" class="btn btn-danger btn-simple">Tutorial</a>
-          </li>
-          <li>
-          <? echo "<a href='?exit' class='btn btn-danger btn-simple'>Выйти</a>" ?>
-          </li>
-          <li>
-          <? if(!isset($_SESSION['userlogin'])) { 
-            echo "<a href='#' target='_blank' class='btn btn-danger btn-fill' data-toggle='modal' data-target='#enter'>Войти</a>"; 
+          <a href='/addbook.php' class='btn btn-danger btn-fill'>Добавить книгу</a>"; 
         	} else {
-            echo "<a href='/newpage.php' class='btn btn-danger btn-fill'>" .$_SESSION['userlogin']. "</a>";
-            }
+          echo "<a href='#' target='_blank' class='btn btn-danger btn-fill' data-toggle='modal' data-target='#enter'>Войти</a>";
+          }
           ?>
           </li>
        </ul>

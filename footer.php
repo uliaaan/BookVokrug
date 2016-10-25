@@ -2,36 +2,6 @@
 
     <!-- </div> -->
     <div class="main">
-        <div class="section section-white section-with-space">
-            <div class="container tim-container text-center">
-                <div class="row">
-                    <div class="col-md-8 col-md-offset-2 text-center">
-                        <h2>Completed with examples</h2>
-                        <p>The kit comes with three pre-built pages to help you get started faster. You can change the text and images and you're good to go. More importantly, looking at them will give you a picture of what you can built with this powerful kit.</p>
-                    </div>
-                </div>
-                <div class="row example-pages">
-                    <div class="col-md-4">
-                        <a href="examples/landing.html" target="_blank">
-                            <img src="assets/paper_img/examples/landing.jpg" alt="Rounded Image" class="img-rounded img-responsive">
-                            <h5>Landing Page</h5>
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a href="examples/register.html" target="_blank">
-                            <img src="assets/paper_img/examples/register.jpg" alt="Rounded Image" class="img-rounded img-responsive">
-                            <h5>Register</h5>
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a href="examples/profile.html" target="_blank">
-                            <img src="assets/paper_img/examples/profile.jpg" alt="Rounded Image" class="img-rounded img-responsive">
-                            <h5>Profile</h5>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="section section-nude section-with-space">
             <div class="container tim-container">
                 <div class="row">
@@ -133,7 +103,7 @@
             </div>
             <div class="divider"></div>
             <div class="right-side">
-                <button name="submit_login" type="submit" class="btn btn-default btn-simple" >Войти</button>
+                <button name="submit_enter" type="submit" class="btn btn-default btn-simple" >Войти</button>
             </div>
           </div>
         </form>
@@ -146,20 +116,29 @@
 <div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Регистрация</h4>
+     <form method="post">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="myModalLabel">Регистрация</h4>
+        </div>
+        <div class="modal-body">
+              <input name="login" type="text" class="form-control" placeholder="Логин"><br>
+        <!--       <input name="email" type="email" class="form-control" placeholder="E-mail"><br>
+        <input name="telephone" type="telephone" class="form-control" placeholder="Номер телефона"><br>
+        <div class="display-flex">
+        <input name="city" type="city" class="form-control" placeholder="Город">&nbsp;&nbsp;
+        <input name="street" type="street" class="form-control" placeholder="Улица">&nbsp;&nbsp;
+        <input name="building" type="building" class="form-control" placeholder="Дом">
+        </div><br> -->
+              <input name="password1" type="password" class="form-control" placeholder="Пароль"><br>
+              <input name="password2" type="password" class="form-control" placeholder="Повторите пароль">
+             <? echo $UserLoginHasExist ?>
+        </div>
+        <div class="modal-footer">
+              <button name="submit_reg" type="submit" class="btn btn-default btn-simple">Зарегистрироваться</button>
+        </div>
       </div>
-      <div class="modal-body">
-            <input type="text" class="form-control" placeholder="Логин"><br>
-            <input type="email" class="form-control" placeholder="E-mail"><br>
-            <input type="password" class="form-control" placeholder="Пароль"><br>
-            <input type="password" class="form-control" placeholder="Повторите пароль">
-      </div>
-      <div class="modal-footer">
-            <button type="button" class="btn btn-default  btn-simple">Зарегистрироваться</button>
-      </div>
-    </div>
+    </form>
   </div>
 </div>
 
