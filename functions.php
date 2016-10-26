@@ -2,6 +2,20 @@
 	session_start();
 	$connect = mysqli_connect('localhost', 'root', '12345678','bookvokrug');
 
+
+	/*Обработчик если логин занят*/
+	if(isset($_GET['login'])){
+		$login = $_GET['login'];
+		$double_reg_query = $connect->query("SELECT `login` FROM `users` WHERE `login` = '$login'");
+		$double_reg_query_true = mysqli_fetch_assoc($double_reg_query);
+		$res = $double_reg_query_true['login'];
+		if($login == $res){
+			echo "no";
+		}else{
+			echo "yes";
+		}
+	}
+
 	/*Обработчик входа*/
 	if(isset($_POST['login']) and isset($_POST['password'])) {
 			$userlogin = htmlspecialchars(trim($_POST['login']));
@@ -28,35 +42,13 @@
 		$userstreet = htmlspecialchars(trim($_POST['street'])); 
 		$userbuilding = htmlspecialchars(trim($_POST['building'])); */
 		$userpassword = htmlspecialchars(trim($_POST['password1']));
-		/*Проверка на существующий логин*/
-		$double_reg_query = $connect->query("SELECT `login` FROM `users` WHERE `login` = '$userlogin'");
-		/*Преобразование к элементу*/
-		$double_reg_query_true = $double_reg_query->fetch_assoc();
-		if (!$double_reg_query_true) {
-			/*Запрос на добавление нового пользователя*/
-			$reg_query = $connect->query("INSERT INTO `users` (`id`, `login`, `password`) VALUES ('','$userlogin','$userpassword')");
+		$reg_query = $connect->query("INSERT INTO `users` (`id`, `login`, `password`) VALUES ('','$userlogin','$userpassword')");
 			if ($reg_query) {
 				$_SESSION['userlogin'] = $userlogin;
 			}
-		} else {
-			/*Переменная для вывода о том, что логин занят*/
-			$UserLoginHasExist = "Логин занят";
-		}
-
-
-
-
-
-			/*$userlogin = htmlspecialchars(trim($_POST['login']));
-			$userpassword = htmlspecialchars(trim($_POST['password']));
-			$my_query = $connect->query("SELECT `login`,`password` FROM `users` WHERE `login` = '$userlogin' AND `password` = '$userpassword'");
-			$result = $my_query->fetch_assoc();
-			if ($result) {
-				$_SESSION['userlogin'] = $userlogin;
-			}*/
 	}
 
-
+	/*Выход с сайта*/
 	if (isset($_GET['exit'])) {
 		unset($_SESSION['userlogin']);
 		header("Location: index.php");

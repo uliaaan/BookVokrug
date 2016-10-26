@@ -1,35 +1,139 @@
-$(document).ready(function(){
-	var fields = ["login", "password1",];
+var login,
+	email,
+	password,
+	password2,
+	loginStat,
+	emailStat,
+	passwordStat,
+	password2Stat;
 
-	$(".form").submit(function(){
-	/*Флаг заполнения обязательных полей*/
-		var error = 0;
-		/*Выбираем все поля*/
-		$(".form").find(":input").each(function() {  
-			/*Работаем по каждому полю*/
-			for(var i = 0; i < fields.length; i++) {
-				/*Если это поле есть в массиве*/
-				if($(this).attr("name") == fields[i]) {
-					/*Если поле не заполнено*/
-					if( !$.trim($(this).val()) ) {
-						$(this).addClass("error-input");
-						error = 1;
-					} else {
-						/*Если поле заполнено*/
-						$(this).removeClass("error-input");
-					}
-				}
+$(function() {
+	//Логин
+	$("#login").change(function(){
+		login = $("#login").val();
+		var expLogin = /^[a-zA-Z0-9_]+$/g;
+		var resLogin = login.search(expLogin);
+		if(resLogin == -1){
+			$("#login").next().hide().text("Неверный логин").css("color","red").fadeIn(400);
+			$("#login").removeClass().addClass("form-control inputRed");
+			loginStat = 0;
+			buttonOnAndOff();
+		}else{
+			$.ajax({
+			url: "functions.php",
+			type: "GET",
+			data: "login=" + login,
+			cache: false,
+			success: function(response){
+				if(response == "no"){
+					$("#login").next().hide().html("Логин занят").css("color","red").fadeIn(400);
+					$("#login").removeClass().addClass("form-control inputRed");					
+				}else{					
+					$("#login").removeClass().addClass("form-control inputGreen");
+					$("#login").next().text("");
+				}			
+				
+			}
+			});
+			loginStat = 1;
+			buttonOnAndOff();
+		}
+		
+	});
+	$("#login").keyup(function(){
+		$("#login").removeClass("inputGreen");
+		$("#login").removeClass("inputRed");
+		$("#login").next().text("");
+	});
+	
+/*	// Email
+	$("#email").change(function(){
+		email = $("#email").val();
+		var expEmail = /[-0-9a-z_]+@[-0-9a-z_]+\.[a-z]{2,6}/i;
+		var resEmail = email.search(expEmail);
+		if(resEmail == -1){
+			$("#email").next().hide().text("Неверный формат Email").css("color","red").fadeIn(400);
+			$("#email").removeClass().addClass("inputRed");
+			emailStat = 0;
+			buttonOnAndOff();
+		}else{
+			
+			$.ajax({
+			url: "testingLoginEmail.php",
+			type: "GET",
+			data: "email=" + email,
+			cache: false,			
+			success: function(response){
+				if(response == "no"){
+					$("#email").next().hide().text("Email Занят").css("color","red").fadeIn(400);
+					$("#email").removeClass().addClass("inputRed");					
+				}else{					
+					$("#email").removeClass().addClass("inputGreen");
+					$("#email").next().text("");
+				}					
 			}
 		});
-
-		/*Проверка перед отправкой*/
-		if(error == 0) {
-			return true;
-		} else {
-			var err_text = "";
-			if(error) err_text += "Заполните красные поля!";
-			$("#err_text_form").hide().fadeIn(500).html(err_text);
-			return false;
+			emailStat = 1;
+			buttonOnAndOff();
 		}
+		
+	});	
+	$("#email").keyup(function(){
+		$("#email").removeClass();
+		$("#email").next().text("");
+	});	
+	
+	
+	//Пароль
+	$("#password").change(function(){
+		password = $("#password").val();
+		if(password.length < 6){
+			$("#password").next().hide().text("Слишком короткий пароль").css("color","red").fadeIn(400);
+			$("#password").removeClass().addClass("inputRed");
+			passwordStat = 0;
+			buttonOnAndOff();
+		}else{
+			$("#password").removeClass().addClass("inputGreen");
+			$("#password").next().text("");
+			passwordStat = 1;
+			buttonOnAndOff();
+		}		
 	});
+	$("#password").keyup(function(){
+		$("#password").removeClass();
+		$("#password").next().text("");
+	});
+	
+	//Проверка пароля
+	$("#password2").change(function(){
+		if(password2 != password){
+			$("#password2").next().hide().text("Пароли не совпадают").css("color","red").fadeIn(400);
+			$("#password2").removeClass().addClass("inputRed");
+			password2Stat = 0;
+			buttonOnAndOff();
+		}else{
+			$("#password2").removeClass().addClass("inputGreen");
+			$("#password2").next().text("");
+		}		
+	});
+	$("#password2").keyup(function(){
+		password2 = $("#password2").val();
+		if(password2 == password){
+			password2Stat = 1;
+			buttonOnAndOff();
+		}else{
+			password2Stat = 0;
+			buttonOnAndOff();
+		}
+	});*/
+	
+	function buttonOnAndOff(){
+		if(emailStat == 1 && passwordStat == 1 && password2Stat == 1 && loginStat == 1){
+			$("#submit").removeAttr("disabled");
+		}else{
+			$("#submit").attr("disabled","disabled");
+		}
+	
+	}
+	
 });

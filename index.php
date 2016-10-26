@@ -10,7 +10,13 @@
         <div class="section">
          <div class="container tim-container">
             <div class="tim-title">
-                <h2>Basic Elements</h2>
+                <h2><?
+                    $double_reg_query = $connect->query("SELECT `login` FROM `users` WHERE `login` = '123123'");
+                    $double_reg_query_true = mysqli_fetch_assoc($double_reg_query);
+                    $res = $double_reg_query_true['login'];
+                    echo $res;
+                    ?>
+                </h2>
             </div>
             
             <div id="buttons">
