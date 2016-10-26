@@ -1015,3 +1015,14 @@ body {
 .display-flex {
     display: flex;
 }
+
+.error-input {
+    background-color: #FFC0A4 !important;
+    color: #EB5E28 !important;
+}
+
+#err_text_form {
+    text-align: center;
+    color: #EB5E28;
+    display: none;
+}

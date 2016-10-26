@@ -116,7 +116,7 @@
 <div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-     <form method="post">
+     <form method="post" class="form">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title" id="myModalLabel">Регистрация</h4>
@@ -133,6 +133,7 @@
               <input name="password1" type="password" class="form-control" placeholder="Пароль"><br>
               <input name="password2" type="password" class="form-control" placeholder="Повторите пароль">
              <? echo $UserLoginHasExist ?>
+             <div id="err_text_form"></div>
         </div>
         <div class="modal-footer">
               <button name="submit_reg" type="submit" class="btn btn-default btn-simple">Зарегистрироваться</button>
@@ -158,5 +159,6 @@
 	<script src="assets/js/bootstrap-select.js"></script>
 	<script src="assets/js/bootstrap-datepicker.js"></script>
 	
-	<script src="assets/js/ct-paper.js"></script>    
+  <script src="assets/js/ct-paper.js"></script>    
+	<script src="assets/js/settings.js"></script>    
 </html>
