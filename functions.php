@@ -16,6 +16,20 @@
 		}
 	}
 
+	/*Обработчик если email занят*/
+	if(isset($_GET['email'])){
+		$email = $_GET['email'];
+		$double_reg_query = $connect->query("SELECT `email` FROM `users` WHERE `email` = '$email'");
+		$double_reg_query_true = mysqli_fetch_assoc($double_reg_query);
+		$res = $double_reg_query_true['email'];
+		if($login == $res){
+			echo "yes";
+		}else{
+			echo "no";
+		}
+	}
+
+
 	/*Обработчик входа*/
 	if(isset($_POST['login']) and isset($_POST['password'])) {
 			$userlogin = htmlspecialchars(trim($_POST['login']));

@@ -122,22 +122,18 @@
           <h4 class="modal-title" id="myModalLabel">Регистрация</h4>
         </div>
         <div class="modal-body">
-              <label>Логин</label>
-              <input name="login" type="text" id="login" class="form-control" placeholder="Логин"><div class="reg-red-text"></div>
-        <!--       <input name="email" type="email" class="form-control" placeholder="E-mail"><br>
-        <input name="telephone" type="telephone" class="form-control" placeholder="Номер телефона"><br>
-        <div class="display-flex">
-        <input name="city" type="city" class="form-control" placeholder="Город">&nbsp;&nbsp;
-        <input name="street" type="street" class="form-control" placeholder="Улица">&nbsp;&nbsp;
-        <input name="building" type="building" class="form-control" placeholder="Дом">
-        </div><br> -->
-              <label>Пароль</label>
-              <input name="password1" type="password" id="reg-password1" class="form-control" placeholder="Пароль"><br>
-              <input name="password2" type="password" id="reg-password2" class="form-control" placeholder="Повторите пароль">
-             <div id="err_text_form"></div>
+              <input name="login" type="text" id="login" class="form-control" placeholder="Логин"><div class="reg-red-text"></div><br>
+              <input name="email" type="text" id="email" class="form-control" placeholder="E-mail"><div class="reg-red-text"></div><br>
+              <input name="telephone" type="telephone" id="telephone" class="form-control" placeholder="Номер телефона"><div class="reg-red-text"></div><br>
+              <div class="display-flex">
+                <input name="city" type="text" id="city" class="form-control" placeholder="Город">&nbsp;&nbsp;
+                <input name="street" type="text" id="street" class="form-control" placeholder="Улица">&nbsp;&nbsp;
+                <input name="building" type="text" id="building" class="form-control" placeholder="Дом">
+              </div><br>
+              <input name="password" type="password" id="password" class="form-control" placeholder="Пароль"><div class="reg-red-text"></div><br>
         </div>
         <div class="modal-footer">
-              <button name="submit" type="submit" id="submit" class="btn btn-default btn-simple">Зарегистрироваться</button>
+              <button name="submit" type="submit" id="submit" class="btn btn-default btn-simple" disabled>Зарегистрироваться</button>
         </div>
       </div>
     </form>

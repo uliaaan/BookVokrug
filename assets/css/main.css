@@ -1034,3 +1034,8 @@ body {
     margin: 3px 0px;
     display: none;
 }
+
+.form-control::-webkit-input-placeholder { color: #262626; opacity: 0.6; }
+.form-control:-moz-placeholder { color: #262626; opacity: 0.6; }
+.form-control::-moz-placeholder { color: #262626; opacity: 0.6; }
+.form-control:-ms-input-placeholder { color: #262626; opacity: 0.6; }

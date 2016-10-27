@@ -103,7 +103,7 @@ blockquote small {
 body {
   color: #66615b;
   font-size: 16px;
-  font-family: 'Montserrat', "Helvetica", Arial, sans-serif;
+  font-family: "Helvetica", 'Montserrat',  Arial, sans-serif;
 }
 
 a {
