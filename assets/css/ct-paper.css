@@ -979,9 +979,9 @@ textarea.form-control {
 
 /* Component containers
 ----------------------------------*/
-.ui-widget {
+/* .ui-widget {
   font-size: 1.1em;
-}
+} */
 
 .ui-widget .ui-widget {
   font-size: 1em;
@@ -992,6 +992,7 @@ textarea.form-control {
 .ui-widget textarea,
 .ui-widget button {
   font-size: 1em;
+  width: 100%;
 }
 
 .ui-widget-content {

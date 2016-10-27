@@ -1,13 +1,16 @@
 var login,
 	email,
 	password,
-	password2,
+	telephone,
 	loginStat,
 	emailStat,
 	passwordStat,
-	password2Stat;
+	telephoneStat;
 
 $(function() {
+
+
+
 	//Логин
 	$("#login").change(function(){
 		login = $("#login").val(); //записываем значение логина в переменную
@@ -111,6 +114,52 @@ $(function() {
 		$("#password").removeClass("inputRed");
 		$("#password").next().text("");
 	});
+
+	//Телефон
+	$("#telephone").change(function(){
+		telephone = $("#telephone").val();
+		if(telephone.length < 10){
+			$("#telephone").next().hide().text("Слишком короткий номер").css("color","red").fadeIn(400);
+			$("#telephone").removeClass().addClass("form-control inputRed");
+			telephoneStat = 0;
+			buttonOnAndOff();
+		}else{
+			$("#telephone").removeClass().addClass("form-control inputGreen");
+			$("#telephone").next().text("");
+			telephoneStat = 1;
+			buttonOnAndOff();
+		}		
+	});
+	$("#telephone").keyup(function(){
+		$("#telephone").removeClass("inputGreen");
+		$("#telephone").removeClass("inputRed");
+		$("#telephone").next().text("");
+	});
+
+	/*Обработчик для проверки ввода чисел в поле телефона*/
+	document.getElementsByName("telephone")[0].onkeypress = function(e) {
+      e = e || event;
+      if (e.ctrlKey || e.altKey || e.metaKey) return;
+      var chr = getChar(e);
+      if (chr == null) return;
+      if (chr < '0' || chr > '9') {
+        return false;
+      }
+    }
+
+    function getChar(event) {
+      if (event.which == null) {
+        if (event.keyCode < 32) return null;
+        return String.fromCharCode(event.keyCode) // IE
+      }
+
+      if (event.which != 0 && event.charCode != 0) {
+        if (event.which < 32) return null;
+        return String.fromCharCode(event.which) // остальные
+      }
+
+      return null; // специальная клавиша
+    }
 	
 /*	//Проверка пароля
 	$("#password2").change(function(){
@@ -136,12 +185,23 @@ $(function() {
 	});*/
 	
 	function buttonOnAndOff(){
-		if(emailStat == 1 && passwordStat == 1 && loginStat == 1){
+		if(emailStat == 1 && passwordStat == 1 && loginStat == 1 && telephoneStat == 1){
 			$("#submit").removeAttr("disabled");
 		}else{
 			$("#submit").attr("disabled","disabled");
 		}
 	
 	}
+
+
+	//Город
+	$( "#city" ).autocomplete({
+        source: 'functions.php',
+        minLength: 3
+    });
+	
+
+
+
 	
 });

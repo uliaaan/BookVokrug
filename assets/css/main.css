@@ -1014,6 +1014,7 @@ body {
 
 .display-flex {
     display: flex;
+    width: 100%;
 }
 
 .error-input {
@@ -1039,3 +1040,19 @@ body {
 .form-control:-moz-placeholder { color: #262626; opacity: 0.6; }
 .form-control::-moz-placeholder { color: #262626; opacity: 0.6; }
 .form-control:-ms-input-placeholder { color: #262626; opacity: 0.6; }
+
+.ui-autocomplete-input {
+    z-index: 10 !important;
+}
+
+.input-city {
+    width: 40%;
+}
+
+.input-street {
+    width: 40%;
+}
+
+.input-building {
+    width: 20%;
+}

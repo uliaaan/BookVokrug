@@ -76,7 +76,20 @@
 	}
 */
 
-		
+	//Город подстановка
+	if(isset($_GET['term'])) {
+	    $searchTerm = $_GET['term'];
+	    
+	    //Выборка по городам
+	    $query = $connect->query("SELECT `city` FROM `citys` WHERE `city` LIKE '%".$searchTerm."%' ORDER BY `city` ASC");
+	    while ($row = $query->fetch_assoc()) {
+	        $data[] = $row['city'];
+	    }
+	    //Возвращение значения
+    echo json_encode($data);
+	}
+	    
+    
 		
 	
 ?>
