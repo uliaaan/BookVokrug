@@ -29,6 +29,19 @@
 		}
 	}
 
+	/*Обработчик если город введен не венро*/
+	if(isset($_GET['city'])){
+		$city = $_GET['city'];
+		$double_reg_query = $connect->query("SELECT `city` FROM `citys` WHERE `city` = '$city'");
+		$double_reg_query_true = mysqli_fetch_assoc($double_reg_query);
+		$res = $double_reg_query_true['city'];
+		if($city == $res){
+			echo "yes";
+		}else{
+			echo "no";
+		}
+	}
+
 
 	/*Обработчик входа*/
 	if(isset($_POST['login']) and isset($_POST['password'])) {

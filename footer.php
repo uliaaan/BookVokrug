@@ -126,11 +126,15 @@
               <input name="email" type="text" id="email" maxlength="50" class="form-control" placeholder="E-mail"><div class="reg-red-text"></div><br>
               <input name="telephone" type="text" id="telephone" maxlength="10" class="form-control" placeholder="Номер телефона без 8"><div class="reg-red-text"></div><br>
               <div class="display-flex">
-                <div class="ui-widget">
-                  <input name="city" type="text" id="city" class="form-control input-city" placeholder="Город">
+                <div class="ui-widget input-city-with-error">
+                  <input name="city" type="text" id="city" maxlength="40" class="form-control input-city" placeholder="Город"><div class="reg-red-text"></div>
                 </div>
-                &nbsp;&nbsp;<input name="street" type="text" id="street" class="form-control input-street" placeholder="Улица">&nbsp;&nbsp;
-                <input name="building" type="text" id="building" class="form-control input-building" placeholder="Дом">
+                <div class="input-street-with-error">
+                  <input name="street" type="text" id="street" maxlength="40" class="form-control input-street" placeholder="Улица"><div class="reg-red-text"></div>
+                </div>
+                <div class="input-building-with-error">
+                  <input name="building" type="text" id="building" maxlength="10" class="form-control input-building" placeholder="Дом">
+                </div>
               </div><br>
               <input name="password" type="password" id="password" maxlength="50" class="form-control" placeholder="Пароль"><div class="reg-red-text"></div><br>
         </div>

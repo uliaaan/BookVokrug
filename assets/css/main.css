@@ -1045,14 +1045,15 @@ body {
     z-index: 10 !important;
 }
 
-.input-city {
+.input-city-with-error {
     width: 40%;
 }
 
-.input-street {
+.input-street-with-error {
     width: 40%;
+    margin: 0 10px;
 }
 
-.input-building {
+.input-building-with-error{
     width: 20%;
 }

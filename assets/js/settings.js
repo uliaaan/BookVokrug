@@ -2,10 +2,16 @@ var login,
 	email,
 	password,
 	telephone,
+	city,
+	street,
 	loginStat,
+	building,
 	emailStat,
 	passwordStat,
-	telephoneStat;
+	telephoneStat,
+	cityStat,
+	streetStat,
+	buildingStat;
 
 $(function() {
 
@@ -192,14 +198,92 @@ $(function() {
 		}
 	
 	}
+	
 
-
-	//Город
-	$( "#city" ).autocomplete({
+	//Город автоподстановка
+	$("#city").autocomplete({
         source: 'functions.php',
         minLength: 3
     });
-	
+
+
+	//Город сравнение
+	$("#street").click(function(){
+		city = $("#city").val();
+			if (city != "") {
+			$.ajax({
+			url: "functions.php",
+			type: "GET",
+			data: "city=" + city,
+			cache: false,
+			success: function(response){
+				if(response == "no"){
+					$("#city").next().hide().html("Город введен неверно").css("color","red").fadeIn(400);
+					$("#city").removeClass().addClass("form-control inputRed");	
+					cityStat = 0;
+					buttonOnAndOff();				
+				}else{					
+					$("#city").removeClass().addClass("form-control inputGreen");
+					$("#city").next().text("");
+					cityStat = 1;
+					buttonOnAndOff();	
+				}				
+			}
+			});
+		} else {
+			$("#city").next().hide().html("Введите город").css("color","red").fadeIn(400);
+			$("#city").removeClass().addClass("form-control inputRed");	
+			cityStat = 0;
+			buttonOnAndOff();
+		}	
+	});
+	$("#city").keyup(function(){
+		$("#city").removeClass("inputGreen");
+		$("#city").removeClass("inputRed");
+		$("#city").next().text("");
+	});
+
+
+	//Улица
+	$("#street").change(function(){
+	street = $("#street").val();
+		if(street.length < 1){
+			$("#street").next().hide().text("Введите город").css("color","red").fadeIn(400);
+			$("#street").removeClass().addClass("form-control input-street inputRed");
+			streetStat = 0;
+			buttonOnAndOff();
+		}else{
+			$("#street").removeClass().addClass("form-control input-street inputGreen");
+			$("#street").next().text("");
+			streetStat = 1;
+			buttonOnAndOff();
+		}		
+	});
+	$("#street").keyup(function(){
+		$("#street").removeClass("inputGreen");
+		$("#street").removeClass("inputRed");
+		$("#street").next().text("");
+	});
+
+	//Дома building
+	$("#building").change(function(){
+	building = $("#building").val();
+		if(building.length < 1){
+			$("#building").removeClass().addClass("form-control input-street inputRed");
+			buildingStat = 0;
+			buttonOnAndOff();
+		}else{
+			$("#building").removeClass().addClass("form-control input-street inputGreen");
+			$("#building").next().text("");
+			buildingStat = 1;
+			buttonOnAndOff();
+		}		
+	});
+	$("#building").keyup(function(){
+	$("#building").removeClass("inputGreen");
+	$("#building").removeClass("inputRed");
+	$("#building").next().text("");
+	});
 
 
 
