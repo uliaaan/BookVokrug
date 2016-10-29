@@ -46,7 +46,7 @@
 	/*Обработчик входа*/
 	if(isset($_POST['login']) and isset($_POST['password'])) {
 			$userlogin = htmlspecialchars(trim($_POST['login']));
-			$userpassword = htmlspecialchars(trim($_POST['password']));
+			$userpassword = md5(htmlspecialchars(trim($_POST['password'])));
 			/*Проверка на пустые поля*/
 				if ($userlogin == '' and $userpassword == '') {
 				header("Location: index.php");
@@ -63,7 +63,7 @@
 	/*Обработчик регистрации*/
 	if(isset($_POST['login']) and isset($_POST['password']) and isset($_POST['email']) and isset($_POST['telephone'])) {
 		$userlogin = htmlspecialchars(trim($_POST['login'])); 
-		$userpassword = htmlspecialchars(trim($_POST['password']));
+		$userpassword = md5(htmlspecialchars(trim($_POST['password'])));
 		$useremail = htmlspecialchars(trim($_POST['email'])); 
 		$usertelephone = htmlspecialchars(trim($_POST['telephone'])); 
 		$usercity = htmlspecialchars(trim($_POST['city']));
