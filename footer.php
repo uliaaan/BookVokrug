@@ -130,13 +130,13 @@
                   <input name="city" type="text" id="city" maxlength="40" class="form-control input-city" placeholder="Город"><div class="reg-red-text"></div>
                 </div>
                 <div class="input-street-with-error">
-                  <input name="street" type="text" id="street" maxlength="40" class="form-control input-street" placeholder="Улица"><div class="reg-red-text"></div>
+                  <input name="street" type="text" id="street" maxlength="50" class="form-control input-street" placeholder="Улица"><div class="reg-red-text"></div>
                 </div>
                 <div class="input-building-with-error">
                   <input name="building" type="text" id="building" maxlength="10" class="form-control input-building" placeholder="Дом">
                 </div>
               </div><br>
-              <input name="password" type="password" id="password" maxlength="50" class="form-control" placeholder="Пароль"><div class="reg-red-text"></div><br>
+              <input name="password" type="password" id="password" maxlength="50" class="form-control" placeholder="Пароль"><div class="reg-red-text"></div>
         </div>
         <div class="modal-footer">
               <button name="submit" type="submit" id="submit" class="btn btn-default btn-simple" disabled>Зарегистрироваться</button>

@@ -191,7 +191,7 @@ $(function() {
 	});*/
 	
 	function buttonOnAndOff(){
-		if(emailStat == 1 && passwordStat == 1 && loginStat == 1 && telephoneStat == 1){
+		if(emailStat == 1 && passwordStat == 1 && loginStat == 1 && telephoneStat == 1 && cityStat == 1){
 			$("#submit").removeAttr("disabled");
 		}else{
 			$("#submit").attr("disabled","disabled");
@@ -207,7 +207,8 @@ $(function() {
     });
 
 
-	//Город сравнение
+	//Город сравнение 
+	// CLICK НУЖНО ИСПРАВИТЬ!!!!!!!!!!!!!!!
 	$("#street").click(function(){
 		city = $("#city").val();
 			if (city != "") {

@@ -61,15 +61,19 @@
 	}
 
 	/*Обработчик регистрации*/
-	if(isset($_POST['login']) and isset($_POST['password1']) == isset($_POST['password2'])) {
+	if(isset($_POST['login']) and isset($_POST['password']) and isset($_POST['email']) and isset($_POST['telephone'])) {
 		$userlogin = htmlspecialchars(trim($_POST['login'])); 
-		/*$useremail = htmlspecialchars(trim($_POST['email'])); 
+		$userpassword = htmlspecialchars(trim($_POST['password']));
+		$useremail = htmlspecialchars(trim($_POST['email'])); 
 		$usertelephone = htmlspecialchars(trim($_POST['telephone'])); 
 		$usercity = htmlspecialchars(trim($_POST['city']));
+		//Достаем id города
+		$usercity_id = $connect->query("SELECT `id` FROM `citys` WHERE `city` = '$usercity'");
+		$usercity_id_true = mysqli_fetch_assoc($usercity_id);
+        $res_city_id = $usercity_id_true['id'];
 		$userstreet = htmlspecialchars(trim($_POST['street'])); 
-		$userbuilding = htmlspecialchars(trim($_POST['building'])); */
-		$userpassword = htmlspecialchars(trim($_POST['password1']));
-		$reg_query = $connect->query("INSERT INTO `users` (`id`, `login`, `password`) VALUES ('','$userlogin','$userpassword')");
+		$userbuilding = htmlspecialchars(trim($_POST['building'])); 
+		$reg_query = $connect->query("INSERT INTO `users` (`id`, `login`, `password`,`email`,`telephone`,`city_id`,`street`,`building`) VALUES ('','$userlogin','$userpassword','$useremail','$usertelephone','$res_city_id','$userstreet','$userbuilding')");
 			if ($reg_query) {
 				$_SESSION['userlogin'] = $userlogin;
 			}
