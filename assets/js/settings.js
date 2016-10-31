@@ -371,6 +371,7 @@ $(function() {
 		$("#passwordnew").next().text("");
 	});
 
+	/*Кнопка Сохранить изменения*/
 	function buttonOnAndOffRedact(){
 		if(emailStat == 1 || loginStat == 1 || telephoneStat == 1 || cityStat == 1 || streetStat == 1 || buildingStat == 1 || passwordlateStat == 1 && passwordStat == 1){
 			$("#submitredact").removeAttr("disabled");

@@ -25,7 +25,7 @@
       
 </head>
 <body>
-<nav class="navbar navbar-ct-transparent" role="navigation-demo" id="demo-navbar">
+<nav class="navbar navbar-ct-transparent nav-img" role="navigation-demo" id="demo-navbar">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">

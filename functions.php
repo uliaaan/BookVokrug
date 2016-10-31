@@ -139,6 +139,7 @@ if ($_SESSION['userlogin']) {
 	/*Изменение данных в профиле*/
 	if($_SERVER['REQUEST_URI'] === '/settingsprofile.php') {
 		if(isset($_POST['email']) or isset($_POST['telephone']) or isset($_POST['city']) or isset($_POST['street']) or isset($_POST['building'])) {
+			/*Проверка емейла сервером*/
 			if(isset($_POST['email'])) {
 				preg_match_all('#([a-z0-9\-\.\_]+@[a-z0-9\-]+\.[a-z]+$)#isU', $_POST['email'], $matches);
 				$_POST['email'] = implode('', $matches[1]);
@@ -146,6 +147,7 @@ if ($_SESSION['userlogin']) {
 						$useremail = htmlspecialchars(trim($_POST['email'])); 
 					}
 			}
+			/*Обновление данных*/
 			$usertelephone = htmlspecialchars(trim($_POST['telephone'])); 
 			$usercity = htmlspecialchars(trim($_POST['city']));
 			//Достаем id города
@@ -159,6 +161,8 @@ if ($_SESSION['userlogin']) {
 					header("Location: profile.php?edituserprofile=1");
 				}
 		}
+
+		/*Обновление информации по паролю*/
 		if (isset($_POST['passwordlate']) and isset($_POST['passwordnew'])) {
 			$passwordlate = md5(htmlspecialchars(trim($_POST['passwordlate'])));
 			$passwordnew = md5(htmlspecialchars(trim($_POST['passwordnew'])));

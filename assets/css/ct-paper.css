@@ -996,7 +996,8 @@ textarea.form-control {
 }
 
 .ui-widget-content {
-  background-color: #E5E5E5;
+  background-color: #fff;
+  border-radius: 5px;
 }
 
 .ui-widget-content a {

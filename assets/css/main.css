@@ -931,6 +931,12 @@
 #demo-navbar{
     border-radius: 0;
     margin-bottom: 0px;
+    box-shadow: 0 0px 10px #000;
+}
+
+.nav-img {
+    background-image: url(../paper_img/cityblur.jpg);
+    background-size: cover;
 }
 .download-area{
     margin-top: 30px;

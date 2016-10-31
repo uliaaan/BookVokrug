@@ -8,7 +8,7 @@
 		<h4 class="text-center">Редактировать профиль</h4>
 
 		<form method="post" class="form">
-			<label>Логин - <? echo $userlogin ?></label><br>
+			<div class="text-center"><h3><? echo $userlogin ?></h3></div><br>
 			<label>E-mail</label>
 			<input name="email" type="email" id="email" maxlength="50" class="form-control" placeholder="E-mail" value="<? echo $useremail ?>"><div class="reg-red-text" ></div><br>
 			<label>Телефон</label>
