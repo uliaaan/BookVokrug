@@ -2,6 +2,7 @@
 	session_start();
 	$connect = mysqli_connect('localhost', 'root', '12345678','bookvokrug');
 
+if(!$_SESSION['userlogin']) {
 
 	/*Обработчик если логин занят*/
 	if(isset($_GET['login'])){
@@ -23,19 +24,6 @@
 		$double_reg_query_true = mysqli_fetch_assoc($double_reg_query);
 		$res = $double_reg_query_true['email'];
 		if($login == $res){
-			echo "yes";
-		}else{
-			echo "no";
-		}
-	}
-
-	/*Обработчик если город введен не венро*/
-	if(isset($_GET['city'])){
-		$city = $_GET['city'];
-		$double_reg_query = $connect->query("SELECT `city` FROM `citys` WHERE `city` = '$city'");
-		$double_reg_query_true = mysqli_fetch_assoc($double_reg_query);
-		$res = $double_reg_query_true['city'];
-		if($city == $res){
 			echo "yes";
 		}else{
 			echo "no";
@@ -79,12 +67,6 @@
 			}
 	}
 
-	/*Выход с сайта*/
-	if (isset($_GET['exit'])) {
-		unset($_SESSION['userlogin']);
-		header("Location: index.php");
-	}
-
 /*	function simple_query() {
 		$my_query = mysqli_query($connect, "SELECT `login` FROM `users`");
 		$result = mysqli_fetch_assoc($my_query);
@@ -92,6 +74,20 @@
 		echo $login;
 	}
 */
+}
+
+	/*Обработчик если город введен не венро*/
+	if(isset($_GET['city'])){
+		$city = $_GET['city'];
+		$double_reg_query = $connect->query("SELECT `city` FROM `citys` WHERE `city` = '$city'");
+		$double_reg_query_true = mysqli_fetch_assoc($double_reg_query);
+		$res = $double_reg_query_true['city'];
+		if($city == $res){
+			echo "yes";
+		}else{
+			echo "no";
+		}
+	}
 
 	//Город подстановка
 	if(isset($_GET['term'])) {
@@ -105,7 +101,47 @@
 	    //Возвращение значения
     echo json_encode($data);
 	}
-	    
+
+
+/*Если пользоваетль в сессии*/
+if ($_SESSION['userlogin']) {
+		$userlogin = $_SESSION['userlogin'];
+		$userdatequery = $connect->query("SELECT * FROM `users` WHERE `login` = '$userlogin'");
+		$userdatequery_mass = mysqli_fetch_assoc($userdatequery);
+        $useremail = $userdatequery_mass['email'];
+        $usertelephone = $userdatequery_mass['telephone'];
+        $usercity_id = $userdatequery_mass['city_id'];
+        $usercity_query = $connect->query("SELECT `city` FROM `citys` WHERE `id` = '$usercity_id'");
+		$usercity_id_true = mysqli_fetch_assoc($usercity_query);
+        $usercity = $usercity_id_true['city'];
+        $userstreet = $userdatequery_mass['street'];
+        $userbuilding = $userdatequery_mass['building'];
+        $userpassword = $userdatequery_mass['password'];
+	
+
+		/*Обработчки проверки пароля*/
+	    if(isset($_GET['passwordlate'])){
+			$password_late = md5($_GET['passwordlate']);
+			$password_latequery = $connect->query("SELECT `password` FROM `users` WHERE `password` = '$password_late'");
+			$password_latequery_mass = mysqli_fetch_assoc($password_latequery);
+			$password_late_true = $password_latequery_mass['password'];
+			if($password_late == $password_late_true){
+				echo "yes";
+			}else{
+				echo "no";
+			}
+		}
+
+
+
+        /*Выход с сайта*/
+		if (isset($_GET['exit'])) {
+			unset($_SESSION['userlogin']);
+			header("Location: index.php");
+		}
+}
+
+
     
 		
 	

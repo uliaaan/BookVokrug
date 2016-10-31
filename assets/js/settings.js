@@ -6,6 +6,8 @@ var login,
 	street,
 	loginStat,
 	building,
+	passwordlate,
+	passwordlateStat,
 	emailStat,
 	passwordStat,
 	telephoneStat,
@@ -286,7 +288,71 @@ $(function() {
 	$("#building").next().text("");
 	});
 
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+//Редактирование профиля
+	//Пароль
+	$("#passwordlate").change(function(){
+		passwordlate = $("#passwordlate").val(); //записываем значение логина в переменную
+		if(passwordlate.length > 0){ //запрос к бд через аджакс
+			$.ajax({
+			url: "functions.php",
+			type: "GET",
+			data: "passwordlate=" + passwordlate,
+			cache: false,
+			success: function(response){
+				if(response == "no"){
+					$("#passwordlate").next().hide().html("Не верный пароль").css("color","red").fadeIn(400);
+					$("#passwordlate").removeClass().addClass("form-control inputRed");
+					passwordlateStat = 0;	
+					buttonOnAndOffPassword();			
+				}else{					
+					$("#passwordlate").removeClass().addClass("form-control inputGreen");
+					$("#passwordlate").next().text("");
+					passwordlateStat = 1;
+					buttonOnAndOffPassword();
+				}			
+				
+			}
+			});
+			
+		}
+		
+	});
+	$("#passwordlate").keyup(function(){
+		$("#passwordlate").removeClass("inputGreen");
+		$("#passwordlate").removeClass("inputRed");
+		$("#passwordlate").next().text("");
+	});
 
+	function buttonOnAndOffPassword(){
+		if(passwordlateStat == 1){
+			$("#passwordnew").removeAttr("disabled");
+		}else{
+			$("#passwordnew").attr("disabled","disabled");
+		}
+	
+	}
+	
+	//Новый пароль
+	$("#passwordnew").change(function(){
+		password = $("#passwordnew").val();
+		if(password.length < 6){
+			$("#passwordnew").next().hide().text("Слишком короткий пароль").css("color","red").fadeIn(400);
+			$("#passwordnew").removeClass().addClass("form-control inputRed");
+			passwordStat = 0;
+			buttonOnAndOff();
+		}else{
+			$("#passwordnew").removeClass().addClass("form-control inputGreen");
+			$("#passwordnew").next().text("");
+			passwordStat = 1;
+			buttonOnAndOff();
+		}		
+	});
+	$("#passwordnew").keyup(function(){
+		$("#passwordnew").removeClass("inputGreen");
+		$("#passwordnew").removeClass("inputRed");
+		$("#passwordnew").next().text("");
+	});
 
 	
-});
+}); //End functions()

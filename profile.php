@@ -1,4 +1,5 @@
 <? include ('header.php') ?>
+<? if ($_SESSION['userlogin']) { ?>
         <div class="profile-background"> 
             <div class="filter-black"></div>  
         </div>
@@ -16,13 +17,6 @@
                                 "; ?>
                             </h4>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 col-md-offset-3 text-center">
-                        <p>An artist of considerable range, Chet Faker — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his own music, giving it a warm, intimate feel with a solid groove structure. </p>
-                        <br />
-                        <btn class="btn"><i class="fa fa-cog"></i> Settings</btn>
                     </div>
                 </div>
                 <div class="profile-tabs">
@@ -88,4 +82,7 @@
                 </div>        
             </div>
         </div>
+<? } else {
+    header("Location: / ");
+    } ?>
 <? include ('footer.php') ?>

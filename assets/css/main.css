@@ -191,10 +191,7 @@
 }
 
 .logo-container .logo{
-    overflow: hidden;
-    border-radius: 50%;
-    border: 1px solid #333333;
-    width: 50px;
+    width: 159px;
     float: left;
 }
 
@@ -1056,4 +1053,12 @@ body {
 
 .input-building-with-error{
     width: 20%;
+}
+
+#edit-profile h4 {
+    margin: 20px 0;
+}
+
+.edit-profile-block {
+    max-width: 600px;
 }

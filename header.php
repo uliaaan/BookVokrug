@@ -38,11 +38,9 @@
       <a href="/">
            <div class="logo-container">
                 <div class="logo">
-                    <img src="assets/paper_img/new_logo.png" alt="Creative Tim Logo">
+                    <img src="assets/img/logo.svg" alt="logo">
                 </div>
-                <div class="brand">
-                    Creative Tim
-                </div>
+            
             </div>
       </a>
     </div>
