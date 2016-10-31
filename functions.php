@@ -50,7 +50,13 @@
 	if(isset($_POST['login']) and isset($_POST['password']) and isset($_POST['email']) and isset($_POST['telephone'])) {
 		$userlogin = htmlspecialchars(trim($_POST['login'])); 
 		$userpassword = md5(htmlspecialchars(trim($_POST['password'])));
-		$useremail = htmlspecialchars(trim($_POST['email'])); 
+		if(isset($_POST['email'])) {
+				preg_match_all('#([a-z0-9\-\.\_]+@[a-z0-9\-]+\.[a-z]+$)#isU', $_POST['email'], $matches);
+				$_POST['email'] = implode('', $matches[1]);
+					if($_POST['email']) {
+						$useremail = htmlspecialchars(trim($_POST['email'])); 
+					}
+		} 
 		$usertelephone = htmlspecialchars(trim($_POST['telephone'])); 
 		$usercity = htmlspecialchars(trim($_POST['city']));
 		//Достаем id города
@@ -133,7 +139,13 @@ if ($_SESSION['userlogin']) {
 	/*Изменение данных в профиле*/
 	if($_SERVER['REQUEST_URI'] === '/settingsprofile.php') {
 		if(isset($_POST['email']) or isset($_POST['telephone']) or isset($_POST['city']) or isset($_POST['street']) or isset($_POST['building'])) {
-			$useremail = htmlspecialchars(trim($_POST['email'])); 
+			if(isset($_POST['email'])) {
+				preg_match_all('#([a-z0-9\-\.\_]+@[a-z0-9\-]+\.[a-z]+$)#isU', $_POST['email'], $matches);
+				$_POST['email'] = implode('', $matches[1]);
+					if($_POST['email']) {
+						$useremail = htmlspecialchars(trim($_POST['email'])); 
+					}
+			}
 			$usertelephone = htmlspecialchars(trim($_POST['telephone'])); 
 			$usercity = htmlspecialchars(trim($_POST['city']));
 			//Достаем id города
@@ -144,7 +156,7 @@ if ($_SESSION['userlogin']) {
 			$userbuilding = htmlspecialchars(trim($_POST['building']));
 			$update_query = $connect->query("UPDATE `users` SET `email` = '$useremail', `telephone` = '$usertelephone', `city_id` = '$res_city_id', `street` = '$userstreet', `building` = '$userbuilding' WHERE `login` = '$userlogin'");
 				if ($update_query) {
-					header("Location: profile.php");
+					header("Location: profile.php?edituserprofile=1");
 				}
 		}
 		if (isset($_POST['passwordlate']) and isset($_POST['passwordnew'])) {
@@ -152,12 +164,15 @@ if ($_SESSION['userlogin']) {
 			$passwordnew = md5(htmlspecialchars(trim($_POST['passwordnew'])));
 			if($userpassword == $passwordlate){
 				$update_query_pass = $connect->query("UPDATE `users` SET `password` = '$passwordnew' WHERE `login` = '$userlogin'");
-				if ($update_query) {
-					header("Location: profile.php");
+				if ($update_query_pass) {
+					header("Location: profile.php?edituserprofile=1");
 				}
 			}
 		}
 	}
+
+	$update_user_data_notif = "<div class=\"alert alert-success\"><div class=\"container\">Данные успешно изменены</div></div>";
+	$update_user_data_notif_fallse = "<div class=\"alert alert-danger\"><div class=\"container\">Ошибка изменения данных</div></div>";
 
 
     /*Выход с сайта*/
@@ -165,7 +180,6 @@ if ($_SESSION['userlogin']) {
 		unset($_SESSION['userlogin']);
 		header("Location: index.php");
 	}
-
 
 }
 

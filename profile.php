@@ -4,6 +4,11 @@
             <div class="filter-black"></div>  
         </div>
         <div class="profile-content section-nude">
+        <!-- Сообщение об успешном редактировании данных -->
+            <?  if ($_GET['edituserprofile'] == 1) {
+                    echo $update_user_data_notif;
+                } 
+            ?>
             <div class="container">
                 <div class="row owner">
                     <div class="text-center">

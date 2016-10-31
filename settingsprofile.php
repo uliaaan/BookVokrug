@@ -2,11 +2,15 @@
 <? if ($_SESSION['userlogin']) { ?>
 <section id="edit-profile" class="section-with-space">
 	<div class="container edit-profile-block">
+	<? if ($update_query) {
+                    echo $udate_date_notid;
+             } ?>
 		<h4 class="text-center">Редактировать профиль</h4>
+
 		<form method="post" class="form">
 			<label>Логин - <? echo $userlogin ?></label><br>
 			<label>E-mail</label>
-			<input name="email" type="text" id="email" maxlength="50" class="form-control" placeholder="E-mail" value="<? echo $useremail ?>"><div class="reg-red-text" ></div><br>
+			<input name="email" type="email" id="email" maxlength="50" class="form-control" placeholder="E-mail" value="<? echo $useremail ?>"><div class="reg-red-text" ></div><br>
 			<label>Телефон</label>
 			<input name="telephone" type="text" id="telephone" maxlength="10" class="form-control" placeholder="Номер телефона без 8" value="<? echo $usertelephone ?>"><div class="reg-red-text"></div><br>
 			<div class="display-flex">
