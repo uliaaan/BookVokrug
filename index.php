@@ -15,6 +15,7 @@
                     $double_reg_query_true = mysqli_fetch_assoc($double_reg_query);
                     $res = $double_reg_query_true['login'];
                     echo $res;
+                    echo $_SERVER['REQUEST_URI'];
                     ?>
                 </h2>
             </div>

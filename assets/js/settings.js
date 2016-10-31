@@ -40,12 +40,14 @@ $(function() {
 					$("#login").next().hide().html("Логин занят").css("color","red").fadeIn(400);
 					$("#login").removeClass().addClass("form-control inputRed");
 					loginStat = 0;	
-					buttonOnAndOff();			
+					buttonOnAndOff();
+					buttonOnAndOffRedact();			
 				}else{					
 					$("#login").removeClass().addClass("form-control inputGreen");
 					$("#login").next().text("");
 					loginStat = 1;
 					buttonOnAndOff();
+					buttonOnAndOffRedact();
 				}			
 				
 			}
@@ -70,6 +72,7 @@ $(function() {
 			$("#email").removeClass().addClass("form-control inputRed");
 			emailStat = 0;
 			buttonOnAndOff();
+			buttonOnAndOffRedact();
 		}else{
 			$.ajax({
 			url: "functions.php",
@@ -81,12 +84,14 @@ $(function() {
 					$("#email").next().hide().html("Email занят").css("color","red").fadeIn(400);
 					$("#email").removeClass().addClass("form-control inputRed");	
 					emailStat = 0;
-					buttonOnAndOff();				
+					buttonOnAndOff();
+					buttonOnAndOffRedact();				
 				}else{					
 					$("#email").removeClass().addClass("form-control inputGreen");
 					$("#email").next().text("");
 					emailStat = 1;
-					buttonOnAndOff();	
+					buttonOnAndOff();
+					buttonOnAndOffRedact();	
 				}			
 				
 			}
@@ -131,11 +136,13 @@ $(function() {
 			$("#telephone").removeClass().addClass("form-control inputRed");
 			telephoneStat = 0;
 			buttonOnAndOff();
+			buttonOnAndOffRedact();
 		}else{
 			$("#telephone").removeClass().addClass("form-control inputGreen");
 			$("#telephone").next().text("");
 			telephoneStat = 1;
 			buttonOnAndOff();
+			buttonOnAndOffRedact();
 		}		
 	});
 	$("#telephone").keyup(function(){
@@ -224,12 +231,14 @@ $(function() {
 					$("#city").next().hide().html("Город введен неверно").css("color","red").fadeIn(400);
 					$("#city").removeClass().addClass("form-control inputRed");	
 					cityStat = 0;
-					buttonOnAndOff();				
+					buttonOnAndOff();
+					buttonOnAndOffRedact();				
 				}else{					
 					$("#city").removeClass().addClass("form-control inputGreen");
 					$("#city").next().text("");
 					cityStat = 1;
-					buttonOnAndOff();	
+					buttonOnAndOff();
+					buttonOnAndOffRedact();	
 				}				
 			}
 			});
@@ -238,6 +247,7 @@ $(function() {
 			$("#city").removeClass().addClass("form-control inputRed");	
 			cityStat = 0;
 			buttonOnAndOff();
+			buttonOnAndOffRedact();
 		}	
 	});
 	$("#city").keyup(function(){
@@ -255,11 +265,13 @@ $(function() {
 			$("#street").removeClass().addClass("form-control input-street inputRed");
 			streetStat = 0;
 			buttonOnAndOff();
+			buttonOnAndOffRedact();
 		}else{
 			$("#street").removeClass().addClass("form-control input-street inputGreen");
 			$("#street").next().text("");
 			streetStat = 1;
 			buttonOnAndOff();
+			buttonOnAndOffRedact();
 		}		
 	});
 	$("#street").keyup(function(){
@@ -275,11 +287,13 @@ $(function() {
 			$("#building").removeClass().addClass("form-control input-street inputRed");
 			buildingStat = 0;
 			buttonOnAndOff();
+			buttonOnAndOffRedact();
 		}else{
 			$("#building").removeClass().addClass("form-control input-street inputGreen");
 			$("#building").next().text("");
 			buildingStat = 1;
 			buttonOnAndOff();
+			buttonOnAndOffRedact();
 		}		
 	});
 	$("#building").keyup(function(){
@@ -303,13 +317,16 @@ $(function() {
 				if(response == "no"){
 					$("#passwordlate").next().hide().html("Не верный пароль").css("color","red").fadeIn(400);
 					$("#passwordlate").removeClass().addClass("form-control inputRed");
+					$("#passwordnew").val("").removeClass("inputGreen inputGreen");
 					passwordlateStat = 0;	
-					buttonOnAndOffPassword();			
+					buttonOnAndOffPassword();	
+					buttonOnAndOffRedact();		
 				}else{					
 					$("#passwordlate").removeClass().addClass("form-control inputGreen");
 					$("#passwordlate").next().text("");
 					passwordlateStat = 1;
 					buttonOnAndOffPassword();
+					buttonOnAndOffRedact();
 				}			
 				
 			}
@@ -340,12 +357,12 @@ $(function() {
 			$("#passwordnew").next().hide().text("Слишком короткий пароль").css("color","red").fadeIn(400);
 			$("#passwordnew").removeClass().addClass("form-control inputRed");
 			passwordStat = 0;
-			buttonOnAndOff();
+			buttonOnAndOffRedact();
 		}else{
 			$("#passwordnew").removeClass().addClass("form-control inputGreen");
 			$("#passwordnew").next().text("");
 			passwordStat = 1;
-			buttonOnAndOff();
+			buttonOnAndOffRedact();
 		}		
 	});
 	$("#passwordnew").keyup(function(){
@@ -353,6 +370,15 @@ $(function() {
 		$("#passwordnew").removeClass("inputRed");
 		$("#passwordnew").next().text("");
 	});
+
+	function buttonOnAndOffRedact(){
+		if(emailStat == 1 || loginStat == 1 || telephoneStat == 1 || cityStat == 1 || streetStat == 1 || buildingStat == 1 || passwordlateStat == 1 && passwordStat == 1){
+			$("#submitredact").removeAttr("disabled");
+		}else{
+			$("#submitredact").attr("disabled","disabled");
+		}
+	
+	}
 
 	
 }); //End functions()

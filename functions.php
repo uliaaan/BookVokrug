@@ -2,8 +2,6 @@
 	session_start();
 	$connect = mysqli_connect('localhost', 'root', '12345678','bookvokrug');
 
-if(!$_SESSION['userlogin']) {
-
 	/*Обработчик если логин занят*/
 	if(isset($_GET['login'])){
 		$login = $_GET['login'];
@@ -74,7 +72,6 @@ if(!$_SESSION['userlogin']) {
 		echo $login;
 	}
 */
-}
 
 	/*Обработчик если город введен не венро*/
 	if(isset($_GET['city'])){
@@ -105,40 +102,71 @@ if(!$_SESSION['userlogin']) {
 
 /*Если пользоваетль в сессии*/
 if ($_SESSION['userlogin']) {
-		$userlogin = $_SESSION['userlogin'];
-		$userdatequery = $connect->query("SELECT * FROM `users` WHERE `login` = '$userlogin'");
-		$userdatequery_mass = mysqli_fetch_assoc($userdatequery);
-        $useremail = $userdatequery_mass['email'];
-        $usertelephone = $userdatequery_mass['telephone'];
-        $usercity_id = $userdatequery_mass['city_id'];
-        $usercity_query = $connect->query("SELECT `city` FROM `citys` WHERE `id` = '$usercity_id'");
-		$usercity_id_true = mysqli_fetch_assoc($usercity_query);
-        $usercity = $usercity_id_true['city'];
-        $userstreet = $userdatequery_mass['street'];
-        $userbuilding = $userdatequery_mass['building'];
-        $userpassword = $userdatequery_mass['password'];
-	
+	$userlogin = $_SESSION['userlogin'];
+	$userdatequery = $connect->query("SELECT * FROM `users` WHERE `login` = '$userlogin'");
+	$userdatequery_mass = mysqli_fetch_assoc($userdatequery);
+    $useremail = $userdatequery_mass['email'];
+    $usertelephone = $userdatequery_mass['telephone'];
+    $usercity_id = $userdatequery_mass['city_id'];
+    $usercity_query = $connect->query("SELECT `city` FROM `citys` WHERE `id` = '$usercity_id'");
+	$usercity_id_true = mysqli_fetch_assoc($usercity_query);
+    $usercity = $usercity_id_true['city'];
+    $userstreet = $userdatequery_mass['street'];
+    $userbuilding = $userdatequery_mass['building'];
+    $userpassword = $userdatequery_mass['password'];
 
-		/*Обработчки проверки пароля*/
-	    if(isset($_GET['passwordlate'])){
-			$password_late = md5($_GET['passwordlate']);
-			$password_latequery = $connect->query("SELECT `password` FROM `users` WHERE `password` = '$password_late'");
-			$password_latequery_mass = mysqli_fetch_assoc($password_latequery);
-			$password_late_true = $password_latequery_mass['password'];
-			if($password_late == $password_late_true){
-				echo "yes";
-			}else{
-				echo "no";
+
+	/*Обработчки проверки пароля*/
+    if(isset($_GET['passwordlate'])){
+		$password_late = md5($_GET['passwordlate']);
+		$password_latequery = $connect->query("SELECT `password` FROM `users` WHERE `password` = '$password_late'");
+		$password_latequery_mass = mysqli_fetch_assoc($password_latequery);
+		$password_late_true = $password_latequery_mass['password'];
+		if($password_late == $password_late_true){
+			echo "yes";
+		}else{
+			echo "no";
+		}
+	}
+
+
+	/*Изменение данных в профиле*/
+	if($_SERVER['REQUEST_URI'] === '/settingsprofile.php') {
+		if(isset($_POST['email']) or isset($_POST['telephone']) or isset($_POST['city']) or isset($_POST['street']) or isset($_POST['building'])) {
+			$useremail = htmlspecialchars(trim($_POST['email'])); 
+			$usertelephone = htmlspecialchars(trim($_POST['telephone'])); 
+			$usercity = htmlspecialchars(trim($_POST['city']));
+			//Достаем id города
+			$usercity_id = $connect->query("SELECT `id` FROM `citys` WHERE `city` = '$usercity'");
+			$usercity_id_true = mysqli_fetch_assoc($usercity_id);
+	        $res_city_id = $usercity_id_true['id'];
+			$userstreet = htmlspecialchars(trim($_POST['street'])); 
+			$userbuilding = htmlspecialchars(trim($_POST['building']));
+			$update_query = $connect->query("UPDATE `users` SET `email` = '$useremail', `telephone` = '$usertelephone', `city_id` = '$res_city_id', `street` = '$userstreet', `building` = '$userbuilding' WHERE `login` = '$userlogin'");
+				if ($update_query) {
+					header("Location: profile.php");
+				}
+		}
+		if (isset($_POST['passwordlate']) and isset($_POST['passwordnew'])) {
+			$passwordlate = md5(htmlspecialchars(trim($_POST['passwordlate'])));
+			$passwordnew = md5(htmlspecialchars(trim($_POST['passwordnew'])));
+			if($userpassword == $passwordlate){
+				$update_query_pass = $connect->query("UPDATE `users` SET `password` = '$passwordnew' WHERE `login` = '$userlogin'");
+				if ($update_query) {
+					header("Location: profile.php");
+				}
 			}
 		}
+	}
 
 
+    /*Выход с сайта*/
+	if (isset($_GET['exit'])) {
+		unset($_SESSION['userlogin']);
+		header("Location: index.php");
+	}
 
-        /*Выход с сайта*/
-		if (isset($_GET['exit'])) {
-			unset($_SESSION['userlogin']);
-			header("Location: index.php");
-		}
+
 }
 
 
