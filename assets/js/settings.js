@@ -4,9 +4,11 @@ var login,
 	telephone,
 	city,
 	street,
+	addtitlebook,
 	loginStat,
 	building,
 	passwordlate,
+	addtitlebookStat,
 	passwordlateStat,
 	emailStat,
 	passwordStat,
@@ -381,5 +383,53 @@ $(function() {
 	
 	}
 
+//ДОБАВЛЕНИЕ КНИГИ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	//Обработчик цены
+	document.getElementsByName("addpricebook")[0].onkeypress = function(e) {
+      e = e || event;
+      if (e.ctrlKey || e.altKey || e.metaKey) return;
+      var chr = getChar(e);
+      if (chr == null) return;
+      if (chr < '0' || chr > '9') {
+        return false;
+      }
+    }
+
+    //Заголовок книги
+	$("#addtitlebook").change(function(){
+	addtitlebook = $("#addtitlebook").val();
+		if(addtitlebook.length < 1){
+			$("#addtitlebook").next().hide().text("Введите название книги").css("color","red").fadeIn(400);
+			$("#addtitlebook").removeClass().addClass("form-control inputRed");
+			addtitlebookStat = 0;
+			buttonOnAndOff();
+		}else{
+			$("#addtitlebook").removeClass().addClass("form-control inputGreen");
+			$("#addtitlebook").next().text("");
+			addtitlebookStat = 1;
+			buttonOnAndOff();
+		}		
+	});
+	$("#addtitlebook").keyup(function(){
+		$("#addtitlebook").removeClass("inputGreen");
+		$("#addtitlebook").removeClass("inputRed");
+		$("#addtitlebook").next().text("");
+	});
+
+
+
 	
 }); //End functions()
+
+	//Изоображение отображаемое сразу после загрузки
+     function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#imgwiev').attr('src', e.target.result);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }

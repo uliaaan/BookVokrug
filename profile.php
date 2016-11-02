@@ -9,21 +9,8 @@
                     echo $update_user_data_notif;
                 } 
             ?>
+        <section id="profile" class="section-with-space">
             <div class="container">
-                <div class="row owner">
-                    <div class="text-center">
-                        <div class="userlogin">
-                            <h4>
-                                <? echo "Добрый день, " .$_SESSION['userlogin']. "!<br />
-                                    <small>
-                                        <a href='/settingsprofile.php' class='btn btn-simple btn-danger'><i class='fa fa-cog' aria-hidden='true'></i></a>
-                                        <a href='?exit' class='btn btn-simple btn-danger'><i class='fa fa-sign-out' aria-hidden='true'></i></a>
-                                        </small>
-                                "; ?>
-                            </h4>
-                        </div>
-                    </div>
-                </div>
                 <div class="profile-tabs">
                     <div class="nav-tabs-navigation">
                         <div class="nav-tabs-wrapper">
@@ -86,6 +73,7 @@
                     
                 </div>        
             </div>
+        </section>
         </div>
 <? } else {
     header("Location: / ");

@@ -55,8 +55,15 @@
           <a href="tutorial.html" class="btn btn-danger btn-simple">Tutorial</a>
         </li> -->
           <? if(isset($_SESSION['userlogin'])) { 
-          echo "<li>
-          <a href='/profile.php' class='btn btn-danger btn-simple'>" .$_SESSION['userlogin']. "</a>
+          echo "
+          
+          <li class='dropdown profile-menu-button'>
+            <a href='#' class='dropdown-toggle btn btn-danger' data-toggle='dropdown' aria-expanded='false'>" .$_SESSION['userlogin']. "<b class='caret'></b></a>
+            <ul class='dropdown-menu dropdown-menu-right'>
+              <li><a href='/profile.php'>Профиль</a></li>
+              <li><a href='/settingsprofile.php'>Редактировать</a></li>
+              <li><a href='?exit'>Выйти</a></li>
+            </ul>
           </li>
           <li>
           <a href='/addbook.php' class='btn btn-danger btn-fill'>Добавить книгу</a>"; 

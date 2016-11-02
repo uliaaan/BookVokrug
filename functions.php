@@ -185,6 +185,15 @@ if ($_SESSION['userlogin']) {
 		header("Location: index.php");
 	}
 
+
+	/*Подстановка жанра в поле селект лист*/
+	$getbookgenre = $connect->query("SELECT `genre` FROM `bookgenre`");
+	$getbookgenre_res = '';
+	 while($getbookgenre_mass = mysqli_fetch_assoc($getbookgenre))
+		{
+	  		$getbookgenre_res .= '<option value = "'.$getbookgenre_mass['genre'].'">'.$getbookgenre_mass['genre'].'</option>';
+		}
+
 }
 
 
