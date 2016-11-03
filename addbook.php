@@ -4,7 +4,7 @@
 	<div class="container center-block text-center">
 		<div class="row">
 			<h4 class="text-center">Добавить книгу</h4>
-			<form method="post" class="form">
+			<form method="post" class="form" enctype="multipart/form-data">
 				<div class="form-inline">
 					<label>Название книги</label>
 					<div class="input-add-book">
@@ -15,7 +15,7 @@
 				<div class="form-inline">
 					<label>Жанр</label>
 					<div class="input-add-book">
-						<select class="form-control second-role" id="addgenre">
+						<select name="bookgenre" class="form-control second-role" id="addgenre">
 						 	<? echo $getbookgenre_res; ?>
 						</select>
 						<div class="reg-red-text"></div>
@@ -41,13 +41,13 @@
 				<div class="form-inline">
 					<label>Фото</label>
 					<div class="input-add-book">
-						<input type="file" onchange="readURL(this);" />
+						<input name="uploadfile" type="file" id="uploadfile" onchange="readURL(this);" />
 						<img id="imgwiev"/>
 					</div>
 				</div>
 				
 				
-				<button name="submit" type="submit" id="submit-add-book" class="btn btn-success center-block" disabled>Добавить книгу</button>
+				<button name="submit" type="submit" id="submit-add-book" class="btn btn-success center-block">Добавить книгу</button>
 			</form>
 		</div>
 	</div>

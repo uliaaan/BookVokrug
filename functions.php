@@ -2,6 +2,7 @@
 	session_start();
 	$connect = mysqli_connect('localhost', 'root', '12345678','bookvokrug');
 
+
 	/*Обработчик если логин занят*/
 	if(isset($_GET['login'])){
 		$login = $_GET['login'];
@@ -109,6 +110,9 @@
 /*Если пользоваетль в сессии*/
 if ($_SESSION['userlogin']) {
 	$userlogin = $_SESSION['userlogin'];
+	$userid_query = $connect->query("SELECT `id` FROM `users` WHERE `login` = '$userlogin'");
+	$userid_query_mass = mysqli_fetch_assoc($userid_query);
+    $userlogin_id = $userid_query_mass['id'];
 	$userdatequery = $connect->query("SELECT * FROM `users` WHERE `login` = '$userlogin'");
 	$userdatequery_mass = mysqli_fetch_assoc($userdatequery);
     $useremail = $userdatequery_mass['email'];
@@ -173,10 +177,12 @@ if ($_SESSION['userlogin']) {
 				}
 			}
 		}
+
 	}
 
 	$update_user_data_notif = "<div class=\"alert alert-success\"><div class=\"container\">Данные успешно изменены</div></div>";
-	$update_user_data_notif_fallse = "<div class=\"alert alert-danger\"><div class=\"container\">Ошибка изменения данных</div></div>";
+	$addbook_notif = "<div class=\"alert alert-success\"><div class=\"container\">Книга успешно добавлена</div></div>";
+	$update_user_data_notif_fallse = "<div class=\"alert alert-danger\"><div class=\"container\">Ошибка</div></div>";
 
 
     /*Выход с сайта*/
@@ -189,10 +195,54 @@ if ($_SESSION['userlogin']) {
 	/*Подстановка жанра в поле селект лист*/
 	$getbookgenre = $connect->query("SELECT `genre` FROM `bookgenre`");
 	$getbookgenre_res = '';
-	 while($getbookgenre_mass = mysqli_fetch_assoc($getbookgenre))
-		{
+	while($getbookgenre_mass = mysqli_fetch_assoc($getbookgenre)) {
 	  		$getbookgenre_res .= '<option value = "'.$getbookgenre_mass['genre'].'">'.$getbookgenre_mass['genre'].'</option>';
+	}
+
+
+	/*Страница добавления книг*/
+	if($_SERVER['REQUEST_URI'] === '/addbook.php') {
+		if(isset($_POST['addtitlebook']) and isset($_POST['bookgenre']) and isset($_POST['addtextbook']) and isset($_POST['addpricebook'])) {
+		$addtitlebook = htmlspecialchars($_POST['addtitlebook']); 
+		$bookgenre = htmlspecialchars($_POST['bookgenre']);
+		$addtextbook = htmlspecialchars($_POST['addtextbook']); 
+		$addpricebook = htmlspecialchars(trim($_POST['addpricebook']));
+		//Достаем id жанра
+		$bookgenreid_query = $connect->query("SELECT `id` FROM `bookgenre` WHERE `genre` = '$bookgenre'");
+		$bookgenre_id_mass = mysqli_fetch_assoc($bookgenreid_query);
+        $bookgenre_id = $bookgenre_id_mass['id'];
+
+        /*Картинка в бд*/
+        $uploaddir = 'assets/userbooks/';
+        $uploadfile = $uploaddir.basename($_FILES['uploadfile']['name']);
+        if (copy($_FILES['uploadfile']['tmp_name'], $uploadfile))
+		{
+		echo "<h3>Файл успешно загружен на сервер</h3>";
 		}
+		else { echo "<h3>Ошибка! Не удалось загрузить файл на сервер!</h3>";
+		}
+		
+
+		$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgname`,`image`,`addtime`,`endtime`) VALUES ('','$userlogin_id','$addtitlebook','$bookgenre_id','$addtextbook','$addpricebook','$uploadfile','0', '0', '0')");
+			if ($addbook) {
+				header("Location: profile.php?addbook=1");
+			}
+		}
+
+		
+	}
+
+	function displayimage() {
+		global $connect;
+		$booksimg_res = $connect->query("SELECT `imgname` FROM `books`");
+
+		while($row = mysqli_fetch_assoc($booksimg_res)) {
+			echo '<img class="bgbooks" src="http://localhost:88/' .$row['imgname']. '"> ';
+		}
+	}
+
+
+
 
 }
 

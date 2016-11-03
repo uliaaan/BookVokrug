@@ -10,6 +10,7 @@
         <div class="section">
          <div class="container tim-container">
             <div class="tim-title">
+            <? displayimage(); ?>
                 <h2><?
                     $double_reg_query = $connect->query("SELECT `login` FROM `users` WHERE `login` = '123123'");
                     $double_reg_query_true = mysqli_fetch_assoc($double_reg_query);
