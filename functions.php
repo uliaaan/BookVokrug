@@ -182,7 +182,7 @@ if ($_SESSION['userlogin']) {
 
 	$update_user_data_notif = "<div class=\"alert alert-success\"><div class=\"container\">Данные успешно изменены</div></div>";
 	$addbook_notif = "<div class=\"alert alert-success\"><div class=\"container\">Книга успешно добавлена</div></div>";
-	$update_user_data_notif_fallse = "<div class=\"alert alert-danger\"><div class=\"container\">Ошибка</div></div>";
+	$addbook_size_fallse = "<div class=\"alert alert-danger\"><div class=\"container\">Слишком большой размер файла</div></div>";
 
 
     /*Выход с сайта*/
@@ -212,42 +212,78 @@ if ($_SESSION['userlogin']) {
 		$bookgenre_id_mass = mysqli_fetch_assoc($bookgenreid_query);
         $bookgenre_id = $bookgenre_id_mass['id'];
 
-        /*Картинка в бд*/
-        $uploaddir = 'assets/userbooks/';
-        $uploadfile = $uploaddir.basename($_FILES['uploadfile']['name']);
-        if (copy($_FILES['uploadfile']['tmp_name'], $uploadfile)) {
-			echo "<h3>Файл успешно загружен на сервер</h3>";
-		} else { 
-			echo "<h3>Ошибка! Не удалось загрузить файл на сервер!</h3>";
-		}
-
 		/*Дата добавления и окнчания*/
 		$addtime = time();
         $endtime = $addtime + 2592000;
 		
 
-		$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`) VALUES ('','$userlogin_id','$addtitlebook','$bookgenre_id','$addtextbook','$addpricebook','$uploadfile', '$addtime', '$endtime')");
-			if ($addbook) {
-				header("Location: profile.php?addbook=1");
+        /*Картинка в бд*/
+        $uploaddir = 'assets/userbooks/';
+        $uploadfilesize = $_FILES['uploadfile']['size'];
+        
+        /*Тип загружаемой картинки*/
+        $typeimg = strtolower(substr(strrchr($_FILES['uploadfile']['name'],'.'), 1));
+			switch (true)
+			{
+			    case in_array($typeimg, array('jpeg','jpe','jpg')):
+			    {
+			        $p = 'jpeg';
+			        break;
+			    }
+			    case ($typeimg =='gif'):
+			    {
+			        $p = 'gif';
+			        break;
+			    }
+			    case ($typeimg =='png'):
+			    {
+			        $p = 'png';
+			        break;
+			    }
 			}
-		}
 
+
+        	/*Проверка размера фото*/
+	        if (($_FILES['uploadfile']['type'] == 'image/gif' || $_FILES['uploadfile']['type'] == 'image/jpeg' || $_FILES['uploadfile']['type'] == 'image/png') && ($uploadfilesize <= 1024000)) {
+	        	/*Подстановка пути до картинки*/
+	        	$uploadfile = $uploaddir.$addtime.'.'.$p;
+		        copy($_FILES['uploadfile']['tmp_name'], $uploadfile);
+			
+				$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`) VALUES ('','$userlogin_id','$addtitlebook','$bookgenre_id','$addtextbook','$addpricebook','$uploadfile', '$addtime', '$endtime')");
+						if ($addbook) {
+							header("Location: profile.php?addbook=1");
+
+						}
+			
+			} else {
+				header("Location: profile.php?addbook=2");
+			}
+		} //Конец добавление книги
+
+		
+	} //Конец - страница добавления книги
+}// Конец $_SESSION['userlogin']
+
+
+	/*Вывод книг на главную страницу*/
+	function booksonmain() {
+		global $connect;
+		$booksrow = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books`");
+		
+			while($booksrow_res = mysqli_fetch_assoc($booksrow)) {
+				echo "<div class='books-block'>";
+					$booksrow_res['id'];
+					echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+				echo "</div>";
+			}
 		
 	}
 
-	function displayimage() {
-		global $connect;
-		$booksimg_res = $connect->query("SELECT `imgbookurl` FROM `books`");
-
-		while($row = mysqli_fetch_assoc($booksimg_res)) {
-			echo '<img class="bgbooks" src="http://localhost:88/' .$row['imgbookurl']. '"> ';
-		}
-	}
 
 
 
 
-}
+
 
 
     

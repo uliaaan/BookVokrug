@@ -47,7 +47,7 @@
 				</div>
 				
 				
-				<button name="submit" type="submit" id="submit-add-book" class="btn btn-success center-block">Добавить книгу</button>
+				<button name="submit" type="submit" id="submitaddbook" class="btn btn-success center-block" disabled>Добавить книгу</button>
 			</form>
 		</div>
 	</div>

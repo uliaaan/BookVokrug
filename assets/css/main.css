@@ -1139,3 +1139,18 @@ body {
     font-size: 11px;
     }
 }
+
+/* Блок с книгами на главной */
+.books-block {
+    width: 200px;
+    height: 300px;
+    border: 1px solid #000;
+    margin: 10px;
+    float: left;
+}
+
+.books-block img {
+    width: 200px;
+    height: 300px;
+    object-fit: cover;
+}

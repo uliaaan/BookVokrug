@@ -10,6 +10,8 @@
                     echo $update_user_data_notif;
                 } else if ($_GET['addbook'] == 1) {
                     echo $addbook_notif;
+                } else if ($_GET['addbook'] == 2) {
+                    echo $addbook_size_fallse;
                 }
             ?>
         <section id="profile" class="section-with-space">

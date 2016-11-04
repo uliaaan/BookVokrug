@@ -402,12 +402,12 @@ $(function() {
 			$("#addtitlebook").next().hide().text("Введите название книги").css("color","red").fadeIn(400);
 			$("#addtitlebook").removeClass().addClass("form-control inputRed");
 			addtitlebookStat = 0;
-			buttonOnAndOff();
+			buttonOnAndOffaddbook();
 		}else{
 			$("#addtitlebook").removeClass().addClass("form-control inputGreen");
 			$("#addtitlebook").next().text("");
 			addtitlebookStat = 1;
-			buttonOnAndOff();
+			buttonOnAndOffaddbook();
 		}		
 	});
 	$("#addtitlebook").keyup(function(){
@@ -415,6 +415,15 @@ $(function() {
 		$("#addtitlebook").removeClass("inputRed");
 		$("#addtitlebook").next().text("");
 	});
+
+	function buttonOnAndOffaddbook() {
+		if(addtitlebookStat == 1){
+			$("#submitaddbook").removeAttr("disabled");
+		} else {
+			$("#submitaddbook").attr("disabled","disabled");
+		}
+	
+	}
 
 
 
