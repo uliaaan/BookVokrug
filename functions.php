@@ -215,15 +215,18 @@ if ($_SESSION['userlogin']) {
         /*Картинка в бд*/
         $uploaddir = 'assets/userbooks/';
         $uploadfile = $uploaddir.basename($_FILES['uploadfile']['name']);
-        if (copy($_FILES['uploadfile']['tmp_name'], $uploadfile))
-		{
-		echo "<h3>Файл успешно загружен на сервер</h3>";
+        if (copy($_FILES['uploadfile']['tmp_name'], $uploadfile)) {
+			echo "<h3>Файл успешно загружен на сервер</h3>";
+		} else { 
+			echo "<h3>Ошибка! Не удалось загрузить файл на сервер!</h3>";
 		}
-		else { echo "<h3>Ошибка! Не удалось загрузить файл на сервер!</h3>";
-		}
+
+		/*Дата добавления и окнчания*/
+		$addtime = time();
+        $endtime = $addtime + 2592000;
 		
 
-		$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgname`,`image`,`addtime`,`endtime`) VALUES ('','$userlogin_id','$addtitlebook','$bookgenre_id','$addtextbook','$addpricebook','$uploadfile','0', '0', '0')");
+		$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`) VALUES ('','$userlogin_id','$addtitlebook','$bookgenre_id','$addtextbook','$addpricebook','$uploadfile', '$addtime', '$endtime')");
 			if ($addbook) {
 				header("Location: profile.php?addbook=1");
 			}
@@ -234,10 +237,10 @@ if ($_SESSION['userlogin']) {
 
 	function displayimage() {
 		global $connect;
-		$booksimg_res = $connect->query("SELECT `imgname` FROM `books`");
+		$booksimg_res = $connect->query("SELECT `imgbookurl` FROM `books`");
 
 		while($row = mysqli_fetch_assoc($booksimg_res)) {
-			echo '<img class="bgbooks" src="http://localhost:88/' .$row['imgname']. '"> ';
+			echo '<img class="bgbooks" src="http://localhost:88/' .$row['imgbookurl']. '"> ';
 		}
 	}
 

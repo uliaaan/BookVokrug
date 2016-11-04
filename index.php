@@ -12,6 +12,14 @@
             <div class="tim-title">
             <? displayimage(); ?>
                 <h2><?
+                echo time();
+                $adddate = time();
+                $lastdate = $adddate + 2592000;
+                echo "<br>";
+                echo $lastdate;
+                echo "<br>";
+
+        
                     $double_reg_query = $connect->query("SELECT `login` FROM `users` WHERE `login` = '123123'");
                     $double_reg_query_true = mysqli_fetch_assoc($double_reg_query);
                     $res = $double_reg_query_true['login'];
