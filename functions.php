@@ -271,10 +271,14 @@ if ($_SESSION['userlogin']) {
 		$booksrow = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books`");
 		
 			while($booksrow_res = mysqli_fetch_assoc($booksrow)) {
-				echo "<div class='books-block'>";
+				echo '<a href="book.php?id=' .$booksrow_res['id']. '"><div class="books-block">';
 					$booksrow_res['id'];
 					echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
-				echo "</div>";
+					echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
+					echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
+					echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
+
+				echo "</div></a>";
 			}
 		
 	}
