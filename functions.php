@@ -315,7 +315,7 @@ if ($_SESSION['userlogin']) {
 		global $userlogin_id;
 		$profile_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `booksold` WHERE `user_id` = '$userlogin_id'");
 		while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
-				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
+				echo '<a href="book.php?noactivebookid=' .$booksrow_res['id']. '"><div class="books-block">';
 					$booksrow_res['id'];
 					echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
 					echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
@@ -326,8 +326,56 @@ if ($_SESSION['userlogin']) {
 			}
 		}
 
-}// Конец $_SESSION['userlogin']
 
+	/*Страница книги устаревшей*/
+	if (isset($_GET['noactivebookid'])) {
+		$bookid = $_GET['noactivebookid'];
+		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `booksold` WHERE `id` = '$bookid'"); //Запрос на вывод данных по запрошенному айдишник
+		while($bookquery_res = mysqli_fetch_assoc($bookquery)) { //Циклом решаем проблему сравнения нескольких полей
+				if ($bookquery_res['user_id'] == $userlogin_id) { //Если серв находит второе совпадение - БИНГО
+					$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `booksold` WHERE `id` = '$bookid'");
+					$bookquery_res = mysqli_fetch_assoc($bookquery);
+					$booktitle = $bookquery_res['booktitle'];
+					
+					$book_price = $bookquery_res['price'];
+					$book_imgbookurl = $bookquery_res['imgbookurl'];
+					$book_addtime = $bookquery_res['addtime'];
+					$book_endtime = $bookquery_res['endtime'];
+
+					/*Данные продавца*/
+					$book_user_id = $bookquery_res['user_id'];
+					$book_user_id_query = $connect->query("SELECT `id`, `login`, `password`,`email`,`telephone`,`city_id`,`street`,`building` FROM `users` WHERE `id` = '$book_user_id'");
+					$book_user_id_query_mass = mysqli_fetch_assoc($book_user_id_query);
+					$book_user_login = $book_user_id_query_mass['login'];
+					$book_user_telephone = $book_user_id_query_mass['telephone'];
+					$book_user_street = $book_user_id_query_mass['street'];
+					$book_user_building = $book_user_id_query_mass['building'];
+
+					/*Данные жанра*/
+					$book_genre_id = $bookquery_res['bookgenre_id'];
+					$book_genre_id_query = $connect->query("SELECT `id`, `genre` FROM `bookgenre` WHERE `id` = '$book_genre_id'");
+					$book_genre_id_query_mass = mysqli_fetch_assoc($book_genre_id_query);
+					$book_genre_name = $book_genre_id_query_mass['genre'];
+
+					/*Перевод времени и подсчет остатка дней*/
+					if ($book_endtime > time()) {
+						$book_day_to_zero = ($book_endtime - time())/86400;
+					} else {
+						$book_day_to_zero = 0;
+					}
+				} else {
+					header("Location: profile.php");
+				}
+		} //Конец while
+		
+	}
+
+}// Конец $_SESSION['userlogin']
+	
+	/*Запрет на посещение устаревших книг*/
+	if (isset($_GET['noactivebookid']) && !$_SESSION['userlogin']) {
+		header("Location: profile.php");
+	}
 
 	/*Вывод имя профиля*/
 	function nameinprofile() {
