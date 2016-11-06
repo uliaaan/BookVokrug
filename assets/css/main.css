@@ -1198,3 +1198,98 @@ body {
     margin-top: 20px;
     color: #fff;
 }
+
+/* Страница книги */
+#bookpage {
+
+}
+
+.bookmb {
+    max-width: 800px;
+    border: 1px solid #e1e1e1;
+    margin: 0 auto;
+
+}
+
+.bookmb-title {
+    border-bottom: 1px solid #e1e1e1;
+    padding: 20px;
+}
+
+.bookmb-title h3 {
+    margin: 0px !important;
+
+}
+
+.bookmb-main {
+    display: flex;
+}
+
+.bookmb-img {
+    position: relative;
+    text-align: center;
+    display: inline-block;
+    vertical-align: top;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+.bookmb-img img{
+    position: relative;
+    height: 400px;
+}
+
+.bookmb-img-bg {
+    position: absolute;
+    display: block;
+    top: -13px;
+    left: -13px;
+    right: -13px;
+    bottom: -13px;
+    background: center no-repeat;
+    background-size: cover;
+    -webkit-filter: blur(13px);
+    filter: blur(13px);
+}
+
+.bookmb-info {
+    text-align: left;
+    padding: 5px 10px;
+    border-left: 1px solid #e1e1e1;
+}
+
+.bookmb-info-top {
+    float: left;
+    font-size: 12px;
+}
+
+.bookmb-info-top-right {
+    float: right;
+}
+
+.bookmb-info-main {
+    font-size: 20px;
+    text-align: left;
+}
+
+.bookmb-price {
+    position: absolute;
+    background: #eb2828;
+    padding: 1px 18px;
+    margin-top: 20px;
+    color: #fff;
+}
+
+.bookmb-contacts-tel a {
+    color: #EB5E28;
+}
+
+.bookmb-left {
+    width: 60%;
+}
+
+.bookmb-right {
+    width: 40%;
+    float: left;
+}
