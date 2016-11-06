@@ -1,4 +1,5 @@
 <? include ('header.php') ?>
+
     <div class="demo-header demo-header-image">
             <div class="motto">
                 <h1 class="title-uppercase"><? ?></h1>

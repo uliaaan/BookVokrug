@@ -1,5 +1,4 @@
 <? include ('header.php') ?>
-<? if ($_SESSION['userlogin']) { ?>
         <div class="profile-background"> 
             <div class="filter-black"></div>  
         </div>
@@ -17,62 +16,44 @@
         <section id="profile" class="section-with-space">
             <div class="container">
                 <div class="profile-tabs">
+                   <?   if($_SESSION['userlogin']) {
+                            if(!$_GET['userid'])  { 
+                    ?>
+
                     <div class="nav-tabs-navigation">
                         <div class="nav-tabs-wrapper">
                             <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-                                <li class="active"><a href="#follows" data-toggle="tab">Follows</a></li>
-                                <li><a href="#following" data-toggle="tab">Following</a></li>
-<!--                                 <li><a href="#following" data-toggle="tab">Following</a></li> -->
+                                <li class="active"><a href="#activebooks" data-toggle="tab">Активные</a></li>
+                                <li><a href="#notactivebooks" data-toggle="tab">Устаревшие</a></li>
                             </ul>
                         </div>
                     </div>
+
+                       <?     
+                            }
+                        } 
+                        ?>
                     <div id="my-tab-content" class="tab-content">
-                        <div class="tab-pane active" id="follows">
+                        <div class="tab-pane active" id="activebooks">
                             <div class="row">
-                                <div class="col-md-6 col-md-offset-3">
-                                    <ul class="list-unstyled follows">
-                                        <li>
-                                            <div class="row">
-                                                <div class="col-md-2 col-md-offset-0 col-xs-3 col-xs-offset-2">
-                                                    <img src="../assets/paper_img/flume.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-                                                </div>
-                                                <div class="col-md-7 col-xs-4">
-                                                    <h6>Flume<br /><small>Musical Producer</small></h6>
-                                                </div>
-                                                <div class="col-md-3 col-xs-2">
-                                                    <div class="unfollow" rel="tooltip" title="Unfollow">
-                                                        <label class="checkbox" for="checkbox1" >
-                                                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox" checked>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <hr />
-                                        <li>
-                                            <div class="row">
-                                                <div class="col-md-2 col-md-offset-0 col-xs-3 col-xs-offset-2">
-                                                    <img src="../assets/paper_img/banks.jpg" alt="Circle Image" class="img-circle img-no-padding img-responsive">
-                                                </div>
-                                                <div class="col-md-7 col-xs-4">
-                                                    <h6>Banks<br /><small>Singer</small></h6>
-                                                </div>
-                                                <div class="col-md-3 col-xs-2">
-                                                    <div class="unfollow" rel="tooltip" title="Unfollow">
-                                                        <label class="checkbox" for="checkbox1" >
-                                                            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox" checked>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
+                            <? if($_SESSION['userlogin']) {
+                                    if($_GET['userid'])  {
+
+                                        echo profile_user_get();
+                                    } else {
+                                        echo profile_user();
+                                    }
+                                } else if ($_SERVER['REQUEST_URI'] === '/profile.php') {
+                                    header("Location: / ");
+                                } else {
+                                    echo profile_booksonmain();
+                                }
+                            ?>
                             </div>
                         </div>
-                        <div class="tab-pane text-center" id="following">
-                            <h3 class="text-muted">Not following anyone yet :(</h3>
-                            <btn class="btn btn-warning btn-fill">Find artists</btn>
+                        <div class="tab-pane" id="notactivebooks">
+
+                           <? echo profile_user_noactualbooks(); ?>
                         </div>
                     </div>
                     
@@ -80,7 +61,4 @@
             </div>
         </section>
         </div>
-<? } else {
-    header("Location: / ");
-    } ?>
 <? include ('footer.php') ?>

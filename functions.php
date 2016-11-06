@@ -164,21 +164,21 @@ if ($_SESSION['userlogin']) {
 				if ($update_query) {
 					header("Location: profile.php?edituserprofile=1");
 				}
-		}
+	}
 
-		/*Обновление информации по паролю*/
-		if (isset($_POST['passwordlate']) and isset($_POST['passwordnew'])) {
-			$passwordlate = md5(htmlspecialchars(trim($_POST['passwordlate'])));
-			$passwordnew = md5(htmlspecialchars(trim($_POST['passwordnew'])));
-			if($userpassword == $passwordlate){
-				$update_query_pass = $connect->query("UPDATE `users` SET `password` = '$passwordnew' WHERE `login` = '$userlogin'");
-				if ($update_query_pass) {
-					header("Location: profile.php?edituserprofile=1");
-				}
+	/*Обновление информации по паролю*/
+	if (isset($_POST['passwordlate']) and isset($_POST['passwordnew'])) {
+		$passwordlate = md5(htmlspecialchars(trim($_POST['passwordlate'])));
+		$passwordnew = md5(htmlspecialchars(trim($_POST['passwordnew'])));
+		if($userpassword == $passwordlate){
+			$update_query_pass = $connect->query("UPDATE `users` SET `password` = '$passwordnew' WHERE `login` = '$userlogin'");
+			if ($update_query_pass) {
+				header("Location: profile.php?edituserprofile=1");
 			}
 		}
-
 	}
+	} //Конец $_SERVER['REQUEST_URI'] === '/settingsprofile.php'
+	
 
 	$update_user_data_notif = "<div class=\"alert alert-success\"><div class=\"container\">Данные успешно изменены</div></div>";
 	$addbook_notif = "<div class=\"alert alert-success\"><div class=\"container\">Книга успешно добавлена</div></div>";
@@ -243,33 +243,108 @@ if ($_SESSION['userlogin']) {
 			}
 
 
-        	/*Проверка размера фото*/
-	        if (($_FILES['uploadfile']['type'] == 'image/gif' || $_FILES['uploadfile']['type'] == 'image/jpeg' || $_FILES['uploadfile']['type'] == 'image/png') && ($uploadfilesize <= 1024000)) {
-	        	/*Подстановка пути до картинки*/
-	        	$uploadfile = $uploaddir.$addtime.'.'.$p;
-		        copy($_FILES['uploadfile']['tmp_name'], $uploadfile);
-			
-				$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`) VALUES ('','$userlogin_id','$addtitlebook','$bookgenre_id','$addtextbook','$addpricebook','$uploadfile', '$addtime', '$endtime')");
-						if ($addbook) {
-							header("Location: profile.php?addbook=1");
+    	/*Проверка размера фото*/
+        if (($_FILES['uploadfile']['type'] == 'image/gif' || $_FILES['uploadfile']['type'] == 'image/jpeg' || $_FILES['uploadfile']['type'] == 'image/png') && ($uploadfilesize <= 1024000)) {
+        	/*Подстановка пути до картинки*/
+        	$uploadfile = $uploaddir.$addtime.'.'.$p;
+	        copy($_FILES['uploadfile']['tmp_name'], $uploadfile);
+		
+			$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`) VALUES ('','$userlogin_id','$addtitlebook','$bookgenre_id','$addtextbook','$addpricebook','$uploadfile', '$addtime', '$endtime')");
+					if ($addbook) {
+						header("Location: profile.php?addbook=1");
 
-						}
-			
-			} else {
-				header("Location: profile.php?addbook=2");
-			}
+					}
+		
+		} else {
+			header("Location: profile.php?addbook=2");
+		}
 		} //Конец добавление книги
 
 		
 	} //Конец - страница добавления книги
+
+
+
+
+		/*Вывод профиля*/
+		function profile_user() {
+		global $connect;
+		global $userlogin_id;
+		$profile_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `user_id` = '$userlogin_id'");
+		while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
+				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
+					$booksrow_res['id'];
+					echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+					echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
+					echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
+					echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
+
+				echo "</div></a>";
+			}
+		}
+
+
+		/*Вывод если есть запрос на профиль*/
+		function profile_user_get() {
+		global $connect;
+		global $userlogin_id;
+		global $profile_user_id;
+		$profile_user_id = $_GET['userid'];
+		nameinprofile();
+			if ($profile_user_id == $userlogin_id) {
+				header("Location: profile.php");
+			} else {
+				$profile_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `user_id` = '$profile_user_id'");
+					while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
+						echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
+							$booksrow_res['id'];
+							echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+							echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
+							echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
+							echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
+
+						echo "</div></a>";
+					}
+			}
+		}
+
+
+		/*Вывод неактуальных книг*/
+		function profile_user_noactualbooks() {
+		global $connect;
+		global $userlogin_id;
+		$profile_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `booksold` WHERE `user_id` = '$userlogin_id'");
+		while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
+				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
+					$booksrow_res['id'];
+					echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+					echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
+					echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
+					echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
+
+				echo "</div></a>";
+			}
+		}
+
 }// Конец $_SESSION['userlogin']
 
+
+	/*Вывод имя профиля*/
+	function nameinprofile() {
+		global $connect;
+		global $profile_user_id;
+		$userlogininprofile_query = $connect->query("SELECT `id`, `login`, `password`,`email`,`telephone`,`city_id`,`street`,`building` FROM `users` WHERE `id` = '$profile_user_id'");
+		$userlogininprofile_mass = mysqli_fetch_assoc($userlogininprofile_query);
+		$userlogininprofile = $userlogininprofile_mass['login'];
+		echo '<h3 class="text-center">Профиль пользователя - ' .$userlogininprofile. '</h3>';
+		echo '<br>';
+	}
 
 	/*Вывод книг на главную страницу*/
 	function booksonmain() {
 		global $connect;
 		$booksrow = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books`");
-		
+			
 			while($booksrow_res = mysqli_fetch_assoc($booksrow)) {
 				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
 					$booksrow_res['id'];
@@ -320,13 +395,38 @@ if ($_SESSION['userlogin']) {
 	}
 
 
+	/*Страница профиля*/
+	function profile_booksonmain() {
+
+	global $connect;
+	if (isset($_GET['userid'])) {
+		global $profile_user_id;
+		$profile_user_id = $_GET['userid'];
+		nameinprofile();
+		$profile_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `user_id` = '$profile_user_id'");
+		while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
+				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
+					$booksrow_res['id'];
+					echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+					echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
+					echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
+					echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
+
+				echo "</div></a>";
+			}
+		}
+	}
 
 
+	/*Перенос данных по книге в новую таблицу и удаление из старой*/
 
-
-
-
-    
-		
-	
+	$transfer_book_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books`");
+	while($transfer_book_mass = mysqli_fetch_assoc($transfer_book_query)) {
+		$transfer_book_id = $transfer_book_mass['id'];
+		$transfer_book_end_time = $transfer_book_mass['endtime'];
+			if ($transfer_book_end_time < time()) {
+				$connect->query("INSERT INTO `booksold` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`) SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `id`='$transfer_book_id'");
+				$connect->query("DELETE FROM `books` WHERE `id`='$transfer_book_id'");
+			}
+	}	
 ?>

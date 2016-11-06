@@ -24,7 +24,7 @@
 						<h6><small>Осталось дней:</small><br> 
 							<? echo (int)$book_day_to_zero; ?></h6>
 						<h6><small>Продавец</small><br>
-							<? echo $book_user_login; ?></h6>			
+							<a href="profile.php?userid=<? echo$book_user_id; ?>"><? echo $book_user_login; ?></a></h6>			
 						<div class="bookmb-contacts-tel">
 						<h6><small>Телефон</small><br>
 							<a href="tel: 8<? echo $book_user_telephone; ?>">+7<? echo $book_user_telephone; ?></a></h6>
