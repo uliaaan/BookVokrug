@@ -4,13 +4,17 @@
         </div>
         <div class="profile-content section-nude">
         <!-- Сообщение об успешном редактировании данных -->
-            <?
+            <? 
             if ($_GET['edituserprofile'] == 1) {
                     echo $update_user_data_notif;
                 } else if ($_GET['addbook'] == 1) {
                     echo $addbook_notif;
                 } else if ($_GET['addbook'] == 2) {
                     echo $addbook_size_fallse;
+                } else if ($_GET['editbook'] == 1) {
+                    echo $update_user_data_notif;
+                } else if ($_GET['editbook'] == 2) {
+                    echo $editbook_fallse;
                 }
             ?>
         <section id="profile" class="section-with-space">
