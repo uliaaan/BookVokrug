@@ -325,7 +325,6 @@ if ($_SESSION['userlogin']) {
 					echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
 					echo '<div class="books-block-gradient"></div>';
 					echo '<div class="up-book-button"><a href="?upbookid=' .$booksrow_res['id']. '"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></div>';
-					echo '<div class="edit-book-button"><a href="settingsbook.php?editbookid=' .$booksrow_res['id']. '"><i class="fa fa-cog" aria-hidden="true"></i></a></div>';
 					echo '<div class="delete-book-button"><a href="?deletebookid=' .$booksrow_res['id']. '"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>';	
 					echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
 					echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
@@ -385,7 +384,7 @@ if ($_SESSION['userlogin']) {
 	if (isset($_GET['editbookid'])) {
 		$editbookid = $_GET['editbookid'];
 		//Супер запрос на поиск из двух таблиц
-		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `id` = '$editbookid' UNION SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `booksold` WHERE `id` = '$editbookid'"); //Запрос на вывод данных по запрошенному айдишник
+		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `id` = '$editbookid'"); //Запрос на вывод данных по запрошенному айдишник
 		while($bookquery_res = mysqli_fetch_assoc($bookquery)) { //Циклом решаем проблему сравнения нескольких полей
 				if ($bookquery_res['user_id'] == $userlogin_id) { //Если серв находит второе совпадение - БИНГО
 					$booktitle = $bookquery_res['booktitle'];
@@ -441,10 +440,6 @@ if ($_SESSION['userlogin']) {
 				    }
 				}
 
-			//Проверка на таблицу в которую мы будем записывать изменнения
-	        $select_table_book = $connect->query("SELECT `id` FROM `booksold` WHERE `id` = '$editbookid'");
-
-			if($select_table_book == false) {
 		    	/*Проверка размера фото*/
 		       if (($_FILES['uploadfile']['type'] == 'image/gif' || $_FILES['uploadfile']['type'] == 'image/jpeg' || $_FILES['uploadfile']['type'] == 'image/png') && ($uploadfilesize <= 1024000) && ($uploadfilesize != 0)) {
 		        	$uploadfile = $uploaddir.$addtime.'.'.$p;
@@ -465,30 +460,6 @@ if ($_SESSION['userlogin']) {
 				} else {
 					header("Location: profile.php?editbook=2");
 				}
-			} else {
-				if (($_FILES['uploadfile']['type'] == 'image/gif' || $_FILES['uploadfile']['type'] == 'image/jpeg' || $_FILES['uploadfile']['type'] == 'image/png') && ($uploadfilesize <= 1024000) && ($uploadfilesize != 0)) {
-		        	
-		        	$uploadfile = $uploaddir.$addtime.'.'.$p;
-			        copy($_FILES['uploadfile']['tmp_name'], $uploadfile);
-				
-					$editbook = $connect->query("UPDATE `booksold` SET `booktitle` = '$edittitlebook', `bookgenre_id` = '$editbookgenre_id', `price` = '$editpricebook', `imgbookurl` = '$uploadfile' WHERE `id` = '$editbookid'");
-							if ($editbook) {
-								header("Location: profile.php?editbook=1");
-							} else {
-								header("Location: profile.php?editbook=2");
-							}
-				} else if ($uploadfilesize == 0) {
-					$editbook = $connect->query("UPDATE `booksold` SET `booktitle` = '$edittitlebook', `bookgenre_id` = '$editbookgenre_id', `price` = '$editpricebook' WHERE `id` = '$editbookid'");
-					if ($editbook) {
-								header("Location: profile.php?editbook=1");
-							} else {
-								header("Location: profile.php?editbook=2");
-							}
-				} else {
-					header("Location: profile.php?editbook=2");
-				}
-			}//Конец выбора таблицы которую редактируем
-
 			} //Конец добавление книги
 
 	}// Конец isset($_GET['editbookid'])
