@@ -15,6 +15,8 @@
                     echo $update_user_data_notif;
                 } else if ($_GET['editbook'] == 2) {
                     echo $editbook_fallse;
+                } else if ($_GET['delbook'] == 1) {
+                    echo $delbook_true;
                 }
             ?>
         <section id="profile" class="section-with-space">

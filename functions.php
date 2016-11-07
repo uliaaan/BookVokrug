@@ -182,6 +182,7 @@ if ($_SESSION['userlogin']) {
 
 	$update_user_data_notif = "<div class=\"alert alert-success\"><div class=\"container\">Данные успешно изменены</div></div>";
 	$addbook_notif = "<div class=\"alert alert-success\"><div class=\"container\">Книга успешно добавлена</div></div>";
+	$delbook_true = "<div class=\"alert alert-success\"><div class=\"container\">Книга успешно удалена</div></div>";
 	$addbook_size_fallse = "<div class=\"alert alert-danger\"><div class=\"container\">Слишком большой размер файла</div></div>";
 	$editbook_fallse = "<div class=\"alert alert-danger\"><div class=\"container\">Ошибка</div></div>";
 
@@ -191,6 +192,60 @@ if ($_SESSION['userlogin']) {
 		unset($_SESSION['userlogin']);
 		header("Location: index.php");
 	}
+
+	//Удаление книги
+	if (isset($_GET['deletebookid'])) {
+		$userlogin_id;
+		$bookid = $_GET['deletebookid'];
+		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `id` = '$bookid'"); //Запрос на вывод данных по запрошенному айдишник
+		while($bookquery_res = mysqli_fetch_assoc($bookquery)) { //Циклом решаем проблему сравнения нескольких полей
+			if ($bookquery_res['user_id'] == $userlogin_id) { 
+				$bookdel_query = $connect->query("DELETE FROM `books` WHERE `id` = '$bookid'");
+					if ($bookdel_query) {
+						header("Location: profile.php?delbook=1");
+					} else {
+						header("Location: profile.php?addbook=2");
+					}
+			}
+		}
+	}
+
+	//Удаление книги из второй таблицы
+	if (isset($_GET['deletebookid'])) {
+		$userlogin_id;
+		$bookid = $_GET['deletebookid'];
+		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `booksold` WHERE `id` = '$bookid'"); //Запрос на вывод данных по запрошенному айдишник
+		while($bookquery_res = mysqli_fetch_assoc($bookquery)) { //Циклом решаем проблему сравнения нескольких полей
+			if ($bookquery_res['user_id'] == $userlogin_id) { 
+				$bookdel_query = $connect->query("DELETE FROM `booksold` WHERE `id` = '$bookid'");
+					if ($bookdel_query) {
+						header("Location: profile.php?delbook=1");
+					} else {
+						header("Location: profile.php?addbook=2");
+					}
+			}
+		}
+	}
+
+	//Поднять книгу по времени
+	if (isset($_GET['upbookid'])) {
+		$userlogin_id;
+		$bookid = $_GET['upbookid'];
+		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `booksold` WHERE `id` = '$bookid'"); //Запрос на вывод данных по запрошенному айдишник
+		while($bookquery_res = mysqli_fetch_assoc($bookquery)) { //Циклом решаем проблему сравнения нескольких полей
+			if ($bookquery_res['user_id'] == $userlogin_id) { 
+				$addtime_new = time();
+        		$endtime_new = $addtime_new + 2592000;
+				$uptimebook = $connect->query("UPDATE `booksold` SET `endtime` = '$endtime_new' WHERE `id` = '$bookid'");
+					if ($uptimebook) {
+						header("Location: profile.php?edituserprofile=1");
+					} else {
+						header("Location: profile.php?editbook=2");
+					}
+			}
+		}
+	}
+
 
 
 	/*Подстановка жанра в поле селект лист*/
@@ -462,6 +517,9 @@ if ($_SESSION['userlogin']) {
 				}
 			} //Конец добавление книги
 
+
+
+
 	}// Конец isset($_GET['editbookid'])
 
 
@@ -491,7 +549,7 @@ if ($_SESSION['userlogin']) {
 	/*Вывод книг на главную страницу*/
 	function booksonmain() {
 		global $connect;
-		$booksrow = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books`");
+		$booksrow = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` ORDER BY `id` DESC");
 			
 			while($booksrow_res = mysqli_fetch_assoc($booksrow)) {
 				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
@@ -569,7 +627,6 @@ if ($_SESSION['userlogin']) {
 
 
 	/*Перенос данных по книге в новую таблицу и удаление из старой*/
-
 	$transfer_book_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books`");
 	while($transfer_book_mass = mysqli_fetch_assoc($transfer_book_query)) {
 		$transfer_book_id = $transfer_book_mass['id'];
@@ -578,5 +635,18 @@ if ($_SESSION['userlogin']) {
 				$connect->query("INSERT INTO `booksold` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`) SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `id`='$transfer_book_id'");
 				$connect->query("DELETE FROM `books` WHERE `id`='$transfer_book_id'");
 			}
-	}	
+	}
+
+
+
+	//Перенос устаревшей книги после поднятия
+	$transfer_book_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `booksold`");
+	while($transfer_book_mass = mysqli_fetch_assoc($transfer_book_query)) {
+		$transfer_book_id = $transfer_book_mass['id'];
+		$transfer_book_end_time = $transfer_book_mass['endtime'];
+			if ($transfer_book_end_time > time()) {
+				$connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`) SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `booksold` WHERE `id`='$transfer_book_id'");
+				$connect->query("DELETE FROM `booksold` WHERE `id`='$transfer_book_id'");
+			}
+	}
 ?>
