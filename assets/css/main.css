@@ -1149,6 +1149,14 @@ body {
     background-color: #000;
 }
 
+.books-block a {
+    color: #fff;
+}
+
+.books-block a:hover {
+    color: #EB5E28;
+}
+
 .books-block:hover{
     box-shadow: 0 0 15px #000;
     cursor: pointer;
@@ -1159,6 +1167,13 @@ body {
     height: 300px;
     object-fit: cover;
     position: absolute;
+}
+
+.books-block-gradient {
+    width: 200px;
+    height: 150px;
+    position: absolute;
+    background: linear-gradient(to bottom, #000, transparent);
 }
 
 .bookline {
@@ -1292,4 +1307,22 @@ body {
 .bookmb-right {
     width: 40%;
     float: left;
+}
+
+.edit-book-button {
+    margin-left: 160px;
+    position: absolute; 
+    color: #fff;
+}
+
+.delete-book-button {
+    margin-left: 180px;
+    position: absolute; 
+    color: #fff;
+}
+
+.up-book-button {
+   margin-left: 160px;
+    position: absolute; 
+    color: #fff; 
 }

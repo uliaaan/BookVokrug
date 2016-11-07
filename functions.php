@@ -183,6 +183,7 @@ if ($_SESSION['userlogin']) {
 	$update_user_data_notif = "<div class=\"alert alert-success\"><div class=\"container\">Данные успешно изменены</div></div>";
 	$addbook_notif = "<div class=\"alert alert-success\"><div class=\"container\">Книга успешно добавлена</div></div>";
 	$addbook_size_fallse = "<div class=\"alert alert-danger\"><div class=\"container\">Слишком большой размер файла</div></div>";
+	$editbook_fallse = "<div class=\"alert alert-danger\"><div class=\"container\">Ошибка</div></div>";
 
 
     /*Выход с сайта*/
@@ -193,19 +194,18 @@ if ($_SESSION['userlogin']) {
 
 
 	/*Подстановка жанра в поле селект лист*/
-	$getbookgenre = $connect->query("SELECT `genre` FROM `bookgenre`");
+	$getbookgenre = $connect->query("SELECT `id`,`genre` FROM `bookgenre`");
 	$getbookgenre_res = '';
 	while($getbookgenre_mass = mysqli_fetch_assoc($getbookgenre)) {
-	  		$getbookgenre_res .= '<option value = "'.$getbookgenre_mass['genre'].'">'.$getbookgenre_mass['genre'].'</option>';
+	  		$getbookgenre_res .= '<option value = "'.$getbookgenre_mass['id'].'">'.$getbookgenre_mass['genre'].'</option>';
 	}
 
 
 	/*Страница добавления книг*/
 	if($_SERVER['REQUEST_URI'] === '/addbook.php') {
-		if(isset($_POST['addtitlebook']) and isset($_POST['bookgenre']) and isset($_POST['addtextbook']) and isset($_POST['addpricebook'])) {
+		if(isset($_POST['addtitlebook']) and isset($_POST['bookgenre']) and isset($_POST['addpricebook'])) {
 		$addtitlebook = htmlspecialchars($_POST['addtitlebook']); 
-		$bookgenre = htmlspecialchars($_POST['bookgenre']);
-		$addtextbook = htmlspecialchars($_POST['addtextbook']); 
+		$bookgenre = htmlspecialchars($_POST['bookgenre']); 
 		$addpricebook = htmlspecialchars(trim($_POST['addpricebook']));
 		//Достаем id жанра
 		$bookgenreid_query = $connect->query("SELECT `id` FROM `bookgenre` WHERE `genre` = '$bookgenre'");
@@ -249,7 +249,7 @@ if ($_SESSION['userlogin']) {
         	$uploadfile = $uploaddir.$addtime.'.'.$p;
 	        copy($_FILES['uploadfile']['tmp_name'], $uploadfile);
 		
-			$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`) VALUES ('','$userlogin_id','$addtitlebook','$bookgenre_id','$addtextbook','$addpricebook','$uploadfile', '$addtime', '$endtime')");
+			$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`) VALUES ('','$userlogin_id','$addtitlebook','$bookgenre_id','','$addpricebook','$uploadfile', '$addtime', '$endtime')");
 					if ($addbook) {
 						header("Location: profile.php?addbook=1");
 
@@ -273,11 +273,15 @@ if ($_SESSION['userlogin']) {
 		$profile_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `user_id` = '$userlogin_id'");
 		while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
 				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
-					$booksrow_res['id'];
+					$booksrow_res['id'];			
 					echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+					echo '<div class="books-block-gradient"></div>';
+					echo '<div class="edit-book-button"><a href="settingsbook.php?editbookid=' .$booksrow_res['id']. '"><i class="fa fa-cog" aria-hidden="true"></i></a></div>';
+					echo '<div class="delete-book-button"><a href="?deletebookid=' .$booksrow_res['id']. '"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>';	
 					echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
 					echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
 					echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
+					
 
 				echo "</div></a>";
 			}
@@ -296,9 +300,10 @@ if ($_SESSION['userlogin']) {
 			} else {
 				$profile_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `user_id` = '$profile_user_id'");
 					while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
-						echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
+						echo '<a href="book.php?editbookid=' .$booksrow_res['id']. '"><div class="books-block">';
 							$booksrow_res['id'];
 							echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+							echo '<div class="books-block-gradient"></div>';
 							echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
 							echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
 							echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
@@ -318,6 +323,9 @@ if ($_SESSION['userlogin']) {
 				echo '<a href="book.php?noactivebookid=' .$booksrow_res['id']. '"><div class="books-block">';
 					$booksrow_res['id'];
 					echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+					echo '<div class="books-block-gradient"></div>';
+					echo '<div class="up-book-button"><a href="?upbookid=' .$booksrow_res['id']. '"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></div>';
+					echo '<div class="delete-book-button"><a href="?deletebookid=' .$booksrow_res['id']. '"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>';	
 					echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
 					echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
 					echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
@@ -367,8 +375,100 @@ if ($_SESSION['userlogin']) {
 					header("Location: profile.php");
 				}
 		} //Конец while
+
+	}//Конец isset($_GET['noactivebookid'])
+
+
+
+	//Страница редактирования книги
+	if (isset($_GET['editbookid'])) {
+		$editbookid = $_GET['editbookid'];
+		//Супер запрос на поиск из двух таблиц
+		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `id` = '$editbookid'"); //Запрос на вывод данных по запрошенному айдишник
+		while($bookquery_res = mysqli_fetch_assoc($bookquery)) { //Циклом решаем проблему сравнения нескольких полей
+				if ($bookquery_res['user_id'] == $userlogin_id) { //Если серв находит второе совпадение - БИНГО
+					$booktitle = $bookquery_res['booktitle'];
+					$book_price = $bookquery_res['price'];
+					$book_imgbookurl = $bookquery_res['imgbookurl'];
+					$book_genre_id = $bookquery_res['bookgenre_id'];
+
+					/*Данные жанра*/
+					$book_genre_id = $bookquery_res['bookgenre_id'];
+					$book_genre_id_query = $connect->query("SELECT `id`, `genre` FROM `bookgenre` WHERE `id` = '$book_genre_id'");
+					$book_genre_id_query_mass = mysqli_fetch_assoc($book_genre_id_query);
+					$book_genre_name = $book_genre_id_query_mass['genre'];
+				} else {
+					header("Location: profile.php");
+				}
+			}
+
+			/*Запрос страницы редактирования книг*/
+			if(isset($_POST['edittitlebook']) and isset($_POST['editbookgenre']) and isset($_POST['editpricebook'])) {
+			$edittitlebook = htmlspecialchars($_POST['edittitlebook']); 
+			$editpricebook = htmlspecialchars(trim($_POST['editpricebook']));
+			$editbookgenre = htmlspecialchars($_POST['editbookgenre']); 
+			//Достаем id жанра
+			$bookgenreid_query = $connect->query("SELECT `id` FROM `bookgenre` WHERE `genre` = '$editbookgenre'");
+			$bookgenre_id_mass = mysqli_fetch_assoc($bookgenreid_query);
+	        $editbookgenre_id = $bookgenre_id_mass['id'];
+
+			/*Дата добавления и окнчания*/
+			$addtime = time();
+	    
+	        /*Картинка в бд*/
+	        $uploaddir = 'assets/userbooks/';
+	        $uploadfilesize = $_FILES['uploadfile']['size'];
+	        
+	        /*Тип загружаемой картинки*/
+	        $typeimg = strtolower(substr(strrchr($_FILES['uploadfile']['name'],'.'), 1));
+				switch (true)
+				{
+				    case in_array($typeimg, array('jpeg','jpe','jpg')):
+				    {
+				        $p = 'jpeg';
+				        break;
+				    }
+				    case ($typeimg =='gif'):
+				    {
+				        $p = 'gif';
+				        break;
+				    }
+				    case ($typeimg =='png'):
+				    {
+				        $p = 'png';
+				        break;
+				    }
+				}
+
+		    	/*Проверка размера фото*/
+		       if (($_FILES['uploadfile']['type'] == 'image/gif' || $_FILES['uploadfile']['type'] == 'image/jpeg' || $_FILES['uploadfile']['type'] == 'image/png') && ($uploadfilesize <= 1024000) && ($uploadfilesize != 0)) {
+		        	$uploadfile = $uploaddir.$addtime.'.'.$p;
+			        copy($_FILES['uploadfile']['tmp_name'], $uploadfile);
+					$editbook = $connect->query("UPDATE `books` SET `booktitle` = '$edittitlebook', `bookgenre_id` = '$editbookgenre_id', `price` = '$editpricebook', `imgbookurl` = '$uploadfile' WHERE `id` = '$editbookid'");
+							if ($editbook) {
+								header("Location: profile.php?editbook=1");
+							} else {
+								header("Location: profile.php?editbook=2");
+							}
+				} else if ($uploadfilesize == 0) {
+					$editbook = $connect->query("UPDATE `books` SET `booktitle` = '$edittitlebook', `bookgenre_id` = '$editbookgenre_id', `price` = '$editpricebook' WHERE `id` = '$editbookid'");
+					if ($editbook) {
+						header("Location: profile.php?editbook=1");
+					} else {
+						header("Location: profile.php?editbook=2");
+					}
+				} else {
+					header("Location: profile.php?editbook=2");
+				}
+			} //Конец добавление книги
+
+	}// Конец isset($_GET['editbookid'])
+
+
 		
-	}
+
+		
+
 
 }// Конец $_SESSION['userlogin']
 	
@@ -397,6 +497,7 @@ if ($_SESSION['userlogin']) {
 				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
 					$booksrow_res['id'];
 					echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+					echo '<div class="books-block-gradient"></div>';
 					echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
 					echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
 					echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
@@ -456,6 +557,7 @@ if ($_SESSION['userlogin']) {
 				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
 					$booksrow_res['id'];
 					echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+					echo '<div class="books-block-gradient"></div>';
 					echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
 					echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
 					echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
