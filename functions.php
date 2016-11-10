@@ -3,6 +3,51 @@
 	$connect = mysqli_connect('localhost', 'root', '12345678','bookvokrug');
 	date_default_timezone_set('Europe/Moscow');
 
+	function title() {
+	global $connect;
+	$page=$_GET['page'];
+	if ($_GET['bookid']) {
+		$bookid = $_GET['bookid'];
+		$bookquery = $connect->query("SELECT * FROM `books` WHERE `id` = '$bookid'");
+		$bookquery_res = mysqli_fetch_assoc($bookquery);
+		$booktitle = $bookquery_res['booktitle'];
+    } else if ($_GET['noactivebookid']) {
+    	$bookid = $_GET['noactivebookid'];
+		$bookquery = $connect->query("SELECT * FROM `booksold` WHERE `id` = '$bookid'");
+		$bookquery_res = mysqli_fetch_assoc($bookquery);
+		$booktitle = $bookquery_res['booktitle'];
+    } else if ($_GET['userid']) {
+    	$userid = $_GET['userid'];
+		$bookquery = $connect->query("SELECT * FROM `users` WHERE `id` = '$userid'");
+		$bookquery_res = mysqli_fetch_assoc($bookquery);
+		$userlogin = $bookquery_res['login'];
+    } else if ($_GET['editbookid']) {
+    	$bookid = $_GET['editbookid'];
+		$bookquery = $connect->query("SELECT * FROM `books` WHERE `id` = '$bookid'");
+		$bookquery_res = mysqli_fetch_assoc($bookquery);
+		$booktitle = $bookquery_res['booktitle'];
+    }
+
+
+		if($_SERVER['REQUEST_URI'] === '/index.php' || $_SERVER['REQUEST_URI'] === '/') {
+			echo 'БУКВОКРУГ - продай или купи книгу';
+		} else if ($_SERVER['REQUEST_URI'] === '/index.php?page='.$page) {
+			echo 'Страница '.$page.' - БУКВОКРУГ';
+		} else if (($_SERVER['REQUEST_URI'] === '/book.php?bookid='.$bookid) || ($_SERVER['REQUEST_URI'] === '/book.php?noactivebookid='.$bookid)) {
+			echo $booktitle.' - БУКВОКРУГ';
+		} else if ($_SERVER['REQUEST_URI'] === '/profile.php?userid='.$userid) {
+			echo 'Профиль пользователя - '.$userlogin;
+		} else if ($_SERVER['REQUEST_URI'] === '/profile.php') {
+			echo 'Профиль';
+		} else if ($_SERVER['REQUEST_URI'] === '/settingsprofile.php') {
+			echo 'Редактировать профиль';
+		} else if ($_SERVER['REQUEST_URI'] === '/addbook.php') {
+			echo 'Добавить книгу';
+		} else if ($_SERVER['REQUEST_URI'] === '/settingsbook.php?editbookid='.$bookid) {
+			echo 'Редактировать книгу - '.$booktitle;
+		}
+	}
+
 	/*Обработчик если логин занят*/
 	if(isset($_GET['login'])){
 		$login = $_GET['login'];
@@ -549,7 +594,24 @@ if ($_SESSION['userlogin']) {
 	/*Вывод книг на главную страницу*/
 	function booksonmain() {
 		global $connect;
-		$booksrow = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` ORDER BY `id` DESC");
+		//Работа со страницами
+
+		$quantity = 3;
+		$limit = 3;
+		$page=$_GET['page'];
+		if(!is_numeric($page)) { $page=1; }
+		if ($page<1) { $page=1; }
+		$cout_rows_query = $connect->query("SELECT * FROM `books`");
+		$cout_rows = mysqli_num_rows($cout_rows_query);
+		$pages = $cout_rows/$quantity;
+		$pages = ceil($pages);
+		$pages++;
+		if ($page>$pages) { $page = 1; }
+		if (!isset($list)) { $list=0; }
+		$list =-- $page*$quantity;
+
+
+		$booksrow = $connect->query("SELECT * FROM `books` ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
 			
 			while($booksrow_res = mysqli_fetch_assoc($booksrow)) {
 				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
@@ -562,8 +624,36 @@ if ($_SESSION['userlogin']) {
 
 				echo "</div></a>";
 			}
+
+		echo '<div class="clearfix"></div><div class="pagebottons"><ul class="pagination pagination-danger">';
+
+		if ($page>=1) {
+    		echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=1"><<</a></li>';
+   			echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $page . '">< </a></li>';
+		}
+
+		$thispage = $page+1;
+		$start = $thispage-$limit;
+		$end = $thispage+$limit;
+		for ($j = 1; $j<$pages; $j++) {
+		    if ($j>=$start && $j<=$end) {
+
+		        // Ссылка на текущую страницу выделяется жирным
+		        if ($j==($page+1)) echo '<li class="active"><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . '">' . $j . '</a></li>';
+
+		        // Ссылки на остальные страницы
+		        else echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . '">' . $j . '</a></li>';
+		    }
+		}
+
+		if ($j>$page && ($page+2)<$j) {
+		    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($page+2) . '"> ></a></li>';
+		    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($j-1) . '">>></a></li>';
+		}
+		echo '</ul><div>';
 		
 	}
+
 
 	/*Страница книги*/
 	if (isset($_GET['bookid'])) {

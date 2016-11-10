@@ -1326,3 +1326,8 @@ body {
     position: absolute; 
     color: #fff; 
 }
+
+.pagebottons {
+    margin-top: 40px;
+    text-align: center;
+}
