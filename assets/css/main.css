@@ -1331,3 +1331,31 @@ body {
     margin-top: 40px;
     text-align: center;
 }
+
+
+.filter-main {
+    text-align: center;
+    background: #eb5e28;
+    padding: 4px;
+    margin: auto;
+    max-width: 568px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.filter-main div {
+    display: inline-block;
+}
+
+.filter-main h3 {
+    margin: 0 10px 0 0;
+}
+
+.btnfilter {
+    border-radius: 3px;
+    height: 40px;
+    margin: 0px 0 1px 0;
+    background-color: #FFF;
+    color: #66615b;
+    border: 1px solid #DDD;
+}

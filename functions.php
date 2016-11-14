@@ -293,13 +293,7 @@ if ($_SESSION['userlogin']) {
 
 
 
-	/*Подстановка жанра в поле селект лист*/
-	$getbookgenre = $connect->query("SELECT `id`,`genre` FROM `bookgenre`");
-	$getbookgenre_res = '';
-	while($getbookgenre_mass = mysqli_fetch_assoc($getbookgenre)) {
-	  		$getbookgenre_res .= '<option value = "'.$getbookgenre_mass['id'].'">'.$getbookgenre_mass['genre'].'</option>';
-	}
-
+	
 
 	/*Страница добавления книг*/
 	if($_SERVER['REQUEST_URI'] === '/addbook.php') {
@@ -574,6 +568,14 @@ if ($_SESSION['userlogin']) {
 
 
 }// Конец $_SESSION['userlogin']
+
+	/*Подстановка жанра в поле селект лист*/
+	$getbookgenre = $connect->query("SELECT `id`,`genre` FROM `bookgenre`");
+	$getbookgenre_res = '';
+	while($getbookgenre_mass = mysqli_fetch_assoc($getbookgenre)) {
+	  		$getbookgenre_res .= '<option value = "'.$getbookgenre_mass['id'].'">'.$getbookgenre_mass['genre'].'</option>';
+	}
+
 	
 	/*Запрет на посещение устаревших книг*/
 	if (isset($_GET['noactivebookid']) && !$_SESSION['userlogin']) {
@@ -594,10 +596,53 @@ if ($_SESSION['userlogin']) {
 	/*Вывод книг на главную страницу*/
 	function booksonmain() {
 		global $connect;
-		//Работа со страницами
+		global $getbookgenre_res;
 
-		$quantity = 3;
-		$limit = 3;
+		$allrussia = "По всей России";
+		$allgenres = "Все жанры";
+		$filterbookgenre_value = '';
+		
+		
+		//Обработчик формы
+		if(isset($_POST['filtercity']) and isset($_POST['filterbookgenre'])) {
+			$filtercity = htmlspecialchars($_POST['filtercity']); 
+			$filterbookgenre = htmlspecialchars($_POST['filterbookgenre']); 
+			
+			//Вывод книг определенного жанра
+			if ($filterbookgenre != $allgenres) {
+				global $allgenres_all;
+				$book_genre_id_query = $connect->query("SELECT `id`, `genre` FROM `bookgenre` WHERE `id` = '$filterbookgenre'");
+				$book_genre_id_query_mass = mysqli_fetch_assoc($book_genre_id_query);
+				$book_genre_name = $book_genre_id_query_mass['genre'];
+				$allgenres_all = '<option value = "'.$book_genre_name.'">'.$book_genre_name.'</option>';
+				$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
+			//WHERE оставляем пустым
+			} else {
+				$filterbookgenre_value = '';
+				$allgenres_all = '';
+			}	
+		}
+
+
+		//Фильтр книг форма
+		echo 	'<form method="post">
+					<div class="filter-main">
+					<div> 
+		                <input name="filtercity" type="text" id="city" maxlength="40" class="form-control input-city" value="'.$allrussia.'">
+	                </div>
+					<div><select name="filterbookgenre" class="form-control">'.$allgenres_all.'<option value = "'.$allgenres.'">'.$allgenres.'</option>' .$getbookgenre_res. '</select></div>
+					<div><button name="submit" type="submit" href="#" class="btnfilter">Найти</button></div>
+					</div>
+				</form>';
+		echo '<div class="clearfix"></div>';
+
+		
+
+
+
+		//Работа со страницами
+		$quantity = 2; // Кол-во книг на странице
+		$limit = 3; // Страниц ..
 		$page=$_GET['page'];
 		if(!is_numeric($page)) { $page=1; }
 		if ($page<1) { $page=1; }
@@ -611,7 +656,7 @@ if ($_SESSION['userlogin']) {
 		$list =-- $page*$quantity;
 
 
-		$booksrow = $connect->query("SELECT * FROM `books` ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
+		$booksrow = $connect->query("SELECT * FROM `books` $filterbookgenre_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
 			
 			while($booksrow_res = mysqli_fetch_assoc($booksrow)) {
 				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
@@ -652,7 +697,11 @@ if ($_SESSION['userlogin']) {
 		}
 		echo '</ul><div>';
 		
-	}
+	} //booksonmain()
+
+
+
+
 
 
 	/*Страница книги*/
