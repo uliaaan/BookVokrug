@@ -598,52 +598,32 @@ if ($_SESSION['userlogin']) {
 	$allgenres_all = '';
 	$book_genre_name = '';
 	/*Вывод книг на главную страницу*/
-	function filterblock() {
-		global $connect;
-		global $getbookgenre_res;
-		global $filterbookgenre_value;
-		global $filterbookgenre;
-		global $allgenres_all;
-		global $book_genre_name;
+	$allrussia = "По всей России";
+	$allgenres = "Все жанры";
 
-		$allrussia = "По всей России";
-		$allgenres = "Все жанры";
-
-		
-		
-		
-		//Обработчик формы
-		if(isset($_POST['filtercity']) and isset($_POST['filterbookgenre'])) {
-			$filtercity = htmlspecialchars($_POST['filtercity']); 
-			$filterbookgenre = htmlspecialchars(trim($_POST['filterbookgenre'])); 
+	//Обработчик формы
+	if(isset($_POST['filtercity']) and isset($_POST['filterbookgenre'])) {
+		$filtercity = htmlspecialchars($_POST['filtercity']); 
+		$filterbookgenre = htmlspecialchars(trim($_POST['filterbookgenre'])); 
+		if ($filterbookgenre != $allgenres) {
 			header("Location: ?page=1&bookgenre=$filterbookgenre");
-
-			//Вывод книг определенного жанра
-			if ($filterbookgenre != $allgenres) {
-				$book_genre_id_query = $connect->query("SELECT `id`, `genre` FROM `bookgenre` WHERE `id` = '$filterbookgenre'");
-				$book_genre_id_query_mass = mysqli_fetch_assoc($book_genre_id_query);
-				$book_genre_name = $book_genre_id_query_mass['genre'];
-				$allgenres_all = '<option value = "'.$book_genre_name.'">'.$book_genre_name.'</option>';
-				$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
-			//WHERE оставляем пустым
-			} else {
-				$filterbookgenre_value = '';
-				$allgenres_all = '';
-			}	
+		} else {
+			header("Location: ?page=1");
 		}
+	
 
-		//Фильтр книг форма
-		echo 	'<form method="post">
-					<div class="filter-main">
-					<div style="width:50%"><input name="filtersearch" type="text" class="form-control width100" placeholder="Поиск"></div>
-					<div style="width:20%"> 
-		                <input name="filtercity" type="text" id="city" maxlength="40" class="form-control input-city" value="'.$allrussia.'">
-	                </div>
-					<div style="width:20%"><select name="filterbookgenre" class="form-control">'.$allgenres_all.'<option value = "'.$allgenres.'">'.$allgenres.'</option>' .$getbookgenre_res. '</select></div>
-					<div style="width:8%"><button name="submit" type="submit" href="#" class="btnfilter" style="width:100%">Найти</button></div>
-					</div>
-				</form>';
-		echo '<div class="clearfix"></div>';
+		$book_genre_id_query = $connect->query("SELECT `id`, `genre` FROM `bookgenre` WHERE `id` = '$filterbookgenre'");
+		$book_genre_id_query_mass = mysqli_fetch_assoc($book_genre_id_query);
+		$book_genre_name = $book_genre_id_query_mass['genre'];
+		//Вывод книг определенного жанра
+		if ($filterbookgenre != $allgenres) {
+			$allgenres_all = '<option value = "'.$book_genre_name.'">'.$book_genre_name.'</option>';
+			$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
+		//WHERE оставляем пустым
+		} else {
+			$filterbookgenre_value = '';
+			$allgenres_all = '';
+		}	
 	}
 
 
