@@ -593,24 +593,33 @@ if ($_SESSION['userlogin']) {
 		echo '<br>';
 	}
 
+	$filterbookgenre_value = '';
+	$filterbookgenre = '';
+	$allgenres_all = '';
+	$book_genre_name = '';
 	/*Вывод книг на главную страницу*/
-	function booksonmain() {
+	function filterblock() {
 		global $connect;
 		global $getbookgenre_res;
+		global $filterbookgenre_value;
+		global $filterbookgenre;
+		global $allgenres_all;
+		global $book_genre_name;
 
 		$allrussia = "По всей России";
 		$allgenres = "Все жанры";
-		$filterbookgenre_value = '';
+
+		
 		
 		
 		//Обработчик формы
 		if(isset($_POST['filtercity']) and isset($_POST['filterbookgenre'])) {
 			$filtercity = htmlspecialchars($_POST['filtercity']); 
-			$filterbookgenre = htmlspecialchars($_POST['filterbookgenre']); 
-			
+			$filterbookgenre = htmlspecialchars(trim($_POST['filterbookgenre'])); 
+			header("Location: ?page=1&bookgenre=$filterbookgenre");
+
 			//Вывод книг определенного жанра
 			if ($filterbookgenre != $allgenres) {
-				global $allgenres_all;
 				$book_genre_id_query = $connect->query("SELECT `id`, `genre` FROM `bookgenre` WHERE `id` = '$filterbookgenre'");
 				$book_genre_id_query_mass = mysqli_fetch_assoc($book_genre_id_query);
 				$book_genre_name = $book_genre_id_query_mass['genre'];
@@ -623,30 +632,39 @@ if ($_SESSION['userlogin']) {
 			}	
 		}
 
-
 		//Фильтр книг форма
 		echo 	'<form method="post">
 					<div class="filter-main">
-					<div> 
+					<div style="width:50%"><input name="filtersearch" type="text" class="form-control width100" placeholder="Поиск"></div>
+					<div style="width:20%"> 
 		                <input name="filtercity" type="text" id="city" maxlength="40" class="form-control input-city" value="'.$allrussia.'">
 	                </div>
-					<div><select name="filterbookgenre" class="form-control">'.$allgenres_all.'<option value = "'.$allgenres.'">'.$allgenres.'</option>' .$getbookgenre_res. '</select></div>
-					<div><button name="submit" type="submit" href="#" class="btnfilter">Найти</button></div>
+					<div style="width:20%"><select name="filterbookgenre" class="form-control">'.$allgenres_all.'<option value = "'.$allgenres.'">'.$allgenres.'</option>' .$getbookgenre_res. '</select></div>
+					<div style="width:8%"><button name="submit" type="submit" href="#" class="btnfilter" style="width:100%">Найти</button></div>
 					</div>
 				</form>';
 		echo '<div class="clearfix"></div>';
-
-		
-
+	}
 
 
+	/*Вывод книг на главную страницу*/
+	function booksonmain() {
+		global $connect;
+		global $filterbookgenre_value;
+		global $filterbookgenre;
+		global $allgenres_all;
+
+		if (isset($_GET['bookgenre'])) {
+			$filterbookgenre = $_GET['bookgenre'];
+			$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
+		}
 		//Работа со страницами
 		$quantity = 2; // Кол-во книг на странице
 		$limit = 3; // Страниц ..
 		$page=$_GET['page'];
 		if(!is_numeric($page)) { $page=1; }
 		if ($page<1) { $page=1; }
-		$cout_rows_query = $connect->query("SELECT * FROM `books`");
+		$cout_rows_query = $connect->query("SELECT * FROM `books` $filterbookgenre_value");
 		$cout_rows = mysqli_num_rows($cout_rows_query);
 		$pages = $cout_rows/$quantity;
 		$pages = ceil($pages);
@@ -656,46 +674,81 @@ if ($_SESSION['userlogin']) {
 		$list =-- $page*$quantity;
 
 
-		$booksrow = $connect->query("SELECT * FROM `books` $filterbookgenre_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
-			
-			while($booksrow_res = mysqli_fetch_assoc($booksrow)) {
-				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
-					$booksrow_res['id'];
-					echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
-					echo '<div class="books-block-gradient"></div>';
-					echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
-					echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
-					echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
+		if (isset($_GET['bookgenre'])) {
+			$filterbookgenre = $_GET['bookgenre'];
+			$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
+			$allgenres_all = '<option value = "'.$book_genre_name.'">'.$book_genre_name.'</option>';
+			$booksrow = $connect->query("SELECT * FROM `books` $filterbookgenre_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
+		} else {
+			$booksrow = $connect->query("SELECT * FROM `books` $filterbookgenre_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
+		}
 
-				echo "</div></a>";
+
+
+		while($booksrow_res = mysqli_fetch_assoc($booksrow)) {
+			echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
+				$booksrow_res['id'];
+				echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+				echo '<div class="books-block-gradient"></div>';
+				echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
+				echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
+				echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
+
+			echo "</div></a>";
+		}
+
+		if ($filterbookgenre != "") {
+			echo '<div class="clearfix"></div><div class="pagebottons"><ul class="pagination pagination-danger">';
+				if ($page>=1) {
+		    		echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=1&bookgenre=' .$filterbookgenre. '"><<</a></li>';
+		   			echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $page . '&bookgenre=' .$filterbookgenre. '">< </a></li>';
+				}
+
+				$thispage = $page+1;
+				$start = $thispage-$limit;
+				$end = $thispage+$limit;
+				for ($j = 1; $j<$pages; $j++) {
+				    if ($j>=$start && $j<=$end) {
+
+				        // Ссылка на текущую страницу выделяется жирным
+				        if ($j==($page+1)) echo '<li class="active"><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . '&bookgenre=' .$filterbookgenre. '">' . $j . '</a></li>';
+
+				        // Ссылки на остальные страницы
+				        else echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . '&bookgenre=' .$filterbookgenre. '">' . $j . '</a></li>';
+				    }
+				}
+
+				if ($j>$page && ($page+2)<$j) {
+				    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($page+2) . '&bookgenre=' .$filterbookgenre. '"> ></a></li>';
+				    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($j-1) . '&bookgenre=' .$filterbookgenre. '">>></a></li>';
+				}
+				echo '</ul><div>';
+			} else {
+					echo '<div class="clearfix"></div><div class="pagebottons"><ul class="pagination pagination-danger">';
+				if ($page>=1) {
+		    		echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=1"><<</a></li>';
+		   			echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $page . '">< </a></li>';
+				}
+
+				$thispage = $page+1;
+				$start = $thispage-$limit;
+				$end = $thispage+$limit;
+				for ($j = 1; $j<$pages; $j++) {
+				    if ($j>=$start && $j<=$end) {
+
+				        // Ссылка на текущую страницу выделяется жирным
+				        if ($j==($page+1)) echo '<li class="active"><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . '">' . $j . '</a></li>';
+
+				        // Ссылки на остальные страницы
+				        else echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . '">' . $j . '</a></li>';
+				    }
+				}
+
+				if ($j>$page && ($page+2)<$j) {
+				    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($page+2) . '"> ></a></li>';
+				    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($j-1) . '">>></a></li>';
+				}
 			}
-
-		echo '<div class="clearfix"></div><div class="pagebottons"><ul class="pagination pagination-danger">';
-
-		if ($page>=1) {
-    		echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=1"><<</a></li>';
-   			echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $page . '">< </a></li>';
-		}
-
-		$thispage = $page+1;
-		$start = $thispage-$limit;
-		$end = $thispage+$limit;
-		for ($j = 1; $j<$pages; $j++) {
-		    if ($j>=$start && $j<=$end) {
-
-		        // Ссылка на текущую страницу выделяется жирным
-		        if ($j==($page+1)) echo '<li class="active"><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . '">' . $j . '</a></li>';
-
-		        // Ссылки на остальные страницы
-		        else echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . '">' . $j . '</a></li>';
-		    }
-		}
-
-		if ($j>$page && ($page+2)<$j) {
-		    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($page+2) . '"> ></a></li>';
-		    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($j-1) . '">>></a></li>';
-		}
-		echo '</ul><div>';
 		
 	} //booksonmain()
 

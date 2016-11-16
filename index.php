@@ -6,13 +6,17 @@
                 <h3>232313.</h3>
             </div>
     </div>
-    
+
+    <div class="filterblock">
+        <div class="container">
+            <? filterblock(); ?>
+        </div>
+    </div>
+
     <div class="main">
         <div class="section">
         <div class="container tim-container">
-            <div class="row">
                 <? booksonmain(); ?>
-            </div>
          </div>
         </div>
     </div>
