@@ -593,6 +593,10 @@ if ($_SESSION['userlogin']) {
 		echo '<br>';
 	}
 
+
+//ФИЛЬТРЫ НА ГЛАВНОЙ!!!!!!!!!!!!!!!!!!!!!
+//ЖАНР
+//Переменные
 	$filterbookgenre_value = '';
 	$filterbookgenre = '';
 	$allgenres_all = '';
@@ -610,14 +614,9 @@ if ($_SESSION['userlogin']) {
 		} else {
 			header("Location: ?page=1");
 		}
-	
 
-		$book_genre_id_query = $connect->query("SELECT `id`, `genre` FROM `bookgenre` WHERE `id` = '$filterbookgenre'");
-		$book_genre_id_query_mass = mysqli_fetch_assoc($book_genre_id_query);
-		$book_genre_name = $book_genre_id_query_mass['genre'];
 		//Вывод книг определенного жанра
 		if ($filterbookgenre != $allgenres) {
-			$allgenres_all = '<option value = "'.$book_genre_name.'">'.$book_genre_name.'</option>';
 			$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
 		//WHERE оставляем пустым
 		} else {
@@ -626,6 +625,14 @@ if ($_SESSION['userlogin']) {
 		}	
 	}
 
+//На любой странице, если есть фильтр от жанров выводить жанр
+	if (isset($_GET['bookgenre'])) {
+		$filterbookgenre = $_GET['bookgenre'];
+		$book_genre_id_query = $connect->query("SELECT `id`, `genre` FROM `bookgenre` WHERE `id` = '$filterbookgenre'");
+		$book_genre_id_query_mass = mysqli_fetch_assoc($book_genre_id_query);
+		$book_genre_name = $book_genre_id_query_mass['genre'];
+		$allgenres_all = '<option value = "'.$book_genre_name.'">'.$book_genre_name.'</option>';
+	}
 
 	/*Вывод книг на главную страницу*/
 	function booksonmain() {
@@ -657,7 +664,6 @@ if ($_SESSION['userlogin']) {
 		if (isset($_GET['bookgenre'])) {
 			$filterbookgenre = $_GET['bookgenre'];
 			$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
-			$allgenres_all = '<option value = "'.$book_genre_name.'">'.$book_genre_name.'</option>';
 			$booksrow = $connect->query("SELECT * FROM `books` $filterbookgenre_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
 		} else {
 			$booksrow = $connect->query("SELECT * FROM `books` $filterbookgenre_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
