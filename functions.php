@@ -6,6 +6,8 @@
 	function title() {
 	global $connect;
 	$page=$_GET['page'];
+	$filterbookgenre = $_GET['bookgenre'];
+
 	if ($_GET['bookid']) {
 		$bookid = $_GET['bookid'];
 		$bookquery = $connect->query("SELECT * FROM `books` WHERE `id` = '$bookid'");
@@ -32,6 +34,8 @@
 		if($_SERVER['REQUEST_URI'] === '/index.php' || $_SERVER['REQUEST_URI'] === '/') {
 			echo 'БУКВОКРУГ - продай или купи книгу';
 		} else if ($_SERVER['REQUEST_URI'] === '/index.php?page='.$page) {
+			echo 'Страница '.$page.' - БУКВОКРУГ';
+		} else if ($_SERVER['REQUEST_URI'] === '/index.php?page='.$page.'&bookgenre='.$filterbookgenre) {
 			echo 'Страница '.$page.' - БУКВОКРУГ';
 		} else if (($_SERVER['REQUEST_URI'] === '/book.php?bookid='.$bookid) || ($_SERVER['REQUEST_URI'] === '/book.php?noactivebookid='.$bookid)) {
 			echo $booktitle.' - БУКВОКРУГ';
@@ -148,7 +152,7 @@
 	        $data[] = $row['city'];
 	    }
 	    //Возвращение значения
-    echo json_encode($data);
+    	echo json_encode($data);
 	}
 
 
@@ -601,29 +605,34 @@ if ($_SESSION['userlogin']) {
 	$filterbookgenre = '';
 	$allgenres_all = '';
 	$book_genre_name = '';
+	$filtersearch_value = '';
 	/*Вывод книг на главную страницу*/
 	$allrussia = "По всей России";
 	$allgenres = "Все жанры";
 
 	//Обработчик формы
-	if(isset($_POST['filtercity']) and isset($_POST['filterbookgenre'])) {
+	if(isset($_POST['filtersearch']) && isset($_POST['filtercity']) && isset($_POST['filterbookgenre'])) {
+		$filtersearch = htmlspecialchars($_POST['filtersearch']);
 		$filtercity = htmlspecialchars($_POST['filtercity']); 
 		$filterbookgenre = htmlspecialchars(trim($_POST['filterbookgenre'])); 
-		if ($filterbookgenre != $allgenres) {
-			header("Location: ?page=1&bookgenre=$filterbookgenre");
-		} else {
-			header("Location: ?page=1");
-		}
+			if ($filterbookgenre != $allgenre) {
+				header("Location: ?page=1&bookgenre=$filterbookgenre");
+			} else {
+				header("Location: ?page=1");
+			}
 
-		//Вывод книг определенного жанра
-		if ($filterbookgenre != $allgenres) {
-			$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
-		//WHERE оставляем пустым
-		} else {
-			$filterbookgenre_value = '';
-			$allgenres_all = '';
-		}	
-	}
+			//Вывод книг определенного жанра
+			if ($filterbookgenre != $allgenres) {
+				$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
+			//WHERE оставляем пустым
+			} else {
+				$filterbookgenre_value = '';
+				$allgenres_all = '';
+			}		
+	} 
+	
+	
+
 
 //На любой странице, если есть фильтр от жанров выводить жанр
 	if (isset($_GET['bookgenre'])) {
@@ -645,6 +654,7 @@ if ($_SESSION['userlogin']) {
 			$filterbookgenre = $_GET['bookgenre'];
 			$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
 		}
+
 		//Работа со страницами
 		$quantity = 2; // Кол-во книг на странице
 		$limit = 3; // Страниц ..
@@ -664,9 +674,9 @@ if ($_SESSION['userlogin']) {
 		if (isset($_GET['bookgenre'])) {
 			$filterbookgenre = $_GET['bookgenre'];
 			$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
-			$booksrow = $connect->query("SELECT * FROM `books` $filterbookgenre_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
+			$booksrow = $connect->query("SELECT * FROM `books` $filterbookgenre_value $filtersearch_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
 		} else {
-			$booksrow = $connect->query("SELECT * FROM `books` $filterbookgenre_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
+			$booksrow = $connect->query("SELECT * FROM `books` $filterbookgenre_value $filtersearch_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
 		}
 
 

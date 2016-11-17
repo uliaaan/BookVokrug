@@ -212,7 +212,7 @@ $(function() {
 	}
 	
 
-	//Город автоподстановка
+	//Город автоподстановка в регистрацию и подстановка в фильтр
 	$("#city, #filtercity").autocomplete({
         source: 'functions.php',
         minLength: 3
