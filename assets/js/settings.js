@@ -3,6 +3,7 @@ var login,
 	password,
 	telephone,
 	city,
+	filtercity,
 	street,
 	addtitlebook,
 	loginStat,
@@ -212,7 +213,7 @@ $(function() {
 	
 
 	//Город автоподстановка
-	$("#city").autocomplete({
+	$("#city, #filtercity").autocomplete({
         source: 'functions.php',
         minLength: 3
     });
@@ -257,7 +258,7 @@ $(function() {
 		$("#city").removeClass("inputRed");
 		$("#city").next().text("");
 	});
-
+	
 
 	//Улица
 	$("#street").change(function(){

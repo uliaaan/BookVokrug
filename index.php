@@ -12,9 +12,6 @@
                 <form method="post">
                     <div class="filter-main">
                     <div style="width:50%"><input name="filtersearch" type="text" class="form-control width100" placeholder="Поиск"></div>
-                    <div style="width:20%"> 
-                        <input name="filtercity" type="text" id="city" maxlength="40" class="form-control input-city" value="<? echo $allrussia; ?>">
-                    </div>
                     <div style="width:20%"><select name="filterbookgenre" class="form-control"><? echo $allgenres_all; ?><option value = "<? echo $allgenres; ?>"><? echo $allgenres; ?></option><? echo $getbookgenre_res; ?></select></div>
                     <div style="width:8%"><button name="submit" type="submit" href="#" class="btnfilter" style="width:100%">Найти</button></div>
                     </div>
