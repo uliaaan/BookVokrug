@@ -170,6 +170,11 @@ if ($_SESSION['userlogin']) {
     $usercity_query = $connect->query("SELECT `city` FROM `citys` WHERE `id` = '$usercity_id'");
 	$usercity_id_true = mysqli_fetch_assoc($usercity_query);
     $usercity = $usercity_id_true['city'];
+
+    $usercity_query_id = $connect->query("SELECT `city_id` FROM `users` WHERE `login` = '$userlogin'");
+	$usercity_query_id_mass = mysqli_fetch_assoc($usercity_query_id);
+    $usercity_id = $usercity_query_id_mass['city_id'];
+
     $userstreet = $userdatequery_mass['street'];
     $userbuilding = $userdatequery_mass['building'];
     $userpassword = $userdatequery_mass['password'];
@@ -246,7 +251,7 @@ if ($_SESSION['userlogin']) {
 	if (isset($_GET['deletebookid'])) {
 		$userlogin_id;
 		$bookid = $_GET['deletebookid'];
-		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `id` = '$bookid'"); //Запрос на вывод данных по запрошенному айдишник
+		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`,`city_id` FROM `books` WHERE `id` = '$bookid'"); //Запрос на вывод данных по запрошенному айдишник
 		while($bookquery_res = mysqli_fetch_assoc($bookquery)) { //Циклом решаем проблему сравнения нескольких полей
 			if ($bookquery_res['user_id'] == $userlogin_id) { 
 				$bookdel_query = $connect->query("DELETE FROM `books` WHERE `id` = '$bookid'");
@@ -263,7 +268,7 @@ if ($_SESSION['userlogin']) {
 	if (isset($_GET['deletebookid'])) {
 		$userlogin_id;
 		$bookid = $_GET['deletebookid'];
-		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `booksold` WHERE `id` = '$bookid'"); //Запрос на вывод данных по запрошенному айдишник
+		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`,`city_id` FROM `booksold` WHERE `id` = '$bookid'"); //Запрос на вывод данных по запрошенному айдишник
 		while($bookquery_res = mysqli_fetch_assoc($bookquery)) { //Циклом решаем проблему сравнения нескольких полей
 			if ($bookquery_res['user_id'] == $userlogin_id) { 
 				$bookdel_query = $connect->query("DELETE FROM `booksold` WHERE `id` = '$bookid'");
@@ -280,7 +285,7 @@ if ($_SESSION['userlogin']) {
 	if (isset($_GET['upbookid'])) {
 		$userlogin_id;
 		$bookid = $_GET['upbookid'];
-		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `booksold` WHERE `id` = '$bookid'"); //Запрос на вывод данных по запрошенному айдишник
+		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`,`city_id` FROM `booksold` WHERE `id` = '$bookid'"); //Запрос на вывод данных по запрошенному айдишник
 		while($bookquery_res = mysqli_fetch_assoc($bookquery)) { //Циклом решаем проблему сравнения нескольких полей
 			if ($bookquery_res['user_id'] == $userlogin_id) { 
 				$addtime_new = time();
@@ -347,7 +352,7 @@ if ($_SESSION['userlogin']) {
         	$uploadfile = $uploaddir.$addtime.'.'.$p;
 	        copy($_FILES['uploadfile']['tmp_name'], $uploadfile);
 		
-			$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`) VALUES ('','$userlogin_id','$addtitlebook','$bookgenre_id','','$addpricebook','$uploadfile', '$addtime', '$endtime')");
+			$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`,`city_id`) VALUES ('','$userlogin_id','$addtitlebook','$bookgenre_id','','$addpricebook','$uploadfile', '$addtime', '$endtime','$usercity_id')");
 					if ($addbook) {
 						header("Location: profile.php?addbook=1");
 
@@ -601,59 +606,106 @@ if ($_SESSION['userlogin']) {
 //ФИЛЬТРЫ НА ГЛАВНОЙ!!!!!!!!!!!!!!!!!!!!!
 //ЖАНР
 //Переменные
+	
+	$filtersearch_value = '';
+	$filtercity_value = '';
 	$filterbookgenre_value = '';
 	$filterbookgenre = '';
 	$allgenres_all = '';
 	$book_genre_name = '';
-	$filtersearch_value = '';
-	/*Вывод книг на главную страницу*/
-	$allrussia = "По всей России";
+	$allsearch_all = '';
+	
 	$allgenres = "Все жанры";
 
 	//Обработчик формы
 	if(isset($_POST['filtersearch']) && isset($_POST['filtercity']) && isset($_POST['filterbookgenre'])) {
 		$filtersearch = htmlspecialchars($_POST['filtersearch']);
+		$filtercity_post = htmlspecialchars($_POST['filtercity']); 
 		$filtercity = htmlspecialchars($_POST['filtercity']); 
-		$filterbookgenre = htmlspecialchars(trim($_POST['filterbookgenre'])); 
-			if ($filterbookgenre != $allgenre) {
-				header("Location: ?page=1&bookgenre=$filterbookgenre");
-			} else {
-				header("Location: ?page=1");
-			}
 
-			//Вывод книг определенного жанра
-			if ($filterbookgenre != $allgenres) {
-				$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
-			//WHERE оставляем пустым
-			} else {
-				$filterbookgenre_value = '';
-				$allgenres_all = '';
-			}		
+		$filtercity_query = $connect->query("SELECT `id`, `city` FROM `citys` WHERE `city` = '$filtercity'");
+		$filtercity_query_mass = mysqli_fetch_assoc($filtercity_query);
+		$filtercity = $filtercity_query_mass['id'];
+
+		$filterbookgenre_post = htmlspecialchars($_POST['filterbookgenre']);
+		$filterbookgenre = ""; 
+		if (is_numeric($filterbookgenre_post)) {
+			$filterbookgenre = htmlspecialchars(trim($_POST['filterbookgenre'])); 
+		} else if ($filterbookgenre_post == $allgenres) {
+			$filterbookgenre = $allgenres;
+		} else {
+			$book_genre_id_query = $connect->query("SELECT `id`, `genre` FROM `bookgenre` WHERE `genre` = '$filterbookgenre_post'");
+			$book_genre_id_query_mass = mysqli_fetch_assoc($book_genre_id_query);
+			$filterbookgenre = $book_genre_id_query_mass['id'];
+		}
+
+
+		//Если указан текст, город и жанр
+		if (($filtersearch != "") && ($filtercity != "") && ($filterbookgenre != $allgenres)) {
+			header("Location: ?page=1&filtresearch=$filtersearch&filtercity=$filtercity&filterbookgenre=$filterbookgenre");
+		//Если указан текст и город
+		} else if (($filtersearch != "") && ($filtercity != "") && ($filterbookgenre == $allgenres)) {
+			header("Location: ?page=1&filtresearch=$filtersearch&filtercity=$filtercity&filterbookgenre=$allgenres");
+		//Если указан город и жанр
+		} else if (($filtersearch == "") && ($filtercity != "") && ($filterbookgenre != $allgenres)) {
+			header("Location: ?page=1&filtercity=$filtercity&filterbookgenre=$filterbookgenre");
+		//Если указан текст и жанр
+		} else if (($filtersearch != "") && ($filtercity == "") && ($filterbookgenre != $allgenres)) {
+			header("Location: ?page=1&filtresearch=$filtersearch&filterbookgenre=$filterbookgenre");
+		//Если указан текст
+		} else if (($filtersearch != "") && ($filtercity == "") && ($filterbookgenre == $allgenres)) {
+			header("Location: ?page=1&filtresearch=$filtersearch&filterbookgenre=$allgenres");
+		//Если указан город
+		} else if (($filtersearch == "") && ($filtercity != "") && ($filterbookgenre == $allgenres)) {
+			header("Location: ?page=1&filtercity=$filtercity&filterbookgenre=$allgenres");
+		//Если указан жанр
+		} else if (($filtersearch == "") && ($filtercity == "") && ($filterbookgenre != $allgenres)) {
+			header("Location: ?page=1&filterbookgenre=$filterbookgenre");
+		//Если все жанры
+		} else if (($filtersearch == "") && ($filtercity == "") && ($filterbookgenre == $allgenres)) {
+			header("Location: ?page=1&filterbookgenre=$allgenres");
+		} 
+
+		
 	} 
 	
 	
 
 
 //На любой странице, если есть фильтр от жанров выводить жанр
-	if (isset($_GET['bookgenre'])) {
-		$filterbookgenre = $_GET['bookgenre'];
-		$book_genre_id_query = $connect->query("SELECT `id`, `genre` FROM `bookgenre` WHERE `id` = '$filterbookgenre'");
+	if (isset($_GET['filterbookgenre'])) {
+		$filterbookgenre_get = $_GET['filterbookgenre'];
+		$book_genre_id_query = $connect->query("SELECT `id`, `genre` FROM `bookgenre` WHERE `id` = '$filterbookgenre_get'");
 		$book_genre_id_query_mass = mysqli_fetch_assoc($book_genre_id_query);
 		$book_genre_name = $book_genre_id_query_mass['genre'];
-		$allgenres_all = '<option value = "'.$book_genre_name.'">'.$book_genre_name.'</option>';
+		if($book_genre_name != "") {
+			$allgenres_all = '<option value = "'.$book_genre_name.'">'.$book_genre_name.'</option>';
+		} else {
+			$allgenres_all = '<option value = "'.$filterbookgenre_get.'">'.$filterbookgenre_get.'</option>';
+		}
+	}
+
+	if (isset($_GET['filtercity'])) {
+		$filtercity = $_GET['filtercity'];
+		$filtercity_id = $connect->query("SELECT `id`,`city` FROM `citys` WHERE `id` = '$filtercity'");
+		$filtercity_id_mass = mysqli_fetch_assoc($filtercity_id);
+		$filtercity_id_res = $filtercity_id_mass['city'];
+		$allcitys_all = $filtercity_id_res;
+	}
+
+	if (isset($_GET['filtresearch'])) {
+		$allsearch_all = $_GET['filtresearch'];
 	}
 
 	/*Вывод книг на главную страницу*/
 	function booksonmain() {
 		global $connect;
+		global $filtersearch_value;
+		global $filtercity_value;
 		global $filterbookgenre_value;
-		global $filterbookgenre;
 		global $allgenres_all;
-
-		if (isset($_GET['bookgenre'])) {
-			$filterbookgenre = $_GET['bookgenre'];
-			$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
-		}
+		global $allgenres;
+		$filterbookgenre = $allgenres;
 
 		//Работа со страницами
 		$quantity = 2; // Кол-во книг на странице
@@ -661,7 +713,7 @@ if ($_SESSION['userlogin']) {
 		$page=$_GET['page'];
 		if(!is_numeric($page)) { $page=1; }
 		if ($page<1) { $page=1; }
-		$cout_rows_query = $connect->query("SELECT * FROM `books` $filterbookgenre_value");
+		$cout_rows_query = $connect->query("SELECT * FROM `books`");
 		$cout_rows = mysqli_num_rows($cout_rows_query);
 		$pages = $cout_rows/$quantity;
 		$pages = ceil($pages);
@@ -670,13 +722,95 @@ if ($_SESSION['userlogin']) {
 		if (!isset($list)) { $list=0; }
 		$list =-- $page*$quantity;
 
+		if (isset($_GET['filtresearch']) && isset($_GET['filtercity']) && isset($_GET['filterbookgenre']) || 
+			isset($_GET['filtresearch']) && isset($_GET['filtercity']) ||
+			isset($_GET['filtercity']) && isset($_GET['filterbookgenre']) ||
+			isset($_GET['filtresearch']) && isset($_GET['filterbookgenre']) ||
+			isset($_GET['filtresearch']) || isset($_GET['filtercity']) || isset($_GET['filterbookgenre'])) {
 
-		if (isset($_GET['bookgenre'])) {
-			$filterbookgenre = $_GET['bookgenre'];
-			$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
-			$booksrow = $connect->query("SELECT * FROM `books` $filterbookgenre_value $filtersearch_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
+			/*$filtersearch = htmlspecialchars($_GET['filtersearch']);
+			$filtercity = htmlspecialchars($_GET['filtercity']);
+			$filterbookgenre = htmlspecialchars($_GET['filterbookgenre']);*/
+
+			if($_GET['filtersearch'] != "") {
+				$filtersearch = htmlspecialchars($_GET['filtersearch']);
+			} else {
+				$filtersearch = "";
+			}
+			
+			if($_GET['filtercity'] != "") {
+				$filtercity = htmlspecialchars($_GET['filtercity']);
+			} else {
+				$filtercity = "";
+			}
+
+			if($_GET['filterbookgenre'] != $allgenres) {
+				$filterbookgenre = htmlspecialchars($_GET['filterbookgenre']);
+			} else {
+				$filterbookgenre = $allgenres;
+			}
+
+		/*	if (isset($_GET['filtercity'])) {
+				$filtercity = htmlspecialchars($_GET['filtercity']);
+				$filtercity_value = "WHERE `city_id` = '$filtercity'";
+				$resulturl = "&filtercity=$filtercity";
+			} else if (isset($_GET['filterbookgenre'])) {
+				$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
+				$resulturl = "&filterbookgenre=$filterbookgenre";
+			} else if ((isset($_GET['filtercity'])) && (isset($_GET['filterbookgenre']))) {
+				$filtercity_value = "WHERE `city_id` = '$filtercity'";
+				$filterbookgenre_value = "AND `bookgenre_id` = '$filterbookgenre'";
+				$resulturl = "&filtercity=$filtercity&filterbookgenre=$filterbookgenre";
+			}*/
+	/*
+
+			if (($filtercity != "") and ($filterbookgenre == $allgenres)) {
+				$filtercity_value = "WHERE `city_id` = '$filtercity'";
+				$resulturl = "&filtercity=$filtercity";
+			} else if (($filtercity == "") and ($filterbookgenre != $allgenres)) {
+				$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
+				$resulturl = "&filterbookgenre=$filterbookgenre";
+			} else if (($filtercity != "") and ($filterbookgenre != $allgenres)) {
+				$filtercity_value = "WHERE `city_id` = '$filtercity'";
+				$filterbookgenre_value = "AND `bookgenre_id` = '$filterbookgenre'";
+				$resulturl = "&filtercity=$filtercity&filterbookgenre=$filterbookgenre";
+			}
+			*/
+
+			//Запрос на все текст, город и жанр
+			if (($filtersearch != "") && ($filtercity != "") && ($filterbookgenre != $allgenres)) {
+				$filtersearch_value = "WHERE `booktitle` LIKE '%".$filtersearch."%'";
+				$filtercity_value = "AND `city_id` = '$filtercity'";
+				$filterbookgenre_value = "AND `bookgenre_id` = '$filterbookgenre'";
+				$resulturl = "&filtresearch=$filtersearch&filtercity=$filtercity&filterbookgenre=$filterbookgenre";
+			//Если указан город и жанр
+			} else if (($filtercity != "") && ($filterbookgenre != $allgenres)) {
+				$filtercity_value = "WHERE `city_id` = '$filtercity'";
+				$filterbookgenre_value = "AND `bookgenre_id` = '$filterbookgenre'";
+				$resulturl = "&filtercity=$filtercity&filterbookgenre=$filterbookgenre";
+			//Запрос на жанр
+			} else if ($filterbookgenre != $allgenres) {
+				$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
+				$resulturl = "&filterbookgenre=$filterbookgenre";
+			//Запрос на город
+			} else if ($filtercity != "") {
+				$filtercity_value = "WHERE `city_id` = '$filtercity'";
+				$resulturl = "&filtercity=$filtercity";
+			//Запрос все жанры
+			} else if ($filterbookgenre == $allgenres) {
+				$filterbookgenre_value = "";
+			//Запрос на текст
+			} else if (($filtersearch != "") && ($filtercity == "") && ($filterbookgenre == $allgenres)) {
+				$filtersearch_value = "WHERE `booktitle` LIKE '%".$filtersearch."%'";
+				$resulturl = "&filtresearch=$filtersearch";
+			//Если указан город и жанр
+			}
+
+
+			$booksrow = $connect->query("SELECT * FROM `books` $filtersearch_value $filtercity_value $filterbookgenre_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
+		//Вывести книги на главной без какого либо запроса
 		} else {
-			$booksrow = $connect->query("SELECT * FROM `books` $filterbookgenre_value $filtersearch_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
+			$booksrow = $connect->query("SELECT * FROM `books` $filtersearch_value $filtercity_value $filterbookgenre_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
 		}
 
 
@@ -693,58 +827,33 @@ if ($_SESSION['userlogin']) {
 			echo "</div></a>";
 		}
 
-		if ($filterbookgenre != "") {
-			echo '<div class="clearfix"></div><div class="pagebottons"><ul class="pagination pagination-danger">';
-				if ($page>=1) {
-		    		echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=1&bookgenre=' .$filterbookgenre. '"><<</a></li>';
-		   			echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $page . '&bookgenre=' .$filterbookgenre. '">< </a></li>';
-				}
+	
+		echo '<div class="clearfix"></div><div class="pagebottons"><ul class="pagination pagination-danger">';
+		if ($page>=1) {
+    		echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=1'.$resulturl.'"><<</a></li>';
+   			echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $page . ''.$resulturl.'">< </a></li>';
+		}
 
-				$thispage = $page+1;
-				$start = $thispage-$limit;
-				$end = $thispage+$limit;
-				for ($j = 1; $j<$pages; $j++) {
-				    if ($j>=$start && $j<=$end) {
+		$thispage = $page+1;
+		$start = $thispage-$limit;
+		$end = $thispage+$limit;
+		for ($j = 1; $j<$pages; $j++) {
+		    if ($j>=$start && $j<=$end) {
 
-				        // Ссылка на текущую страницу выделяется жирным
-				        if ($j==($page+1)) echo '<li class="active"><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . '&bookgenre=' .$filterbookgenre. '">' . $j . '</a></li>';
+		        // Ссылка на текущую страницу выделяется жирным
+		        if ($j==($page+1)) echo '<li class="active"><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . ''.$resulturl.'">' . $j . '</a></li>';
 
-				        // Ссылки на остальные страницы
-				        else echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . '&bookgenre=' .$filterbookgenre. '">' . $j . '</a></li>';
-				    }
-				}
+		        // Ссылки на остальные страницы
+		        else echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . ''.$resulturl.'">' . $j . '</a></li>';
+		    }
+		}
 
-				if ($j>$page && ($page+2)<$j) {
-				    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($page+2) . '&bookgenre=' .$filterbookgenre. '"> ></a></li>';
-				    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($j-1) . '&bookgenre=' .$filterbookgenre. '">>></a></li>';
-				}
-				echo '</ul><div>';
-			} else {
-					echo '<div class="clearfix"></div><div class="pagebottons"><ul class="pagination pagination-danger">';
-				if ($page>=1) {
-		    		echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=1"><<</a></li>';
-		   			echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $page . '">< </a></li>';
-				}
-
-				$thispage = $page+1;
-				$start = $thispage-$limit;
-				$end = $thispage+$limit;
-				for ($j = 1; $j<$pages; $j++) {
-				    if ($j>=$start && $j<=$end) {
-
-				        // Ссылка на текущую страницу выделяется жирным
-				        if ($j==($page+1)) echo '<li class="active"><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . '">' . $j . '</a></li>';
-
-				        // Ссылки на остальные страницы
-				        else echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . '">' . $j . '</a></li>';
-				    }
-				}
-
-				if ($j>$page && ($page+2)<$j) {
-				    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($page+2) . '"> ></a></li>';
-				    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($j-1) . '">>></a></li>';
-				}
-			}
+		if ($j>$page && ($page+2)<$j) {
+		    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($page+2) . ''.$resulturl.'"> ></a></li>';
+		    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($j-1) . ''.$resulturl.'">>></a></li>';
+		}
+		echo '</ul><div>';
+			
 		
 	} //booksonmain()
 
@@ -815,12 +924,12 @@ if ($_SESSION['userlogin']) {
 
 
 	/*Перенос данных по книге в новую таблицу и удаление из старой*/
-	$transfer_book_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books`");
+	$transfer_book_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`,`city_id` FROM `books`");
 	while($transfer_book_mass = mysqli_fetch_assoc($transfer_book_query)) {
 		$transfer_book_id = $transfer_book_mass['id'];
 		$transfer_book_end_time = $transfer_book_mass['endtime'];
 			if ($transfer_book_end_time < time()) {
-				$connect->query("INSERT INTO `booksold` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`) SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `id`='$transfer_book_id'");
+				$connect->query("INSERT INTO `booksold` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`,`city_id`) SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`,`city_id` FROM `books` WHERE `id`='$transfer_book_id'");
 				$connect->query("DELETE FROM `books` WHERE `id`='$transfer_book_id'");
 			}
 	}
@@ -828,12 +937,12 @@ if ($_SESSION['userlogin']) {
 
 
 	//Перенос устаревшей книги после поднятия
-	$transfer_book_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `booksold`");
+	$transfer_book_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`,`city_id` FROM `booksold`");
 	while($transfer_book_mass = mysqli_fetch_assoc($transfer_book_query)) {
 		$transfer_book_id = $transfer_book_mass['id'];
 		$transfer_book_end_time = $transfer_book_mass['endtime'];
 			if ($transfer_book_end_time > time()) {
-				$connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`) SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `booksold` WHERE `id`='$transfer_book_id'");
+				$connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`,`city_id`) SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`,`city_id` FROM `booksold` WHERE `id`='$transfer_book_id'");
 				$connect->query("DELETE FROM `booksold` WHERE `id`='$transfer_book_id'");
 			}
 	}
