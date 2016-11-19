@@ -171,6 +171,8 @@ if ($_SESSION['userlogin']) {
 	$usercity_id_true = mysqli_fetch_assoc($usercity_query);
     $usercity = $usercity_id_true['city'];
 
+
+
     $usercity_query_id = $connect->query("SELECT `city_id` FROM `users` WHERE `login` = '$userlogin'");
 	$usercity_query_id_mass = mysqli_fetch_assoc($usercity_query_id);
     $usercity_id = $usercity_query_id_mass['city_id'];
@@ -306,10 +308,11 @@ if ($_SESSION['userlogin']) {
 
 	/*Страница добавления книг*/
 	if($_SERVER['REQUEST_URI'] === '/addbook.php') {
-		if(isset($_POST['addtitlebook']) and isset($_POST['bookgenre']) and isset($_POST['addpricebook'])) {
+		if(isset($_POST['addtitlebook']) and isset($_POST['bookgenre']) and isset($_POST['addpricebook']) and isset($_POST['addtextbook'])) {
 		$addtitlebook = htmlspecialchars($_POST['addtitlebook']); 
 		$bookgenre = htmlspecialchars($_POST['bookgenre']); 
 		$addpricebook = htmlspecialchars(trim($_POST['addpricebook']));
+		$addtextbook = htmlspecialchars($_POST['addtextbook']); 
 		//Достаем id жанра
 		$bookgenreid_query = $connect->query("SELECT `id` FROM `bookgenre` WHERE `genre` = '$bookgenre'");
 		$bookgenre_id_mass = mysqli_fetch_assoc($bookgenreid_query);
@@ -352,7 +355,7 @@ if ($_SESSION['userlogin']) {
         	$uploadfile = $uploaddir.$addtime.'.'.$p;
 	        copy($_FILES['uploadfile']['tmp_name'], $uploadfile);
 		
-			$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`,`city_id`) VALUES ('','$userlogin_id','$addtitlebook','$bookgenre_id','','$addpricebook','$uploadfile', '$addtime', '$endtime','$usercity_id')");
+			$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`,`city_id`) VALUES ('','$userlogin_id','$addtitlebook','$bookgenre_id','$addtextbook','$addpricebook','$uploadfile', '$addtime', '$endtime','$usercity_id')");
 					if ($addbook) {
 						header("Location: profile.php?addbook=1");
 
@@ -620,7 +623,6 @@ if ($_SESSION['userlogin']) {
 	//Обработчик формы
 	if(isset($_POST['filtersearch']) && isset($_POST['filtercity']) && isset($_POST['filterbookgenre'])) {
 		$filtersearch = htmlspecialchars($_POST['filtersearch']);
-		$filtercity_post = htmlspecialchars($_POST['filtercity']); 
 		$filtercity = htmlspecialchars($_POST['filtercity']); 
 
 		$filtercity_query = $connect->query("SELECT `id`, `city` FROM `citys` WHERE `city` = '$filtercity'");
@@ -668,6 +670,25 @@ if ($_SESSION['userlogin']) {
 
 		
 	} 
+
+	if ($_SESSION['userlogin']) {
+		$userlogin = $_SESSION['userlogin'];
+		$userdatequery = $connect->query("SELECT * FROM `users` WHERE `login` = '$userlogin'");
+		$userdatequery_mass = mysqli_fetch_assoc($userdatequery);
+	    $usercity_id = $userdatequery_mass['city_id'];
+	    $usercity_query = $connect->query("SELECT `city` FROM `citys` WHERE `id` = '$usercity_id'");
+		$usercity_id_true = mysqli_fetch_assoc($usercity_query);
+	    $usercity = $usercity_id_true['city'];
+
+	    $allcitys_all = $usercity;
+	    if(!empty($_POST['filtercity'])) {
+	    	$filtercity = htmlspecialchars($_POST['filtercity']);
+	    	$allcitys_all = htmlspecialchars($_POST['filtercity']);
+	    } else {
+	    	$filtercity = "";
+	    }
+
+	}
 	
 	
 
@@ -790,6 +811,7 @@ if ($_SESSION['userlogin']) {
 			}
 
 
+
 			$booksrow = $connect->query("SELECT * FROM `books` $filtersearch_value $filtercity_value $filterbookgenre_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
 		//Вывести книги на главной без какого либо запроса
 		} else {
@@ -856,6 +878,7 @@ if ($_SESSION['userlogin']) {
 		$book_imgbookurl = $bookquery_res['imgbookurl'];
 		$book_addtime = $bookquery_res['addtime'];
 		$book_endtime = $bookquery_res['endtime'];
+		$book_text = $bookquery_res['textbook'];
 
 		/*Данные продавца*/
 		$book_user_id = $bookquery_res['user_id'];

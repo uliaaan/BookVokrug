@@ -22,6 +22,13 @@
 					</div>
 				</div>
 				<div class="form-inline">
+					<label>Краткая рецензия</label>
+					<div class="input-add-book">
+						<textarea name="addtextbook" type="text" id="addtextbook" class="form-control second-role"></textarea>
+						<div class="reg-red-text"></div>
+					</div>
+				</div>
+				<div class="form-inline">
 					<label>Цена</label>
 					<div class="input-add-book">
 						<div class="input-group">

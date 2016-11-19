@@ -32,6 +32,7 @@
 						<div class="bookmb-contacts-adres">
 						<h6><small>Адрес</small><br>
 						<? echo $book_user_street; ?>, <? echo $book_user_building; ?></h6>
+						<h6>Рецензия<br><small><? echo $book_text; ?></small></h6>
 						</div>
 					</div>
 				</div>
