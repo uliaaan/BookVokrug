@@ -750,32 +750,6 @@ if ($_SESSION['userlogin']) {
 				$filterbookgenre = $allgenres;
 			}
 
-		/*	if (isset($_GET['filtercity'])) {
-				$filtercity = htmlspecialchars($_GET['filtercity']);
-				$filtercity_value = "WHERE `city_id` = '$filtercity'";
-				$resulturl = "&filtercity=$filtercity";
-			} else if (isset($_GET['filterbookgenre'])) {
-				$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
-				$resulturl = "&filterbookgenre=$filterbookgenre";
-			} else if ((isset($_GET['filtercity'])) && (isset($_GET['filterbookgenre']))) {
-				$filtercity_value = "WHERE `city_id` = '$filtercity'";
-				$filterbookgenre_value = "AND `bookgenre_id` = '$filterbookgenre'";
-				$resulturl = "&filtercity=$filtercity&filterbookgenre=$filterbookgenre";
-			}*/
-	/*
-
-			if (($filtercity != "") and ($filterbookgenre == $allgenres)) {
-				$filtercity_value = "WHERE `city_id` = '$filtercity'";
-				$resulturl = "&filtercity=$filtercity";
-			} else if (($filtercity == "") and ($filterbookgenre != $allgenres)) {
-				$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
-				$resulturl = "&filterbookgenre=$filterbookgenre";
-			} else if (($filtercity != "") and ($filterbookgenre != $allgenres)) {
-				$filtercity_value = "WHERE `city_id` = '$filtercity'";
-				$filterbookgenre_value = "AND `bookgenre_id` = '$filterbookgenre'";
-				$resulturl = "&filtercity=$filtercity&filterbookgenre=$filterbookgenre";
-			}
-			*/
 
 			//Запрос на все текст, город и жанр
 			if (!empty($filtersearch) && !empty($filtercity) && ($filterbookgenre != $allgenres)) {
@@ -783,7 +757,6 @@ if ($_SESSION['userlogin']) {
 				$filtercity_value = "AND `city_id` = '$filtercity'";
 				$filterbookgenre_value = "AND `bookgenre_id` = '$filterbookgenre'";
 				$resulturl = "&filtersearch=$filtersearch&filtercity=$filtercity&filterbookgenre=$filterbookgenre";
-<<<<<<< HEAD
 			//Если текст, город и все жанры
 			} if (!empty($filtersearch) && !empty($filtercity) && ($filterbookgenre == $allgenres)) {
 				$filtersearch_value = "WHERE `booktitle` LIKE '%".$filtersearch."%'";
@@ -793,8 +766,6 @@ if ($_SESSION['userlogin']) {
 			} else if (!empty($filtersearch) && empty($filtercity) && ($filterbookgenre == $allgenres)) {
 				$filtersearch_value = "WHERE `booktitle` LIKE '%".$filtersearch."%'";
 				$resulturl = "&filtersearch=$filtersearch";
-=======
->>>>>>> origin/master
 			//Если указан город и жанр
 			} else if (empty($filtersearch) && !empty($filtercity) && ($filterbookgenre != $allgenres)) {
 				$filtercity_value = "WHERE `city_id` = '$filtercity'";
@@ -817,28 +788,6 @@ if ($_SESSION['userlogin']) {
 			} else if (empty($filtersearch) && empty($filtercity) && ($filterbookgenre == $allgenres)) {
 				$resulturl = "";
 			}
-
-			/*else if (($filtercity != "") && ($filterbookgenre != $allgenres)) {
-				$filtercity_value = "WHERE `city_id` = '$filtercity'";
-				$filterbookgenre_value = "AND `bookgenre_id` = '$filterbookgenre'";
-				$resulturl = "&filtercity=$filtercity&filterbookgenre=$filterbookgenre";
-			//Запрос на жанр
-			} else if ($filterbookgenre != $allgenres) {
-				$filterbookgenre_value = "WHERE `bookgenre_id` = '$filterbookgenre'";
-				$resulturl = "&filterbookgenre=$filterbookgenre";
-			//Запрос на город
-			} else if ($filtercity != "") {
-				$filtercity_value = "WHERE `city_id` = '$filtercity'";
-				$resulturl = "&filtercity=$filtercity";
-			//Запрос все жанры
-			} else if ($filterbookgenre == $allgenres) {
-				$filterbookgenre_value = "";
-			//Запрос на текст
-			} else if (($filtersearch != "") && ($filtercity == "") && ($filterbookgenre == $allgenres)) {
-				$filtersearch_value = "WHERE `booktitle` LIKE '%".$filtersearch."%'";
-				$resulturl = "&filtersearch=$filtersearch";
-			//Если указан город и жанр
-			}*/
 
 
 			$booksrow = $connect->query("SELECT * FROM `books` $filtersearch_value $filtercity_value $filterbookgenre_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
