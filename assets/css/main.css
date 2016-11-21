@@ -1003,7 +1003,7 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
   padding-right: 0px !important;
-  background-color: #FFFCF5;
+  background-color: #EBEBEB;
 }
 .footer-demo {
   position: absolute;
@@ -1220,9 +1220,9 @@ body {
 }
 
 .bookmb {
-    max-width: 800px;
-    border: 1px solid #e1e1e1;
+    max-width: 660px;
     margin: 0 auto;
+    background-color: #fff;
 
 }
 
@@ -1234,10 +1234,6 @@ body {
 .bookmb-title h3 {
     margin: 0px !important;
 
-}
-
-.bookmb-main {
-    display: flex;
 }
 
 .bookmb-img {
@@ -1270,12 +1266,17 @@ body {
 
 .bookmb-info {
     text-align: left;
-    padding: 5px 10px;
+    padding: 20px 25px 15px 25px;
     border-left: 1px solid #e1e1e1;
 }
 
 .bookmb-info-top {
     float: left;
+    font-size: 12px;
+}
+
+.bookmb-info-top-right {
+    float: right;
     font-size: 12px;
 }
 
@@ -1300,14 +1301,25 @@ body {
     color: #EB5E28;
 }
 
-.bookmb-left {
-    width: 60%;
+.bookmb-info-main-simple {
+    font-size: 17px;
+    margin-bottom: 5px;
 }
 
-.bookmb-right {
-    width: 40%;
-    float: left;
+.bookmb-info-main-simple i {
+    font-size: 15px;
+    margin-right: 5px;
 }
+
+.bookmb-info-main-simple small {
+    vertical-align: text-bottom;
+}
+
+.bookmb-info-main-tel {
+    font-size: 25px;
+    font-weight: bold;
+}
+
 
 .edit-book-button {
     margin-left: 160px;
@@ -1356,4 +1368,18 @@ body {
 
 .filterblock {
         background: #eb5e28;
+}
+
+.nav-tabs > li.active :before {
+    border-bottom: 11px solid #1a1817;
+}
+
+.nav-tabs > li.active :after {
+    border-bottom: 11px solid #1a1817;
+    border-left:0px;
+    border-right: 0px;
+}
+
+.nav-tabs-navigation {
+        border-bottom: 1px solid #1a1817;
 }

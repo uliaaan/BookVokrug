@@ -908,6 +908,10 @@ if ($_SESSION['userlogin']) {
 		$book_user_telephone = $book_user_id_query_mass['telephone'];
 		$book_user_street = $book_user_id_query_mass['street'];
 		$book_user_building = $book_user_id_query_mass['building'];
+		$book_user_city_id = $book_user_id_query_mass['city_id'];
+		$book_user_city_id_query = $connect->query("SELECT `id`, `city` FROM `citys` WHERE `id` = '$book_user_city_id'");
+		$book_user_city_id_query_mass = mysqli_fetch_assoc($book_user_city_id_query);
+		$book_user_city = $book_user_city_id_query_mass['city'];
 
 		/*Данные жанра*/
 		$book_genre_id = $bookquery_res['bookgenre_id'];
