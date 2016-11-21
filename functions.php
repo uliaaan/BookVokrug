@@ -686,6 +686,7 @@ if ($_SESSION['userlogin']) {
 	    	$allcitys_all = htmlspecialchars($_POST['filtercity']);
 	    } else {
 	    	$filtercity = "";
+	    	$allcitys_all = ""; //!!!!
 	    }
 
 	}
@@ -728,20 +729,24 @@ if ($_SESSION['userlogin']) {
 		global $allgenres;
 		$filterbookgenre = $allgenres;
 
-		//Работа со страницами
-		$quantity = 2; // Кол-во книг на странице
-		$limit = 3; // Страниц ..
-		$page=$_GET['page'];
-		if(!is_numeric($page)) { $page=1; }
-		if ($page<1) { $page=1; }
-		$cout_rows_query = $connect->query("SELECT * FROM `books`");
-		$cout_rows = mysqli_num_rows($cout_rows_query);
-		$pages = $cout_rows/$quantity;
-		$pages = ceil($pages);
-		$pages++;
-		if ($page>$pages) { $page = 1; }
-		if (!isset($list)) { $list=0; }
-		$list =-- $page*$quantity;
+
+		
+			//Работа со страницами
+			$quantity = 2; // Кол-во книг на странице
+			$limit = 3; // Страниц ..
+			$page=$_GET['page'];
+			if(!is_numeric($page)) { $page=1; }
+			if ($page<1) { $page=1; }
+			$cout_rows_query = $connect->query("SELECT * FROM `books`");
+			$cout_rows = mysqli_num_rows($cout_rows_query);
+			$pages = $cout_rows/$quantity;
+			$pages = ceil($pages);
+			$pages++;
+			if ($page>$pages) { $page = 1; }
+			if (!isset($list)) { $list=0; }
+			$list =-- $page*$quantity;
+		
+		
 
 		if (isset($_GET['filtersearch']) && isset($_GET['filtercity']) && isset($_GET['filterbookgenre']) || 
 			isset($_GET['filtersearch']) && isset($_GET['filtercity']) ||
@@ -804,12 +809,27 @@ if ($_SESSION['userlogin']) {
 			//Если указан город и все жанры
 			} else if (empty($filtersearch) && !empty($filtercity) && ($filterbookgenre == $allgenres)) {
 				$filtercity_value = "WHERE `city_id` = '$filtercity'";
-				$resulturl = "&filtercity=$filtercity";
+				$resulturl = "&filtercity=$filtercity&filterbookgenre=$filterbookgenre";
 			//Если ничего не указано и все жанры
 			} else if (empty($filtersearch) && empty($filtercity) && ($filterbookgenre == $allgenres)) {
 				$resulturl = "";
 			}
 
+			
+				$quantity = 2; // Кол-во книг на странице
+				$limit = 3; // Страниц ..
+				$page=$_GET['page'];
+				if(!is_numeric($page)) { $page=1; }
+				if ($page<1) { $page=1; }
+				$cout_rows_query = $connect->query("SELECT * FROM `books` $filtersearch_value $filtercity_value $filterbookgenre_value");
+				$cout_rows = mysqli_num_rows($cout_rows_query);
+				$pages = $cout_rows/$quantity;
+				$pages = ceil($pages);
+				$pages++;
+				if ($page>$pages) { $page = 1; }
+				if (!isset($list)) { $list=0; }
+				$list =-- $page*$quantity;
+			
 
 
 			$booksrow = $connect->query("SELECT * FROM `books` $filtersearch_value $filtercity_value $filterbookgenre_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
@@ -835,8 +855,8 @@ if ($_SESSION['userlogin']) {
 	
 		echo '<div class="clearfix"></div><div class="pagebottons"><ul class="pagination pagination-danger">';
 		if ($page>=1) {
-    		echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=1'.$resulturl.'"><<</a></li>';
-   			echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $page . ''.$resulturl.'">< </a></li>';
+    		echo '<li><a href="/?page=1'.$resulturl.'"><<</a></li>';
+   			echo '<li><a href="/?page=' . $page . ''.$resulturl.'">< </a></li>';
 		}
 
 		$thispage = $page+1;
@@ -846,16 +866,16 @@ if ($_SESSION['userlogin']) {
 		    if ($j>=$start && $j<=$end) {
 
 		        // Ссылка на текущую страницу выделяется жирным
-		        if ($j==($page+1)) echo '<li class="active"><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . ''.$resulturl.'">' . $j . '</a></li>';
+		        if ($j==($page+1)) echo '<li class="active"><a href="/?page=' . $j . ''.$resulturl.'">' . $j . '</a></li>';
 
 		        // Ссылки на остальные страницы
-		        else echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . $j . ''.$resulturl.'">' . $j . '</a></li>';
+		        else echo '<li><a href="/?page=' . $j . ''.$resulturl.'">' . $j . '</a></li>';
 		    }
 		}
 
 		if ($j>$page && ($page+2)<$j) {
-		    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($page+2) . ''.$resulturl.'"> ></a></li>';
-		    echo '<li><a href="' . $_SERVER['SCRIPT_NAME'] . '?page=' . ($j-1) . ''.$resulturl.'">>></a></li>';
+		    echo '<li><a href="/?page=' . ($page+2) . ''.$resulturl.'"> ></a></li>';
+		    echo '<li><a href="/?page=' . ($j-1) . ''.$resulturl.'">>></a></li>';
 		}
 		echo '</ul><div>';
 			
