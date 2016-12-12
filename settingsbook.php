@@ -18,7 +18,7 @@
 					<label>Жанр</label>
 					<div class="input-add-book">
 						<select name="editbookgenre" class="form-control second-role" id="addgenre">
-						 	<? echo '<option value = "'.$book_genre_id.'">'.$book_genre_name.'</option>' ?>
+						 	<? echo '<option value = "'.$book_genre_id.'">'.$editbook_genre_name.'</option>' ?>
 						 	<? echo $getbookgenre_res; ?>
 						</select>
 						<div class="reg-red-text"></div>

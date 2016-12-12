@@ -499,10 +499,9 @@ if ($_SESSION['userlogin']) {
 					$book_genre_id = $bookquery_res['bookgenre_id'];
 
 					/*Данные жанра*/
-					$book_genre_id = $bookquery_res['bookgenre_id'];
 					$book_genre_id_query = $connect->query("SELECT `id`, `genre` FROM `bookgenre` WHERE `id` = '$book_genre_id'");
 					$book_genre_id_query_mass = mysqli_fetch_assoc($book_genre_id_query);
-					$book_genre_name = $book_genre_id_query_mass['genre'];
+					$editbook_genre_name = $book_genre_id_query_mass['genre'];
 				} else {
 					header("Location: profile.php");
 				}
@@ -514,9 +513,9 @@ if ($_SESSION['userlogin']) {
 			$editpricebook = htmlspecialchars(trim($_POST['editpricebook']));
 			$editbookgenre = htmlspecialchars($_POST['editbookgenre']); 
 			//Достаем id жанра
-			$bookgenreid_query = $connect->query("SELECT `id` FROM `bookgenre` WHERE `genre` = '$editbookgenre'");
-			$bookgenre_id_mass = mysqli_fetch_assoc($bookgenreid_query);
-	        $editbookgenre_id = $bookgenre_id_mass['id'];
+			$editbookgenreid_query = $connect->query("SELECT `id`,`genre` FROM `bookgenre` WHERE `id` = '$editbookgenre'");
+			$editbookgenre_id_mass = mysqli_fetch_assoc($editbookgenreid_query);
+	        $editbookgenre_id = $editbookgenre_id_mass['id'];
 
 			/*Дата добавления и окнчания*/
 			$addtime = time();

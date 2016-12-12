@@ -1,7 +1,7 @@
 <? include ('functions.php') ?>
 
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
 	<meta charset="utf-8" />
 	<link rel="icon" type="image/png" href="/favicon.ico">
@@ -18,7 +18,7 @@
     <link href="assets/css/main.css" rel="stylesheet" /> 
         
     <!--     Fonts and icons     -->
-    <link href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" rel="stylesheet"> <!--  Добавить в папу -->
     <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
 
