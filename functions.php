@@ -6,7 +6,7 @@
 	function title() {
 	global $connect;
 	$page=$_GET['page'];
-	$filterbookgenre = $_GET['bookgenre'];
+	$filterbookgenre = $_GET['filterbookgenre'];
 
 	if ($_GET['bookid']) {
 		$bookid = $_GET['bookid'];
@@ -30,15 +30,22 @@
 		$booktitle = $bookquery_res['booktitle'];
     }
 
+    if (($_GET['edituserprofile']) || ($_GET['addbook']) || ($_GET['editbook']) || ($_GET['delbook'])) {
+    	echo 'Профиль';
+    }
+
 
 		if($_SERVER['REQUEST_URI'] === '/index.php' || $_SERVER['REQUEST_URI'] === '/') {
 			echo 'БУКВОКРУГ - продай или купи книгу';
-		} else if ($_SERVER['REQUEST_URI'] === '/index.php?page='.$page) {
-			echo 'Страница '.$page.' - БУКВОКРУГ';
-		} else if ($_SERVER['REQUEST_URI'] === '/index.php?page='.$page.'&bookgenre='.$filterbookgenre) {
-			echo 'Страница '.$page.' - БУКВОКРУГ';
+		} else if ($_SERVER['REQUEST_URI'] === '/?page='.$page) {
+			echo 'Страница '.$page;
+		} else if ($_SERVER['REQUEST_URI'] === '/?page='.$page.'&filterbookgenre='.$filterbookgenre) {
+			$bookgenreid_query = $connect->query("SELECT `id`,`genre` FROM `bookgenre` WHERE `id` = '$filterbookgenre'");
+			$bookgenre_id_mass = mysqli_fetch_assoc($bookgenreid_query);
+	        $bookgenre_name = $bookgenre_id_mass['genre'];
+			echo 'Страница '.$page.' - '.$bookgenre_name;
 		} else if (($_SERVER['REQUEST_URI'] === '/book.php?bookid='.$bookid) || ($_SERVER['REQUEST_URI'] === '/book.php?noactivebookid='.$bookid)) {
-			echo $booktitle.' - БУКВОКРУГ';
+			echo $booktitle;
 		} else if ($_SERVER['REQUEST_URI'] === '/profile.php?userid='.$userid) {
 			echo 'Профиль пользователя - '.$userlogin;
 		} else if ($_SERVER['REQUEST_URI'] === '/profile.php') {
@@ -153,6 +160,13 @@
 	    }
 	    //Возвращение значения
     	echo json_encode($data);
+	}
+
+	/*Подстановка жанра в поле селект лист*/
+	$getbookgenre = $connect->query("SELECT `id`,`genre` FROM `bookgenre`");
+	$getbookgenre_res = '';
+	while($getbookgenre_mass = mysqli_fetch_assoc($getbookgenre)) {
+	  		$getbookgenre_res .= '<option value = "'.$getbookgenre_mass['id'].'">'.$getbookgenre_mass['genre'].'</option>';
 	}
 
 
@@ -310,13 +324,10 @@ if ($_SESSION['userlogin']) {
 	if($_SERVER['REQUEST_URI'] === '/addbook.php') {
 		if(isset($_POST['addtitlebook']) and isset($_POST['bookgenre']) and isset($_POST['addpricebook']) and isset($_POST['addtextbook'])) {
 		$addtitlebook = htmlspecialchars($_POST['addtitlebook']); 
-		$bookgenre = htmlspecialchars($_POST['bookgenre']); 
+		$addbookgenre = htmlspecialchars($_POST['bookgenre']); 
 		$addpricebook = htmlspecialchars(trim($_POST['addpricebook']));
 		$addtextbook = htmlspecialchars($_POST['addtextbook']); 
-		//Достаем id жанра
-		$bookgenreid_query = $connect->query("SELECT `id` FROM `bookgenre` WHERE `genre` = '$bookgenre'");
-		$bookgenre_id_mass = mysqli_fetch_assoc($bookgenreid_query);
-        $bookgenre_id = $bookgenre_id_mass['id'];
+		
 
 		/*Дата добавления и окнчания*/
 		$addtime = time();
@@ -355,7 +366,7 @@ if ($_SESSION['userlogin']) {
         	$uploadfile = $uploaddir.$addtime.'.'.$p;
 	        copy($_FILES['uploadfile']['tmp_name'], $uploadfile);
 		
-			$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`,`city_id`) VALUES ('','$userlogin_id','$addtitlebook','$bookgenre_id','$addtextbook','$addpricebook','$uploadfile', '$addtime', '$endtime','$usercity_id')");
+			$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`,`city_id`) VALUES ('','$userlogin_id','$addtitlebook','$addbookgenre','$addtextbook','$addpricebook','$uploadfile', '$addtime', '$endtime','$usercity_id')");
 					if ($addbook) {
 						header("Location: profile.php?addbook=1");
 
@@ -580,12 +591,7 @@ if ($_SESSION['userlogin']) {
 
 }// Конец $_SESSION['userlogin']
 
-	/*Подстановка жанра в поле селект лист*/
-	$getbookgenre = $connect->query("SELECT `id`,`genre` FROM `bookgenre`");
-	$getbookgenre_res = '';
-	while($getbookgenre_mass = mysqli_fetch_assoc($getbookgenre)) {
-	  		$getbookgenre_res .= '<option value = "'.$getbookgenre_mass['id'].'">'.$getbookgenre_mass['genre'].'</option>';
-	}
+	
 
 	
 	/*Запрет на посещение устаревших книг*/
@@ -731,7 +737,7 @@ if ($_SESSION['userlogin']) {
 
 		
 			//Работа со страницами
-			$quantity = 2; // Кол-во книг на странице
+			$quantity = 20; // Кол-во книг на странице
 			$limit = 3; // Страниц ..
 			$page=$_GET['page'];
 			if(!is_numeric($page)) { $page=1; }
@@ -815,7 +821,7 @@ if ($_SESSION['userlogin']) {
 			}
 
 			
-				$quantity = 2; // Кол-во книг на странице
+				$quantity = 20; // Кол-во книг на странице
 				$limit = 3; // Страниц ..
 				$page=$_GET['page'];
 				if(!is_numeric($page)) { $page=1; }
