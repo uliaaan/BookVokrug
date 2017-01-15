@@ -1383,3 +1383,20 @@ body {
 .nav-tabs-navigation {
         border-bottom: 1px solid #1a1817;
 }
+
+.citiinputheader {
+    margin: 15px 3px;
+    max-width: 150px;
+    background: transparent;
+    border: 2px solid #EB5E28;
+    border-radius: 20px;
+    color: #EB5E28;
+}
+
+.citiinputheader:hover {
+    background: transparent;
+}
+
+.citiinputheader:focus {
+    background: transparent;
+}

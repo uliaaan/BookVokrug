@@ -48,6 +48,13 @@
 <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="navigation-example-2">
       <ul class="nav navbar-nav navbar-right">
+        <li><a href='/citys.php' class='btn btn-danger btn-fill' >
+        <? if (empty($usercity_session) || empty($_SESSION['usercity'])) {
+            echo $allcitys;
+          } else {
+            echo $usercity_session; 
+          }?>
+        </a></li>
         <!--   <li>
           <a href="components.html" class="btn btn-danger btn-simple">Components</a>
         </li>
