@@ -1400,3 +1400,33 @@ body {
 .citiinputheader:focus {
     background: transparent;
 }
+
+.cityslinks a {
+    color: #EB5E28;
+    margin-right: 10px;
+}
+
+.cityslinks a:hover {
+    color: #777777;
+    border-bottom: 1px dashed #777777;
+}
+
+.cityslinks-main a {
+    font-weight: bold; 
+    font-size: 26px;
+}
+
+.cityslinks-maincitys a {
+    font-weight: bold; 
+    font-size: 20px;
+}
+
+.cityslinks-othercitys a { 
+    font-size: 14px;
+}
+
+
+
+.cityslinks-select {
+    margin: 10px 0;
+}

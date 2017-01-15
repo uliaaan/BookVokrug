@@ -2,17 +2,17 @@
 	session_start();
 	$connect = mysqli_connect('localhost', 'root', '12345678','bookvokrug');
 	date_default_timezone_set('Europe/Moscow');
-	$usercity_id_null = $_SESSION['usercity'];
-	$usercity_query = $connect->query("SELECT `id` FROM `rcity` WHERE `Name` = '$usercity_id_null'");
-	$usercity_query_mass = mysqli_fetch_assoc($usercity_query);
-    
-    
-
+	
     //Переменные 
 	$allcitys = "Все города";
 	$allgenres = "Все жанры";
 	$usercity_session = $_SESSION['usercity']; //Название города
-	$usercity_id = $usercity_query_mass['id']; //ID города
+
+	$usercity_id_null = $usercity_session;
+	$usercity_query = $connect->query("SELECT `ID` FROM `rcity` WHERE `Name` = '$usercity_id_null'");
+	$usercity_query_mass = mysqli_fetch_assoc($usercity_query);
+
+	$usercity_session_id = $usercity_query_mass['ID']; //ID города
 
 	function title() {
 	global $connect;
@@ -675,7 +675,7 @@ function booksonmain() {
 	//Подключение общих переменных
 	global $allcitys;
 	global $usercity_session;
-	global $usercity_id;
+	global $usercity_session_id;
 	global $filtersearch_value;
 	global $filterbookgenre_value;
 	global $allgenres_all;
@@ -689,7 +689,7 @@ function booksonmain() {
 	} else if (empty($usercity_session)) {
 		$filtercity_value = "";
 	} else {
-		$filtercity_value = "WHERE `city_id` = '$usercity_id'";
+		$filtercity_value = "WHERE `city_id` = '$usercity_session_id'";
 	}
 
 	//Работа со страницами
@@ -698,7 +698,7 @@ function booksonmain() {
 	$page=$_GET['page'];
 	if(!is_numeric($page)) { $page=1; }
 	if ($page<1) { $page=1; }
-	$cout_rows_query = $connect->query("SELECT * FROM `books` WHERE `city_id` = '$usercity_id'");
+	$cout_rows_query = $connect->query("SELECT * FROM `books` WHERE `city_id` = '$usercity_session_id'");
 	$cout_rows = mysqli_num_rows($cout_rows_query);
 	$pages = $cout_rows/$quantity;
 	$pages = ceil($pages);
@@ -749,7 +749,7 @@ function booksonmain() {
 			$resulturl = "";
 			}
 		} else {
-			$filtercity_value = "WHERE `city_id` = '$usercity_id'";
+			$filtercity_value = "WHERE `city_id` = '$usercity_session_id'";
 		 	//Если текст и все жанры
 			if (!empty($filtersearch) && ($filterbookgenre == $allgenres)) {
 				$filtersearch_value = "AND `booktitle` LIKE '%".$filtersearch."%'";
