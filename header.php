@@ -48,7 +48,7 @@
 <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="navigation-example-2">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href='/citys.php' class='btn btn-danger btn-fill' >
+        <li><a href='/citys.php' class='btn btn-danger btn-fill' > <i class="fa fa-map-marker" aria-hidden="true"></i>
         <? if (empty($usercity_session) || empty($_SESSION['usercity'])) {
             echo $allcitys;
           } else {
@@ -75,7 +75,7 @@
           <li>
           <a href='/addbook.php' class='btn btn-danger btn-fill'>Добавить книгу</a>"; 
         	} else {
-          echo "<a href='#' target='_blank' class='btn btn-danger btn-fill' data-toggle='modal' data-target='#enter'>Войти</a>";
+          echo "<a href='#enter' target='_blank' class='btn btn-danger btn-fill' data-toggle='modal' data-target='#enter'>Войти</a>";
           }
           ?>
           </li>

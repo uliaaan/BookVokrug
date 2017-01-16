@@ -143,9 +143,13 @@
   color: #777777;
   padding: 10px 15px;
   font-size: 14px;
-  margin: 15px 3px;
+  margin: 6px 0px 6px 25px;
   line-height: 20px;
   text-align: center;
+}
+
+.footer-demo .copyright img {
+    width: 67px;
 }
 .footer-demo .heart{
     color: #EB5E28;
@@ -1301,6 +1305,12 @@ body {
     color: #EB5E28;
 }
 
+.bookmb-info-main a:hover {
+    color: #777777;
+    border-bottom: 1px dashed #777777;
+}
+
+
 .bookmb-info-main-simple {
     font-size: 17px;
     margin-bottom: 5px;
@@ -1322,13 +1332,13 @@ body {
 
 
 .edit-book-button {
-    margin-left: 160px;
+    margin-left: 175px;
     position: absolute; 
     color: #fff;
 }
 
 .delete-book-button {
-    margin-left: 180px;
+    margin-left: 194px;
     position: absolute; 
     color: #fff;
 }
@@ -1375,9 +1385,8 @@ body {
 }
 
 .nav-tabs > li.active :after {
-    border-bottom: 11px solid #1a1817;
-    border-left:0px;
-    border-right: 0px;
+    border-bottom: 11px solid #ebebeb;
+
 }
 
 .nav-tabs-navigation {
@@ -1429,4 +1438,31 @@ body {
 
 .cityslinks-select {
     margin: 10px 0;
+}
+
+.profileuser-undertitle {
+    font-size: 20px;
+}
+
+.profileuser-title {
+    line-height: 0.9;
+}
+
+.footer-social-icons {
+    color: #777777;
+    font-size: 14px;
+    margin: 18px 3px;
+    float: right;
+}
+
+.footer-social-icons i {
+    margin: 0 5px;
+}
+
+.footer-social-icons a {
+    color: #EB5E28;
+}
+
+.footer-social-icons a:hover {
+    color: #333;
 }

@@ -41,7 +41,7 @@
                         ?>
                     <div id="my-tab-content" class="tab-content">
                         <div class="tab-pane active" id="activebooks">
-                            <div class="row">
+                            <!-- <div class="row"> -->
                             <? if($_SESSION['userlogin']) {
                                     if($_GET['userid'])  {
 
@@ -55,7 +55,7 @@
                                     echo profile_booksonmain();
                                 }
                             ?>
-                            </div>
+                            <!-- </div> -->
                         </div>
                         <div class="tab-pane" id="notactivebooks">
 

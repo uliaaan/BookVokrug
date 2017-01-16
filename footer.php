@@ -8,16 +8,48 @@
             <ul>
 
                 <li>
-                    <a href="/">
+                    <a href="/about.php">
                         О проекте
                     </a>
                 </li>
-               
+                <li>
+                    <a href="/rules.php">
+                       Правила
+                    </a>
+                </li>
+                <li>
+                    <a href="/lince.php">
+                        Лицензионное соглашение
+                    </a>
+                </li>
             </ul>
         </nav>
         <div class="copyright pull-right">
-            MADE BY ULIAAAAN
+            powered by <a href="http://uliaaan.ru"><img src="http://uliaaan.ru/logo000.svg"></a>
         </div>
+        <div class="footer-social-icons">
+        <a href="https://github.com/uliaaan/BookVokrug">
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+          </span>
+        </a>
+        <a href="https://instagram.com/bookvokrug">
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-circle fa-stack-2x"></i>
+            <i class="fa fa-instagram fa-stack-1x fa-inverse"></i>
+          </span>
+        </a>
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-circle fa-stack-2x"></i>
+          <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+        </span>
+        <span class="fa-stack fa-lg">
+          <i class="fa fa-circle fa-stack-2x"></i>
+          <i class="fa fa-vk fa-stack-1x fa-inverse"></i>
+        </span>
+        </div>
+        
     </div>
 </footer>
 </div>

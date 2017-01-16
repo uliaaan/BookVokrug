@@ -133,7 +133,8 @@
         $res_city_id = $usercity_id_true['ID'];
 		$userstreet = htmlspecialchars(trim($_POST['street'])); 
 		$userbuilding = htmlspecialchars(trim($_POST['building'])); 
-		$reg_query = $connect->query("INSERT INTO `users` (`id`, `login`, `password`,`email`,`telephone`,`city_id`,`street`,`building`) VALUES ('','$userlogin','$userpassword','$useremail','$usertelephone','$res_city_id','$userstreet','$userbuilding')");
+		$timenow = time();
+		$reg_query = $connect->query("INSERT INTO `users` (`id`, `login`, `password`,`email`,`telephone`,`city_id`,`street`,`building`,`datereg`) VALUES ('','$userlogin','$userpassword','$useremail','$usertelephone','$res_city_id','$userstreet','$userbuilding','$timenow')");
 			if ($reg_query) {
 				$_SESSION['userlogin'] = $userlogin;
 				$_SESSION['usercity'] = $usercity;
@@ -430,7 +431,7 @@ if ($_SESSION['userlogin']) {
 			} else {
 				$profile_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `user_id` = '$profile_user_id'");
 					while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
-						echo '<a href="book.php?editbookid=' .$booksrow_res['id']. '"><div class="books-block">';
+						echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
 							$booksrow_res['id'];
 							echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
 							echo '<div class="books-block-gradient"></div>';
@@ -604,10 +605,16 @@ if (isset($_GET['noactivebookid']) && !$_SESSION['userlogin']) {
 function nameinprofile() {
 	global $connect;
 	global $profile_user_id;
-	$userlogininprofile_query = $connect->query("SELECT `id`, `login`, `password`,`email`,`telephone`,`city_id`,`street`,`building` FROM `users` WHERE `id` = '$profile_user_id'");
+	$userlogininprofile_query = $connect->query("SELECT `id`, `login`, `password`,`email`,`telephone`,`city_id`,`street`,`building`,`datereg` FROM `users` WHERE `id` = '$profile_user_id'");
 	$userlogininprofile_mass = mysqli_fetch_assoc($userlogininprofile_query);
 	$userlogininprofile = $userlogininprofile_mass['login'];
-	echo '<h3 class="text-center">Профиль пользователя - ' .$userlogininprofile. '</h3>';
+	$profileuser_daterig = $userlogininprofile_mass['datereg'];
+	$profileuser_daterig_onair = (time() - $profileuser_daterig)/86400 + 1;
+	$profileuser_city_id = $userlogininprofile_mass['city_id'];
+	$profileuser_city_query = $connect->query("SELECT `Name` FROM `rcity` WHERE `ID` = '$profileuser_city_id'");
+	$profileuser_city_mass = mysqli_fetch_assoc($profileuser_city_query);
+	$profileuser_city_name = $profileuser_city_mass['Name'];
+	echo '<h3 class="text-center profileuser-title">Профиль пользователя - ' .$userlogininprofile. '<br><span class="profileuser-undertitle">' .$profileuser_city_name. ' - ' .round($profileuser_daterig_onair, 0). ' дней на сайте</span></h3>';
 	echo '<br>';
 }
 
@@ -698,7 +705,7 @@ function booksonmain() {
 	$page=$_GET['page'];
 	if(!is_numeric($page)) { $page=1; }
 	if ($page<1) { $page=1; }
-	$cout_rows_query = $connect->query("SELECT * FROM `books` WHERE `city_id` = '$usercity_session_id'");
+	$cout_rows_query = $connect->query("SELECT * FROM `books` $filtercity_value");
 	$cout_rows = mysqli_num_rows($cout_rows_query);
 	$pages = $cout_rows/$quantity;
 	$pages = ceil($pages);
@@ -858,9 +865,9 @@ if (isset($_GET['bookid'])) {
 	$book_user_street = $book_user_id_query_mass['street'];
 	$book_user_building = $book_user_id_query_mass['building'];
 	$book_user_city_id = $book_user_id_query_mass['city_id'];
-	$book_user_city_id_query = $connect->query("SELECT `id`, `city` FROM `citys` WHERE `id` = '$book_user_city_id'");
+	$book_user_city_id_query = $connect->query("SELECT `ID`, `Name` FROM `rcity` WHERE `ID` = '$book_user_city_id'");
 	$book_user_city_id_query_mass = mysqli_fetch_assoc($book_user_city_id_query);
-	$book_user_city = $book_user_city_id_query_mass['city'];
+	$book_user_city = $book_user_city_id_query_mass['Name'];
 
 	/*Данные жанра*/
 	$book_genre_id = $bookquery_res['bookgenre_id'];
