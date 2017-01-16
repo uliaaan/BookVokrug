@@ -6,7 +6,6 @@
     <div class="container">
         <nav class="pull-left">
             <ul>
-
                 <li>
                     <a href="/about.php">
                         О проекте
@@ -15,11 +14,6 @@
                 <li>
                     <a href="/rules.php">
                        Правила
-                    </a>
-                </li>
-                <li>
-                    <a href="/lince.php">
-                        Лицензионное соглашение
                     </a>
                 </li>
             </ul>

@@ -1466,3 +1466,8 @@ body {
 .footer-social-icons a:hover {
     color: #333;
 }
+
+#rules p {
+    text-align: justify;
+    text-indent: 30px;
+}

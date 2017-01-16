@@ -67,6 +67,12 @@
 			echo 'Добавить книгу';
 		} else if ($_SERVER['REQUEST_URI'] === '/settingsbook.php?editbookid='.$bookid) {
 			echo 'Редактировать книгу - '.$booktitle;
+		} else if ($_SERVER['REQUEST_URI'] === '/rules.php') {
+			echo 'Правила';
+		} else if ($_SERVER['REQUEST_URI'] === '/citys.php') {
+			echo 'Выбор города';
+		} else if ($_SERVER['REQUEST_URI'] === '/about.php') {
+			echo 'О проекте';
 		}
 	}
 
@@ -421,27 +427,27 @@ if ($_SESSION['userlogin']) {
 
 		/*Вывод если есть запрос на профиль*/
 		function profile_user_get() {
-		global $connect;
-		global $userlogin_id;
-		global $profile_user_id;
-		$profile_user_id = $_GET['userid'];
-		nameinprofile();
-			if ($profile_user_id == $userlogin_id) {
-				header("Location: profile.php");
-			} else {
-				$profile_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `user_id` = '$profile_user_id'");
-					while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
-						echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
-							$booksrow_res['id'];
-							echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
-							echo '<div class="books-block-gradient"></div>';
-							echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
-							echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
-							echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
+			global $connect;
+			global $userlogin_id;
+			$profile_user_id = $_GET['userid'];
+			
+				if ($profile_user_id == $userlogin_id) {
+					header("Location: profile.php");
+				} else {
+					nameinprofile();
+					$profile_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `user_id` = '$profile_user_id'");
+						while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
+							echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
+								$booksrow_res['id'];
+								echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+								echo '<div class="books-block-gradient"></div>';
+								echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
+								echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
+								echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
 
-						echo "</div></a>";
-					}
-			}
+							echo "</div></a>";
+						}
+				}
 		}
 
 
@@ -604,7 +610,7 @@ if (isset($_GET['noactivebookid']) && !$_SESSION['userlogin']) {
 /*Вывод имя профиля*/
 function nameinprofile() {
 	global $connect;
-	global $profile_user_id;
+	$profile_user_id = $_GET['userid'];
 	$userlogininprofile_query = $connect->query("SELECT `id`, `login`, `password`,`email`,`telephone`,`city_id`,`street`,`building`,`datereg` FROM `users` WHERE `id` = '$profile_user_id'");
 	$userlogininprofile_mass = mysqli_fetch_assoc($userlogininprofile_query);
 	$userlogininprofile = $userlogininprofile_mass['login'];
