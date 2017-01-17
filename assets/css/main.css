@@ -1471,3 +1471,14 @@ body {
     text-align: justify;
     text-indent: 30px;
 }
+
+.modal-body p {
+    text-align: center;
+    margin-bottom: 20px;
+        color: #999;
+    margin-top: 20px;
+}
+
+.modal-body hr {
+    margin-bottom: 0px;
+}

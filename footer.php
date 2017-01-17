@@ -93,7 +93,9 @@
         <div class="modal-body">
               <input name="login" type="text" id="login" maxlength="30" class="form-control" placeholder="Логин"><div class="reg-red-text"></div><br>
               <input name="email" type="text" id="email" maxlength="50" class="form-control" placeholder="E-mail"><div class="reg-red-text"></div><br>
-              <input name="telephone" type="text" id="telephone" maxlength="10" class="form-control" placeholder="Номер телефона без 8"><div class="reg-red-text"></div><br>
+              <input name="telephone" type="text" id="telephone" maxlength="10" class="form-control" placeholder="Номер телефона без 8"><div class="reg-red-text"></div>
+              
+              <p>Данные для подачи объявлений</p>
               <div class="display-flex">
                 <div class="ui-widget input-city-with-error">
                   <input name="city" type="text" id="city" maxlength="40" class="form-control input-city" placeholder="Город"><div class="reg-red-text"></div>

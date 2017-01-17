@@ -620,7 +620,7 @@ function nameinprofile() {
 	$profileuser_city_query = $connect->query("SELECT `Name` FROM `rcity` WHERE `ID` = '$profileuser_city_id'");
 	$profileuser_city_mass = mysqli_fetch_assoc($profileuser_city_query);
 	$profileuser_city_name = $profileuser_city_mass['Name'];
-	echo '<h3 class="text-center profileuser-title">Профиль пользователя - ' .$userlogininprofile. '<br><span class="profileuser-undertitle">' .$profileuser_city_name. ' - ' .round($profileuser_daterig_onair, 0). ' дней на сайте</span></h3>';
+	echo '<h3 class="text-center profileuser-title">Профиль пользователя - ' .$userlogininprofile. '<br><span class="profileuser-undertitle">г. ' .$profileuser_city_name. ' - ' .round($profileuser_daterig_onair, 0). ' дней на сайте</span></h3>';
 	echo '<br>';
 }
 
@@ -805,18 +805,19 @@ function booksonmain() {
 		$booksrow = $connect->query("SELECT * FROM `books` $filtercity_value ORDER BY `id` DESC LIMIT $quantity OFFSET $list");
 	}// Конец isset($_GET['filtersearch']) && isset($_GET['filterbookgenre']
 
-
-
-	while($booksrow_res = mysqli_fetch_assoc($booksrow)) {
-		echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
-			$booksrow_res['id'];
-			echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
-			echo '<div class="books-block-gradient"></div>';
-			echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
-			echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
-			echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
-
-		echo "</div></a>";
+	if (mysqli_num_rows($booksrow) > 0) {
+		while($booksrow_res = mysqli_fetch_assoc($booksrow)) {
+			echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
+				$booksrow_res['id'];
+				echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+				echo '<div class="books-block-gradient"></div>';
+				echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
+				echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
+				echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
+			echo "</div></a>";
+		}
+	} else {
+		echo '<div class="text-center"><h3>К сожалению, по Вашему запросу ничего не найдено</h3></div>';
 	}
 
 

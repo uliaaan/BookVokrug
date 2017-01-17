@@ -111,7 +111,7 @@ $(function() {
 	
 	
 	//Пароль
-	$("#password").change(function(){
+	$("#password").mouseout(function(){
 		password = $("#password").val();
 		if(password.length < 6){
 			$("#password").next().hide().text("Слишком короткий пароль").css("color","red").fadeIn(400);
@@ -221,7 +221,7 @@ $(function() {
 
 	//Город сравнение 
 	// CLICK НУЖНО ИСПРАВИТЬ!!!!!!!!!!!!!!!
-	$("#street").click(function(){
+	$("#street").focus(function(){
 		city = $("#city").val();
 			if (city != "") {
 			$.ajax({
