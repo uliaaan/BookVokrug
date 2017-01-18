@@ -13,25 +13,25 @@
       $row = mysqli_fetch_assoc($res);
       $_SESSION['usercity'] = $row['Name'];
         if ($rcity !== 0) {
-            header ('Location: /');
+            header ('Location: http://i96607v1.beget.tech/');
         }
     }
 
     //Постоянные ссылки
     if (isset($_GET['allcitys'])) {
         $_SESSION['usercity'] = $allcitys;
-        header("Location: /");
+        header("Location: http://i96607v1.beget.tech/");
     } else if (isset($_GET['ufa'])) {
         $_SESSION['usercity'] = "Уфа";
         header("Location: /");
     } else if (isset($_GET['moscow'])) {
         $_SESSION['usercity'] = "Москва";
-        header("Location: /");
+        header("Location: http://i96607v1.beget.tech/");
     } else if (isset($_GET['sankt-peterburg'])) {
         $_SESSION['usercity'] = "Санкт-Петербург";
         header("Location: /");
     }
-
+    
 
     function is_sel($a, $field)
     {

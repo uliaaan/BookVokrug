@@ -44,10 +44,11 @@
                             <!-- <div class="row"> -->
                             <? if($_SESSION['userlogin']) {
                                     if($_GET['userid'])  {
-
                                         echo profile_user_get();
+
                                     } else {
                                         echo profile_user();
+                                        echo profile_user_noactualbooks();
                                     }
                                 } else if ($_SERVER['REQUEST_URI'] === '/profile.php') {
                                     header("Location: / ");
@@ -58,11 +59,9 @@
                             <!-- </div> -->
                         </div>
                         <div class="tab-pane" id="notactivebooks">
-
-                           <? echo profile_user_noactualbooks(); ?>
+                           <?  ?>
                         </div>
                     </div>
-                    
                 </div>        
             </div>
         </section>

@@ -1,8 +1,8 @@
 <? 
 	session_start();
-	$connect = mysqli_connect('localhost', 'root', '12345678','bookvokrug');
+	$connect = mysqli_connect('localhost', 'i96607v1_bd', '12345678','i96607v1_bd');
 	date_default_timezone_set('Europe/Moscow');
-	
+	ob_start();
     //Переменные 
 	$allcitys = "Все города";
 	$allgenres = "Все жанры";
@@ -411,7 +411,7 @@ if ($_SESSION['userlogin']) {
 		while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
 				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
 					$booksrow_res['id'];			
-					echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+					echo '<img class="bgbooks" src="/' .$booksrow_res['imgbookurl']. '"> ';
 					echo '<div class="books-block-gradient"></div>';
 					echo '<div class="edit-book-button"><a href="settingsbook.php?editbookid=' .$booksrow_res['id']. '"><i class="fa fa-cog" aria-hidden="true"></i></a></div>';
 					echo '<div class="delete-book-button"><a href="?deletebookid=' .$booksrow_res['id']. '"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>';	
@@ -439,7 +439,7 @@ if ($_SESSION['userlogin']) {
 						while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
 							echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
 								$booksrow_res['id'];
-								echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+								echo '<img class="bgbooks" src="/' .$booksrow_res['imgbookurl']. '"> ';
 								echo '<div class="books-block-gradient"></div>';
 								echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
 								echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
@@ -459,7 +459,7 @@ if ($_SESSION['userlogin']) {
 		while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
 				echo '<a href="book.php?noactivebookid=' .$booksrow_res['id']. '"><div class="books-block">';
 					$booksrow_res['id'];
-					echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+					echo '<img class="bgbooks" src="/' .$booksrow_res['imgbookurl']. '"> ';
 					echo '<div class="books-block-gradient"></div>';
 					echo '<div class="up-book-button"><a href="?upbookid=' .$booksrow_res['id']. '"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></div>';
 					echo '<div class="delete-book-button"><a href="?deletebookid=' .$booksrow_res['id']. '"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>';	
@@ -809,7 +809,7 @@ function booksonmain() {
 		while($booksrow_res = mysqli_fetch_assoc($booksrow)) {
 			echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
 				$booksrow_res['id'];
-				echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+				echo '<img class="bgbooks" src="/' .$booksrow_res['imgbookurl']. '"> ';
 				echo '<div class="books-block-gradient"></div>';
 				echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
 				echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
@@ -903,7 +903,7 @@ function profile_booksonmain() {
 		while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
 				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
 					$booksrow_res['id'];
-					echo '<img class="bgbooks" src="http://localhost:88/' .$booksrow_res['imgbookurl']. '"> ';
+					echo '<img class="bgbooks" src="/' .$booksrow_res['imgbookurl']. '"> ';
 					echo '<div class="books-block-gradient"></div>';
 					echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
 					echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
