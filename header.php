@@ -9,20 +9,31 @@
 	
 	<title><? title(); ?> - БУКВОКРУГ</title>
 
+  <meta name="description" content="БУКВОКРУГ - купи, продай или обменяй книжки"/>
+  <meta name="robots" content="noodp"/>
+  <link rel="canonical" href="http://bookvokrug.ru/" />
+  <meta property="og:locale" content="ru_RU" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="БУКВОКРУГ - купи, продай или обменяй книжки" />
+  <meta property="og:description" content="Скопились книжки и Вы не знаете куда их деть? Продайте или обменяйте их на нашем порале!" />
+  <meta property="og:url" content="http://bookvokrug.ru/" />
+  <meta property="og:site_name" content="bookvokrug.ru" />
+
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-    <meta name="viewport" content="width=device-width" />
+  <meta name="viewport" content="width=device-width" />
 
-    <link href="assets/css/jquery-ui.css" rel="stylesheet" /> 
-    <link href="bootstrap3/css/bootstrap.css" rel="stylesheet" />
-    <link href="assets/css/ct-paper.css" rel="stylesheet"/>
-    <link href="assets/css/main.css" rel="stylesheet" /> 
-        
-    <!--     Fonts and icons     -->
-    <link href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" rel="stylesheet"> <!--  Добавить в папу -->
-    <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+  <link href="assets/css/jquery-ui.css" rel="stylesheet" /> 
+  <link href="bootstrap3/css/bootstrap.css" rel="stylesheet" />
+  <link href="assets/css/ct-paper.css" rel="stylesheet"/>
+  <link href="assets/css/main.css" rel="stylesheet" /> 
 
-      
+  <!--     Fonts and icons     -->
+  <link href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" rel="stylesheet"> <!--  Добавить в папу -->
+  <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+  <meta name="yandex-verification" content="868867660412cf61" />
+  <meta name="google-site-verification" content="37ds4WzRmwb3lj5HuCccy0k91nZkkki_K0NdTzjWg_k" />
+
 </head>
 <body>
 <nav class="navbar navbar-ct-transparent nav-img" role="navigation-demo" id="demo-navbar">

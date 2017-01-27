@@ -245,9 +245,9 @@ if ($_SESSION['userlogin']) {
 			$usertelephone = htmlspecialchars(trim($_POST['telephone'])); 
 			$usercity = htmlspecialchars(trim($_POST['city']));
 			//Достаем id города
-			$usercity_id = $connect->query("SELECT `id` FROM `citys` WHERE `city` = '$usercity'");
+			$usercity_id = $connect->query("SELECT `ID` FROM `rcity` WHERE `Name` = '$usercity'");
 			$usercity_id_true = mysqli_fetch_assoc($usercity_id);
-	        $res_city_id = $usercity_id_true['id'];
+	        $res_city_id = $usercity_id_true['ID'];
 			$userstreet = htmlspecialchars(trim($_POST['street'])); 
 			$userbuilding = htmlspecialchars(trim($_POST['building']));
 			$update_query = $connect->query("UPDATE `users` SET `email` = '$useremail', `telephone` = '$usertelephone', `city_id` = '$res_city_id', `street` = '$userstreet', `building` = '$userbuilding' WHERE `login` = '$userlogin'");
@@ -381,7 +381,7 @@ if ($_SESSION['userlogin']) {
 
 
     	/*Проверка размера фото*/
-        if (($_FILES['uploadfile']['type'] == 'image/gif' || $_FILES['uploadfile']['type'] == 'image/jpeg' || $_FILES['uploadfile']['type'] == 'image/png') && ($uploadfilesize <= 1024000)) {
+        if (($_FILES['uploadfile']['type'] == 'image/gif' || $_FILES['uploadfile']['type'] == 'image/jpeg' || $_FILES['uploadfile']['type'] == 'image/png') && ($uploadfilesize <= 1024000) && ($uploadfilesize != 0)) {
         	/*Подстановка пути до картинки*/
         	$uploadfile = $uploaddir.$addtime.'.'.$p;
 	        copy($_FILES['uploadfile']['tmp_name'], $uploadfile);
@@ -392,14 +392,101 @@ if ($_SESSION['userlogin']) {
 
 					}
 		
+		} else if ($uploadfilesize == 0) {
+					$addbook = $connect->query("INSERT INTO `books` (`id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime`,`city_id`) VALUES ('','$userlogin_id','$addtitlebook','$addbookgenre','$addtextbook','$addpricebook','', '$addtime', '$endtime','$usercity_id')");
+					if ($addbook) {
+						header("Location: profile.php?addbook=1");
+					} else {
+						header("Location: profile.php?addbook=2");
+					}
 		} else {
 			header("Location: profile.php?addbook=2");
 		}
-		} //Конец добавление книги
-
-		
+		} //Конец добавление книги	
 	} //Конец - страница добавления книги
 
+
+	//Страница редактирования книги
+	if (isset($_GET['editbookid'])) {
+		$editbookid = $_GET['editbookid'];
+		//Супер запрос на поиск из двух таблиц
+		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `id` = '$editbookid'"); //Запрос на вывод данных по запрошенному айдишник
+		while($bookquery_res = mysqli_fetch_assoc($bookquery)) { //Циклом решаем проблему сравнения нескольких полей
+				if ($bookquery_res['user_id'] == $userlogin_id) { //Если серв находит второе совпадение - БИНГО
+					$booktitle = $bookquery_res['booktitle'];
+					$book_price = $bookquery_res['price'];
+					$book_imgbookurl = $bookquery_res['imgbookurl'];
+					$book_genre_id = $bookquery_res['bookgenre_id'];
+
+					/*Данные жанра*/
+					$book_genre_id_query = $connect->query("SELECT `id`, `genre` FROM `bookgenre` WHERE `id` = '$book_genre_id'");
+					$book_genre_id_query_mass = mysqli_fetch_assoc($book_genre_id_query);
+					$editbook_genre_name = $book_genre_id_query_mass['genre'];
+				} else {
+					header("Location: profile.php");
+				}
+			}
+
+			/*Запрос страницы редактирования книг*/
+			if(isset($_POST['edittitlebook']) and isset($_POST['editbookgenre']) and isset($_POST['editpricebook'])) {
+			$edittitlebook = htmlspecialchars($_POST['edittitlebook']); 
+			$editpricebook = htmlspecialchars(trim($_POST['editpricebook']));
+			$editbookgenre = htmlspecialchars($_POST['editbookgenre']); 
+			//Достаем id жанра
+			$editbookgenreid_query = $connect->query("SELECT `id`,`genre` FROM `bookgenre` WHERE `id` = '$editbookgenre'");
+			$editbookgenre_id_mass = mysqli_fetch_assoc($editbookgenreid_query);
+	        $editbookgenre_id = $editbookgenre_id_mass['id'];
+
+			/*Дата добавления и окнчания*/
+			$addtime = time();
+	    
+	        /*Картинка в бд*/
+	        $uploaddir = 'assets/userbooks/';
+	        $uploadfilesize = $_FILES['uploadfile']['size'];
+	        
+	        /*Тип загружаемой картинки*/
+	        $typeimg = strtolower(substr(strrchr($_FILES['uploadfile']['name'],'.'), 1));
+				switch (true)
+				{
+				    case in_array($typeimg, array('jpeg','jpe','jpg')):
+				    {
+				        $p = 'jpeg';
+				        break;
+				    }
+				    case ($typeimg =='gif'):
+				    {
+				        $p = 'gif';
+				        break;
+				    }
+				    case ($typeimg =='png'):
+				    {
+				        $p = 'png';
+				        break;
+				    }
+				}
+
+		    	/*Проверка размера фото*/
+		       if (($_FILES['uploadfile']['type'] == 'image/gif' || $_FILES['uploadfile']['type'] == 'image/jpeg' || $_FILES['uploadfile']['type'] == 'image/png') && ($uploadfilesize <= 1024000) && ($uploadfilesize != 0)) {
+		        	$uploadfile = $uploaddir.$addtime.'.'.$p;
+			        copy($_FILES['uploadfile']['tmp_name'], $uploadfile);
+					$editbook = $connect->query("UPDATE `books` SET `booktitle` = '$edittitlebook', `bookgenre_id` = '$editbookgenre_id', `price` = '$editpricebook', `imgbookurl` = '$uploadfile' WHERE `id` = '$editbookid'");
+							if ($editbook) {
+								header("Location: profile.php?editbook=1");
+							} else {
+								header("Location: profile.php?editbook=2");
+							}
+				} else if ($uploadfilesize == 0) {
+					$editbook = $connect->query("UPDATE `books` SET `booktitle` = '$edittitlebook', `bookgenre_id` = '$editbookgenre_id', `price` = '$editpricebook' WHERE `id` = '$editbookid'");
+					if ($editbook) {
+						header("Location: profile.php?editbook=1");
+					} else {
+						header("Location: profile.php?editbook=2");
+					}
+				} else {
+					header("Location: profile.php?editbook=2");
+				}
+			} //Конец добавление книги
+	}// Конец isset($_GET['editbookid'])
 
 
 
@@ -407,7 +494,7 @@ if ($_SESSION['userlogin']) {
 		function profile_user() {
 		global $connect;
 		global $userlogin_id;
-		$profile_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `user_id` = '$userlogin_id'");
+		$profile_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `user_id` = '$userlogin_id' ORDER BY `id` DESC");
 		while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
 				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
 					$booksrow_res['id'];			
@@ -517,87 +604,7 @@ if ($_SESSION['userlogin']) {
 
 
 
-	//Страница редактирования книги
-	if (isset($_GET['editbookid'])) {
-		$editbookid = $_GET['editbookid'];
-		//Супер запрос на поиск из двух таблиц
-		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `id` = '$editbookid'"); //Запрос на вывод данных по запрошенному айдишник
-		while($bookquery_res = mysqli_fetch_assoc($bookquery)) { //Циклом решаем проблему сравнения нескольких полей
-				if ($bookquery_res['user_id'] == $userlogin_id) { //Если серв находит второе совпадение - БИНГО
-					$booktitle = $bookquery_res['booktitle'];
-					$book_price = $bookquery_res['price'];
-					$book_imgbookurl = $bookquery_res['imgbookurl'];
-					$book_genre_id = $bookquery_res['bookgenre_id'];
 
-					/*Данные жанра*/
-					$book_genre_id_query = $connect->query("SELECT `id`, `genre` FROM `bookgenre` WHERE `id` = '$book_genre_id'");
-					$book_genre_id_query_mass = mysqli_fetch_assoc($book_genre_id_query);
-					$editbook_genre_name = $book_genre_id_query_mass['genre'];
-				} else {
-					header("Location: profile.php");
-				}
-			}
-
-			/*Запрос страницы редактирования книг*/
-			if(isset($_POST['edittitlebook']) and isset($_POST['editbookgenre']) and isset($_POST['editpricebook'])) {
-			$edittitlebook = htmlspecialchars($_POST['edittitlebook']); 
-			$editpricebook = htmlspecialchars(trim($_POST['editpricebook']));
-			$editbookgenre = htmlspecialchars($_POST['editbookgenre']); 
-			//Достаем id жанра
-			$editbookgenreid_query = $connect->query("SELECT `id`,`genre` FROM `bookgenre` WHERE `id` = '$editbookgenre'");
-			$editbookgenre_id_mass = mysqli_fetch_assoc($editbookgenreid_query);
-	        $editbookgenre_id = $editbookgenre_id_mass['id'];
-
-			/*Дата добавления и окнчания*/
-			$addtime = time();
-	    
-	        /*Картинка в бд*/
-	        $uploaddir = 'assets/userbooks/';
-	        $uploadfilesize = $_FILES['uploadfile']['size'];
-	        
-	        /*Тип загружаемой картинки*/
-	        $typeimg = strtolower(substr(strrchr($_FILES['uploadfile']['name'],'.'), 1));
-				switch (true)
-				{
-				    case in_array($typeimg, array('jpeg','jpe','jpg')):
-				    {
-				        $p = 'jpeg';
-				        break;
-				    }
-				    case ($typeimg =='gif'):
-				    {
-				        $p = 'gif';
-				        break;
-				    }
-				    case ($typeimg =='png'):
-				    {
-				        $p = 'png';
-				        break;
-				    }
-				}
-
-		    	/*Проверка размера фото*/
-		       if (($_FILES['uploadfile']['type'] == 'image/gif' || $_FILES['uploadfile']['type'] == 'image/jpeg' || $_FILES['uploadfile']['type'] == 'image/png') && ($uploadfilesize <= 1024000) && ($uploadfilesize != 0)) {
-		        	$uploadfile = $uploaddir.$addtime.'.'.$p;
-			        copy($_FILES['uploadfile']['tmp_name'], $uploadfile);
-					$editbook = $connect->query("UPDATE `books` SET `booktitle` = '$edittitlebook', `bookgenre_id` = '$editbookgenre_id', `price` = '$editpricebook', `imgbookurl` = '$uploadfile' WHERE `id` = '$editbookid'");
-							if ($editbook) {
-								header("Location: profile.php?editbook=1");
-							} else {
-								header("Location: profile.php?editbook=2");
-							}
-				} else if ($uploadfilesize == 0) {
-					$editbook = $connect->query("UPDATE `books` SET `booktitle` = '$edittitlebook', `bookgenre_id` = '$editbookgenre_id', `price` = '$editpricebook' WHERE `id` = '$editbookid'");
-					if ($editbook) {
-						header("Location: profile.php?editbook=1");
-					} else {
-						header("Location: profile.php?editbook=2");
-					}
-				} else {
-					header("Location: profile.php?editbook=2");
-				}
-			} //Конец добавление книги
-	}// Конец isset($_GET['editbookid'])
 }// Конец $_SESSION['userlogin']
 	
 	

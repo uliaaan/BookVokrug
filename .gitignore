@@ -49,3 +49,6 @@ Temporary Items
 appserv/*
 cgi-bin/*
 phpMyAdmin/*
+assets/paper_img/*
+assets/userbooks/*
+ftpsync.settings

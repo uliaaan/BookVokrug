@@ -20,13 +20,13 @@
     //Постоянные ссылки
     if (isset($_GET['allcitys'])) {
         $_SESSION['usercity'] = $allcitys;
-        header("Location: http://i96607v1.beget.tech/");
+        header("Location: /");
     } else if (isset($_GET['ufa'])) {
         $_SESSION['usercity'] = "Уфа";
         header("Location: /");
     } else if (isset($_GET['moscow'])) {
         $_SESSION['usercity'] = "Москва";
-        header("Location: http://i96607v1.beget.tech/");
+        header("Location: /");
     } else if (isset($_GET['sankt-peterburg'])) {
         $_SESSION['usercity'] = "Санкт-Петербург";
         header("Location: /");

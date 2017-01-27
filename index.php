@@ -1,10 +1,11 @@
 <? include ('header.php') ?>
 
     <div class="demo-header demo-header-image">
-            <div class="motto">
-                <h1 class="title-uppercase"><? ?></h1>
-                <h3>232313.</h3>
-            </div>
+	    <div class="container">
+		    <div class="banner-on-index">
+		    	<img src="/assets/paper_img/ul2.png">
+		    </div>
+		</div>
     </div>
 
     <div class="filterblock">

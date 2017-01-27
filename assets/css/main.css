@@ -1482,3 +1482,8 @@ body {
 .modal-body hr {
     margin-bottom: 0px;
 }
+
+.banner-on-index {
+    margin-top: 40px;
+    display: block;
+}

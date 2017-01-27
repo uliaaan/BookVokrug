@@ -6,8 +6,8 @@
 			<div class="bookmb-main">
 			<div class="bookmb-left">
 				<div class="bookmb-img">
-					<span class="bookmb-img-bg" style="background-image: url(/<? echo $book_imgbookurl; ?>);"></span>
-					<img class="bgbooks" src="http://localhost:88/<? echo $book_imgbookurl; ?>">
+					<span class="bookmb-img-bg" style="background-image: url(<? echo $book_imgbookurl; ?>);"></span>
+					<img class="bgbooks" src="<? echo $book_imgbookurl; ?>">
 					
 				</div>
 			</div>
