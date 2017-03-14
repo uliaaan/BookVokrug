@@ -934,14 +934,10 @@
 }
 #demo-navbar{
     border-radius: 0;
-    margin-bottom: 0px;
-    box-shadow: 0 0px 10px #000;
+    margin-bottom: 0;
+    background-color: #1a1817;
 }
 
-.nav-img {
-    background-image: url(../paper_img/cityblur.jpg);
-    background-size: cover;
-}
 .download-area{
     margin-top: 30px;
 }
@@ -1205,9 +1201,11 @@ body {
 .booknameinner {
     color: #EB5E28; 
     margin: auto;
-    padding: 10px;
     text-align: center;
     font-size: 14px;
+    padding: 2px 10px;
+    word-wrap: break-word;
+    width: 213px;
 }
 
 .bookprice {
@@ -1237,7 +1235,7 @@ body {
 
 .bookmb-title h3 {
     margin: 0px !important;
-
+    word-wrap: break-word;
 }
 
 .bookmb-img {
@@ -1486,4 +1484,14 @@ body {
 .banner-on-index {
     margin-top: 40px;
     display: block;
+}
+
+.counter.character-counter-limit-exceeded {
+    color:red;
+}
+
+.characters-remaining-wrapper {
+    text-transform: uppercase;
+    font-size: 13px;
+    margin-top: 5px;
 }

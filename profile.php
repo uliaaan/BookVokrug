@@ -48,7 +48,7 @@
 
                                     } else {
                                         echo profile_user();
-                                        echo profile_user_noactualbooks();
+                                        
                                     }
                                 } else if ($_SERVER['REQUEST_URI'] === '/profile.php') {
                                     header("Location: / ");
@@ -59,7 +59,9 @@
                             <!-- </div> -->
                         </div>
                         <div class="tab-pane" id="notactivebooks">
-                           <?  ?>
+                           <? if($_SESSION['userlogin']) {
+                            echo profile_user_noactualbooks();  
+                            }?>
                         </div>
                     </div>
                 </div>        

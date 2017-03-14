@@ -9,7 +9,6 @@
 					<label>Название книги</label>
 					<div class="input-add-book">
 						<input name="addtitlebook" type="text" id="addtitlebook" class="form-control second-role">
-						<div class="reg-red-text"></div>
 					</div>
 				</div>
 				<div class="form-inline">

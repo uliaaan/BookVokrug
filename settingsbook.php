@@ -5,13 +5,12 @@
 		<div class="row">
 
 		<? echo $select_table_book_res; ?> 
-			<h4 class="text-center">Добавить книгу</h4>
+			<h4 class="text-center">Редактировать книгу</h4>
 			<form method="post" class="form" enctype="multipart/form-data">
 				<div class="form-inline">
 					<label>Название книги</label>
 					<div class="input-add-book">
 						<input name="edittitlebook" type="text" id="addtitlebook" class="form-control second-role" value="<? echo $booktitle; ?>">
-						<div class="reg-red-text"></div>
 					</div>
 				</div>
 				<div class="form-inline">
@@ -21,6 +20,13 @@
 						 	<? echo '<option value = "'.$book_genre_id.'">'.$editbook_genre_name.'</option>' ?>
 						 	<? echo $getbookgenre_res; ?>
 						</select>
+						<div class="reg-red-text"></div>
+					</div>
+				</div>
+				<div class="form-inline">
+					<label>Краткая рецензия</label>
+					<div class="input-add-book">
+						<textarea name="edittextbook" type="text" id="addtextbook" class="form-control second-role"><? echo $book_text; ?></textarea>
 						<div class="reg-red-text"></div>
 					</div>
 				</div>

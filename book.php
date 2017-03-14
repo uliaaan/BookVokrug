@@ -15,7 +15,7 @@
 				<div class="bookmb-info">
 					<div class="bookmb-info-top">№ <? echo $bookid; ?>, размещено <? echo date('Y-m-d', $book_addtime); ?> в <? echo date('H:i', $book_addtime); ?>
 					</div>					 
-					<div class="bookmb-info-top-right">Осталось дней: <? echo (int)$book_day_to_zero; ?></div>
+					<div class="bookmb-info-top-right">Осталось дней: <? echo (int)$book_day_to_zero + 1; ?></div>
 					<br>
 					<div class="bookmb-info-main">
 						<div class="bookmb-info-main-simple bookmb-info-main-tel"><small><i class="fa fa-phone" aria-hidden="true"></i></small>

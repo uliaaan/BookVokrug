@@ -36,6 +36,7 @@
 
 </head>
 <body>
+
 <nav class="navbar navbar-ct-transparent nav-img" role="navigation-demo" id="demo-navbar">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -49,7 +50,7 @@
       <a href="/">
            <div class="logo-container">
                 <div class="logo">
-                    <img src="assets/img/logo.svg" alt="logo">
+                    <img src="assets/img/logo-main.svg" alt="logo">
                 </div>
             
             </div>

@@ -116,6 +116,7 @@
 				$result = $my_query->fetch_assoc();
 				if ($result) {
 					$_SESSION['userlogin'] = $userlogin;
+					
 					}
 				}
 	}
@@ -201,9 +202,9 @@ if ($_SESSION['userlogin']) {
     $useremail = $userdatequery_mass['email'];
     $usertelephone = $userdatequery_mass['telephone'];
     $usercity_id = $userdatequery_mass['city_id'];
-    $usercity_query = $connect->query("SELECT `city` FROM `citys` WHERE `id` = '$usercity_id'");
+    $usercity_query = $connect->query("SELECT `Name` FROM `rcity` WHERE `id` = '$usercity_id'");
 	$usercity_id_true = mysqli_fetch_assoc($usercity_query);
-    $usercity = $usercity_id_true['city'];
+    $usercity = $usercity_id_true['Name'];
 
 
 
@@ -346,6 +347,9 @@ if ($_SESSION['userlogin']) {
 		$addtitlebook = htmlspecialchars($_POST['addtitlebook']); 
 		$addbookgenre = htmlspecialchars($_POST['bookgenre']); 
 		$addpricebook = htmlspecialchars(trim($_POST['addpricebook']));
+		if ($addpricebook == "") {
+				$addpricebook = 0;
+			} 
 		$addtextbook = htmlspecialchars($_POST['addtextbook']); 
 		
 
@@ -410,13 +414,14 @@ if ($_SESSION['userlogin']) {
 	if (isset($_GET['editbookid'])) {
 		$editbookid = $_GET['editbookid'];
 		//Супер запрос на поиск из двух таблиц
-		$bookquery = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `id` = '$editbookid'"); //Запрос на вывод данных по запрошенному айдишник
+		$bookquery = $connect->query("SELECT * FROM `books` WHERE `id` = '$editbookid'"); //Запрос на вывод данных по запрошенному айдишник
 		while($bookquery_res = mysqli_fetch_assoc($bookquery)) { //Циклом решаем проблему сравнения нескольких полей
 				if ($bookquery_res['user_id'] == $userlogin_id) { //Если серв находит второе совпадение - БИНГО
 					$booktitle = $bookquery_res['booktitle'];
 					$book_price = $bookquery_res['price'];
 					$book_imgbookurl = $bookquery_res['imgbookurl'];
 					$book_genre_id = $bookquery_res['bookgenre_id'];
+					$book_text = $bookquery_res['textbook'];
 
 					/*Данные жанра*/
 					$book_genre_id_query = $connect->query("SELECT `id`, `genre` FROM `bookgenre` WHERE `id` = '$book_genre_id'");
@@ -431,7 +436,11 @@ if ($_SESSION['userlogin']) {
 			if(isset($_POST['edittitlebook']) and isset($_POST['editbookgenre']) and isset($_POST['editpricebook'])) {
 			$edittitlebook = htmlspecialchars($_POST['edittitlebook']); 
 			$editpricebook = htmlspecialchars(trim($_POST['editpricebook']));
+			if ($editpricebook == "") {
+				$editpricebook = 0;
+			} 
 			$editbookgenre = htmlspecialchars($_POST['editbookgenre']); 
+			$edittextbook = htmlspecialchars($_POST['edittextbook']); 
 			//Достаем id жанра
 			$editbookgenreid_query = $connect->query("SELECT `id`,`genre` FROM `bookgenre` WHERE `id` = '$editbookgenre'");
 			$editbookgenre_id_mass = mysqli_fetch_assoc($editbookgenreid_query);
@@ -469,14 +478,14 @@ if ($_SESSION['userlogin']) {
 		       if (($_FILES['uploadfile']['type'] == 'image/gif' || $_FILES['uploadfile']['type'] == 'image/jpeg' || $_FILES['uploadfile']['type'] == 'image/png') && ($uploadfilesize <= 1024000) && ($uploadfilesize != 0)) {
 		        	$uploadfile = $uploaddir.$addtime.'.'.$p;
 			        copy($_FILES['uploadfile']['tmp_name'], $uploadfile);
-					$editbook = $connect->query("UPDATE `books` SET `booktitle` = '$edittitlebook', `bookgenre_id` = '$editbookgenre_id', `price` = '$editpricebook', `imgbookurl` = '$uploadfile' WHERE `id` = '$editbookid'");
+					$editbook = $connect->query("UPDATE `books` SET `booktitle` = '$edittitlebook', `bookgenre_id` = '$editbookgenre_id',`textbook` = $edittextbook, `price` = '$editpricebook', `imgbookurl` = '$uploadfile' WHERE `id` = '$editbookid'");
 							if ($editbook) {
 								header("Location: profile.php?editbook=1");
 							} else {
 								header("Location: profile.php?editbook=2");
 							}
 				} else if ($uploadfilesize == 0) {
-					$editbook = $connect->query("UPDATE `books` SET `booktitle` = '$edittitlebook', `bookgenre_id` = '$editbookgenre_id', `price` = '$editpricebook' WHERE `id` = '$editbookid'");
+					$editbook = $connect->query("UPDATE `books` SET `booktitle` = '$edittitlebook', `bookgenre_id` = '$editbookgenre_id', `textbook` = $edittextbook, `price` = '$editpricebook' WHERE `id` = '$editbookid'");
 					if ($editbook) {
 						header("Location: profile.php?editbook=1");
 					} else {

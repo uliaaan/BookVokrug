@@ -18,6 +18,129 @@ var login,
 	streetStat,
 	buildingStat;
 
+(function ($) {
+$.fn.characterCounter = function (params) {
+    // merge default and user parameters
+    params = $.extend({
+        // define maximum characters
+        maximumCharacters: 90,
+        // create typed character counter DOM element on the fly
+        characterCounterNeeded: true,
+        // create remaining character counter DOM element on the fly
+        charactersRemainingNeeded: true,
+        // chop text to the maximum characters
+        chopText: false,
+        // place character counter before input or textarea element
+        positionBefore: false,
+        // class for limit excess
+        limitExceededClass: "character-counter-limit-exceeded",
+        // whether to use the short format (e.g. 123/1000)
+        shortFormat: false,
+        // separator for the short format
+        shortFormatSeparator: "/"
+    }, params);
+
+    // traverse all nodes
+    this.each(function () {
+        var $this = $(this),
+            $pluginElementsWrapper,
+            $characterCounterSpan,
+            $charactersRemainingSpan;
+
+        // return if the given element is not a textfield or textarea
+        if (!$this.is("input[type=text]") && !$this.is("textarea")) {
+            return this;
+        }
+
+        // create main parent div
+        if (params.characterCounterNeeded || params.charactersRemainingNeeded) {
+            // create the character counter element wrapper
+            $pluginElementsWrapper = $('<div>', {
+                'class': 'character-counter-main-wrapper'
+            });
+
+            if (params.positionBefore) {
+                $pluginElementsWrapper.insertBefore($this);
+            } else {
+                $pluginElementsWrapper.insertAfter($this);
+            }
+        }
+
+        if (params.characterCounterNeeded) {
+            $characterCounterSpan = $('<span>', {
+                'class': 'counter character-counter',
+                    'text': 0
+            });
+
+            if (params.shortFormat) {
+                $characterCounterSpan.appendTo($pluginElementsWrapper);
+
+                var $shortFormatSeparatorSpan = $('<span>', {
+                    'html': params.shortFormatSeparator
+                }).appendTo($pluginElementsWrapper);
+
+            }
+        }
+
+        if (params.charactersRemainingNeeded) {
+
+            $charactersRemainingSpan = $('<span>', {
+                'class': 'counter characters-remaining',
+                    'text': 'Осталось символов: ' + params.maximumCharacters
+            });
+
+            if (params.shortFormat) {
+                $charactersRemainingSpan.appendTo($pluginElementsWrapper);
+            } else {
+                // create the character counter element wrapper
+                var $charactersRemainingWrapper = $('<div>', {
+                    'class': 'characters-remaining-wrapper',
+                        'html': params.charactersRemainingSuffixText
+                });
+                $charactersRemainingWrapper.prepend($charactersRemainingSpan);
+                $charactersRemainingWrapper.appendTo($pluginElementsWrapper);
+            }
+        }
+
+        $this.keyup(function () {
+
+            var typedText = $this.val();
+            var textLength = typedText.length;
+            var charactersRemaining = params.maximumCharacters - textLength;
+
+            // chop the text to the desired length
+            if (charactersRemaining < 0 && params.chopText) {
+                $this.val(typedText.substr(0, params.maximumCharacters));
+                charactersRemaining = 0;
+                textLength = params.maximumCharacters;
+            }
+
+            if (params.characterCounterNeeded) {
+                $characterCounterSpan.text(textLength);
+            }
+
+            if (params.charactersRemainingNeeded) {
+            	var countremain = "Осталось символов: " + charactersRemaining;
+                $charactersRemainingSpan.text(countremain);
+
+                if (charactersRemaining <= 0) {
+                    if (!$charactersRemainingSpan.hasClass(params.limitExceededClass)) {
+                        $charactersRemainingSpan.addClass(params.limitExceededClass);
+                    }
+                } else {
+                    $charactersRemainingSpan.removeClass(params.limitExceededClass);
+                }
+            }
+        });
+
+    });
+
+    // allow jQuery chaining
+    return this;
+
+};
+})(jQuery);
+
 $(function() {
 
 
@@ -386,6 +509,7 @@ $(function() {
 
 //ДОБАВЛЕНИЕ КНИГИ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	//Обработчик цены
+if(window.location.href=="http://bookvokrug.ru/addbook.php") {
 	document.getElementsByName("addpricebook")[0].onkeypress = function(e) {
       e = e || event;
       if (e.ctrlKey || e.altKey || e.metaKey) return;
@@ -395,18 +519,33 @@ $(function() {
         return false;
       }
     }
+} else {
+	document.getElementsByName("editpricebook")[0].onkeypress = function(e) {
+      e = e || event;
+      if (e.ctrlKey || e.altKey || e.metaKey) return;
+      var chr = getChar(e);
+      if (chr == null) return;
+      if (chr < '0' || chr > '9') {
+        return false;
+      }
+    }
+}
 
-    //Заголовок книги
+
+
+
+
+
+
+	//Заголовок книги
 	$("#addtitlebook").change(function(){
 	addtitlebook = $("#addtitlebook").val();
-		if(addtitlebook.length < 1){
-			$("#addtitlebook").next().hide().text("Введите название книги").css("color","red").fadeIn(400);
-			$("#addtitlebook").removeClass().addClass("form-control inputRed");
+		if(addtitlebook.length > 90){
+			$("#addtitlebook").addClass("form-control inputRed");
 			addtitlebookStat = 0;
 			buttonOnAndOffaddbook();
 		}else{
-			$("#addtitlebook").removeClass().addClass("form-control inputGreen");
-			$("#addtitlebook").next().text("");
+			$("#addtitlebook").addClass("form-control inputGreen");
 			addtitlebookStat = 1;
 			buttonOnAndOffaddbook();
 		}		
@@ -414,7 +553,6 @@ $(function() {
 	$("#addtitlebook").keyup(function(){
 		$("#addtitlebook").removeClass("inputGreen");
 		$("#addtitlebook").removeClass("inputRed");
-		$("#addtitlebook").next().text("");
 	});
 
 	function buttonOnAndOffaddbook() {
@@ -426,20 +564,28 @@ $(function() {
 	
 	}
 
-
-
-	
 }); //End functions()
 
-	//Изоображение отображаемое сразу после загрузки
-     function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
 
-            reader.onload = function (e) {
-                $('#imgwiev').attr('src', e.target.result);
-            };
+$(document).ready(function () {
 
-            reader.readAsDataURL(input.files[0]);
-        }
+    $('#addtitlebook').characterCounter();
+
+});
+
+
+//Изоображение отображаемое сразу после загрузки
+ function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#imgwiev').attr('src', e.target.result);
+        };
+
+        reader.readAsDataURL(input.files[0]);
     }
+}
+
+
+

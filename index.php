@@ -1,12 +1,12 @@
 <? include ('header.php') ?>
 
-    <div class="demo-header demo-header-image">
-	    <div class="container">
-		    <div class="banner-on-index">
-		    	<img src="/assets/paper_img/ul2.png">
-		    </div>
-		</div>
-    </div>
+   <!--  <div class="demo-header demo-header-image">
+   	    <div class="container">
+   		    <div class="banner-on-index">
+   		    	<img src="/assets/paper_img/ul2.png">
+   		    </div>
+   		</div>
+   </div> -->
 
     <div class="filterblock">
         <div class="container">

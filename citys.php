@@ -13,7 +13,7 @@
       $row = mysqli_fetch_assoc($res);
       $_SESSION['usercity'] = $row['Name'];
         if ($rcity !== 0) {
-            header ('Location: http://i96607v1.beget.tech/');
+            header ('Location:/');
         }
     }
 
@@ -29,6 +29,9 @@
         header("Location: /");
     } else if (isset($_GET['sankt-peterburg'])) {
         $_SESSION['usercity'] = "Санкт-Петербург";
+        header("Location: /");
+    } else if (isset($_GET['nijni-novgorod'])) {
+        $_SESSION['usercity'] = "Нижний Новгород";
         header("Location: /");
     }
     
@@ -106,10 +109,27 @@
     <div class="cityslinks-maincitys">
         <a href="?moscow">Москва</a>
         <a href="?sankt-peterburg">Санкт-Петербург</a>
-        <a href="?ufa">Уфа</a>
+        <a href="?vladivostok">Владивосток</a>
+        <a href="?nijni-novgorod">Нижний Новгород</a>
+        <a href="?rostov">Ростов-на-Дону</a>
+        <a href="?ekb">Екатеринбург</a>
+        <a href="?samara">Самара</a>
     </div>
     <div class="cityslinks-othercitys">
+        <a href="?Kazan">Казань</a>
+        <a href="?novosibirsk">Новосибирск</a>
+        <a href="?krasnoyarsk">Красноярск</a>
+        <a href="?tumen">Тюмень</a>
+        <a href="?khabarovsk">Хабаровск</a>
+        <a href="?irkutsk">Иркутск</a>
+        <a href="?tomsk">Томск</a>
+        <a href="?mahaczkala">Махачкала</a>
         <a href="?ufa">Уфа</a>
+        <a href="?ulan-ude">Улан-Удэ</a>
+        <a href="?Tver">Тверь</a>
+        <a href="?Soczi">Сочи</a>
+        <a href="?Voronez">Воронеж</a>
+        <a href="?Perm">Пермь</a>
     </div>
 </div>
 
