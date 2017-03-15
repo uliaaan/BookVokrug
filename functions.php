@@ -73,6 +73,8 @@
 			echo 'Выбор города';
 		} else if ($_SERVER['REQUEST_URI'] === '/about.php') {
 			echo 'О проекте';
+		} else if ($_SERVER['REQUEST_URI'] === '/enter.php') {
+			echo 'Вход';
 		}
 	}
 
@@ -116,7 +118,7 @@
 				$result = $my_query->fetch_assoc();
 				if ($result) {
 					$_SESSION['userlogin'] = $userlogin;
-					
+					header("Location: /");
 					}
 				}
 	}
@@ -228,6 +230,11 @@ if ($_SESSION['userlogin']) {
 		}else{
 			echo "no";
 		}
+	}
+
+	//if session dont accesss page enter 
+	if($_SERVER['REQUEST_URI'] === '/enter.php') {
+		header("Location: /");
 	}
 
 
@@ -505,7 +512,7 @@ if ($_SESSION['userlogin']) {
 		global $userlogin_id;
 		$profile_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `user_id` = '$userlogin_id' ORDER BY `id` DESC");
 		while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
-				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
+				echo '<div class="books-block"><a href="book.php?bookid=' .$booksrow_res['id']. '">';
 					$booksrow_res['id'];			
 					echo '<img class="bgbooks" src="/' .$booksrow_res['imgbookurl']. '"> ';
 					echo '<div class="books-block-gradient"></div>';
@@ -516,7 +523,7 @@ if ($_SESSION['userlogin']) {
 					echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
 					
 
-				echo "</div></a>";
+				echo "</a></div>";
 			}
 		}
 
@@ -533,7 +540,7 @@ if ($_SESSION['userlogin']) {
 					nameinprofile();
 					$profile_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `user_id` = '$profile_user_id'");
 						while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
-							echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
+							echo '<div class="books-block"><a href="book.php?bookid=' .$booksrow_res['id']. '">';
 								$booksrow_res['id'];
 								echo '<img class="bgbooks" src="/' .$booksrow_res['imgbookurl']. '"> ';
 								echo '<div class="books-block-gradient"></div>';
@@ -541,7 +548,7 @@ if ($_SESSION['userlogin']) {
 								echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
 								echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
 
-							echo "</div></a>";
+							echo "</a></div>";
 						}
 				}
 		}
@@ -823,14 +830,14 @@ function booksonmain() {
 
 	if (mysqli_num_rows($booksrow) > 0) {
 		while($booksrow_res = mysqli_fetch_assoc($booksrow)) {
-			echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
+			echo '<div class="books-block"><a href="book.php?bookid=' .$booksrow_res['id']. '">';
 				$booksrow_res['id'];
 				echo '<img class="bgbooks" src="/' .$booksrow_res['imgbookurl']. '"> ';
 				echo '<div class="books-block-gradient"></div>';
 				echo '<div class="bookprice">' .$booksrow_res['price']. ' &#8381;</div>';
 				echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
 				echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
-			echo "</div></a>";
+			echo "</a></div>";
 		}
 	} else {
 		echo '<div class="text-center"><h3>К сожалению, по Вашему запросу ничего не найдено</h3></div>';
@@ -917,7 +924,7 @@ function profile_booksonmain() {
 		nameinprofile();
 		$profile_query = $connect->query("SELECT `id`, `user_id`, `booktitle`,`bookgenre_id`,`textbook`,`price`,`imgbookurl`,`addtime`,`endtime` FROM `books` WHERE `user_id` = '$profile_user_id'");
 		while($booksrow_res = mysqli_fetch_assoc($profile_query)) {
-				echo '<a href="book.php?bookid=' .$booksrow_res['id']. '"><div class="books-block">';
+				echo '<div class="books-block"><a href="book.php?bookid=' .$booksrow_res['id']. '">';
 					$booksrow_res['id'];
 					echo '<img class="bgbooks" src="/' .$booksrow_res['imgbookurl']. '"> ';
 					echo '<div class="books-block-gradient"></div>';
@@ -925,7 +932,7 @@ function profile_booksonmain() {
 					echo '<div class="bookline"><div style="color: #fff; display: inline;">БУК</div>ВОКРУГ</div>';
 					echo '<div class="bookname"><div class="booknameinner">' .$booksrow_res['booktitle']. '</div></div>';
 
-				echo "</div></a>";
+				echo "</a></div>";
 		}
 	}
 }

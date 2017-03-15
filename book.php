@@ -1,8 +1,8 @@
 <? include ('header.php') ?>
 <section id="bookpage" class="section-with-space">
-	<div class="container center-block text-center">
+	<div class="container center-block text-center mobilebook">
 		<div class="bookmb">
-			<div class="bookmb-title"><h3><? echo $booktitle; ?></h3><? echo $book_price; ?> руб.</div>
+			<div class="bookmb-title"><h3><? echo $booktitle; ?></h3><div class="pagebookprice"><? echo $book_price; ?> руб.</div></div>
 			<div class="bookmb-main">
 			<div class="bookmb-left">
 				<div class="bookmb-img">

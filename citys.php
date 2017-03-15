@@ -33,8 +33,63 @@
     } else if (isset($_GET['nijni-novgorod'])) {
         $_SESSION['usercity'] = "Нижний Новгород";
         header("Location: /");
+    } else if (isset($_GET['vladivostok'])) {
+        $_SESSION['usercity'] = "Владивосток";
+        header("Location: /");
+    } else if (isset($_GET['rostov'])) {
+        $_SESSION['usercity'] = "Ростов-на-Дону";
+        header("Location: /");
+    } else if (isset($_GET['ekb'])) {
+        $_SESSION['usercity'] = "Екатеринбург";
+        header("Location: /");
+    } else if (isset($_GET['samara'])) {
+        $_SESSION['usercity'] = "Самара";
+        header("Location: /");
+    } else if (isset($_GET['Kazan'])) {
+        $_SESSION['usercity'] = "Казань";
+        header("Location: /");
+    } else if (isset($_GET['novosibirsk'])) {
+        $_SESSION['usercity'] = "Новосибирск";
+        header("Location: /");
+    } else if (isset($_GET['krasnoyarsk'])) {
+        $_SESSION['usercity'] = "Красноярск";
+        header("Location: /");
+    } else if (isset($_GET['tumen'])) {
+        $_SESSION['usercity'] = "Тюмень";
+        header("Location: /");
+    } else if (isset($_GET['khabarovsk'])) {
+        $_SESSION['usercity'] = "Хабаровск";
+        header("Location: /");
+    } else if (isset($_GET['irkutsk'])) {
+        $_SESSION['usercity'] = "Иркутск";
+        header("Location: /");
+    } else if (isset($_GET['tomsk'])) {
+        $_SESSION['usercity'] = "Томск";
+        header("Location: /");
+    } else if (isset($_GET['mahaczkala'])) {
+        $_SESSION['usercity'] = "Махачкала";
+        header("Location: /");
+    } else if (isset($_GET['ufa'])) {
+        $_SESSION['usercity'] = "Уфа";
+        header("Location: /");
+    } else if (isset($_GET['ulan-ude'])) {
+        $_SESSION['usercity'] = "Улан-Удэ";
+        header("Location: /");
+    } else if (isset($_GET['Tver'])) {
+        $_SESSION['usercity'] = "Тверь";
+        header("Location: /");
+    } else if (isset($_GET['Soczi'])) {
+        $_SESSION['usercity'] = "Сочи";
+        header("Location: /");
+    } else if (isset($_GET['Voronez'])) {
+        $_SESSION['usercity'] = "Воронеж";
+        header("Location: /");
+    } else if (isset($_GET['Perm'])) {
+        $_SESSION['usercity'] = "Пермь";
+        header("Location: /");
     }
     
+
 
     function is_sel($a, $field)
     {
@@ -109,13 +164,13 @@
     <div class="cityslinks-maincitys">
         <a href="?moscow">Москва</a>
         <a href="?sankt-peterburg">Санкт-Петербург</a>
-        <a href="?vladivostok">Владивосток</a>
         <a href="?nijni-novgorod">Нижний Новгород</a>
+        <a href="?vladivostok">Владивосток</a>
         <a href="?rostov">Ростов-на-Дону</a>
         <a href="?ekb">Екатеринбург</a>
-        <a href="?samara">Самара</a>
     </div>
     <div class="cityslinks-othercitys">
+        <a href="?samara">Самара</a>
         <a href="?Kazan">Казань</a>
         <a href="?novosibirsk">Новосибирск</a>
         <a href="?krasnoyarsk">Красноярск</a>

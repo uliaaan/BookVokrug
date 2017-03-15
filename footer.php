@@ -4,7 +4,7 @@
 
     <footer class="footer-demo section-dark">
     <div class="container">
-        <nav class="pull-left">
+        <nav class="left">
             <ul>
                 <li>
                     <a href="/about.php">
@@ -18,7 +18,7 @@
                 </li>
             </ul>
         </nav>
-        <div class="copyright pull-right">
+        <div class="copyright pull-right mobiledisplay">
             powered by <a href="http://uliaaan.ru"><img src="http://uliaaan.ru/logo000.svg"></a>
         </div>
         <div class="footer-social-icons">

@@ -87,7 +87,8 @@
           <li>
           <a href='/addbook.php' class='btn btn-danger btn-fill'>Добавить книгу</a>"; 
         	} else {
-          echo "<a href='#enter' target='_blank' class='btn btn-danger btn-fill' data-toggle='modal' data-target='#enter'>Войти</a>";
+          echo "<li class='onlylaptop'><a href='#enter' target='_blank' class='btn btn-danger btn-fill ' data-toggle='modal' data-target='#enter'>Войти</a></li>
+          <li class='onlymobile'><a href='/enter.php' class='btn btn-danger btn-fill'>Войти</a></li>";
           }
           ?>
           </li>

@@ -218,6 +218,16 @@
 .navbar-small .logo-container .brand{
     color: #333333;
 }
+
+.mainbar-search {
+    width: 70%;
+}
+.mainbar-genre {
+    width:20%;
+}
+.mainbar-button {
+    width:8%;
+}
 .demo-header{
     background-size: cover;
     background-color: #FF8F5E;
@@ -1495,3 +1505,119 @@ body {
     font-size: 13px;
     margin-top: 5px;
 }
+
+.pagebookprice {
+        font-size: 20px;
+    background: #EB5E28;
+    color: #fff;
+    padding: 5px;
+    width: 30%;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+#page-enter .nav-tabs-navigation {
+    margin: 0 auto;
+}
+
+.left {
+    float: left;
+}
+
+@media (max-width: 767px) {
+    .navbar-nav {
+        margin-bottom: 55px;
+    }
+    .nav-tabs {
+        font-size: 14px;
+    }
+    .footer-demo nav > ul {
+        font-size: 12px;
+    }
+
+    .modal-body {
+        padding: 20px 0;
+    }
+
+    .footer-demo nav > ul > li {
+        line-height: 0;
+        margin: 5px;
+        padding: 0;
+    }
+    .footer-demo nav > ul > li:first-child {
+        margin: 5px;
+    }
+    .left {
+        float: none;
+        text-align: center;
+        margin: 5px auto;
+    }
+    .footer-social-icons {
+        float: none;
+        margin: 5px auto;
+        text-align: center;
+    }
+    .mainbar-search {
+        width: 100%;
+    }
+    .mainbar-genre {
+        margin: 5px 0;
+        width:100%;
+    }
+    .mainbar-button {
+        width:100%;
+    }
+}
+
+@media (max-width: 400px) {
+    .nav-tabs {
+        font-size: 12px;
+    }
+}
+
+@media (min-width: 768px){
+    .laptopdisplay {
+        display: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .mobiledisplay {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) {
+    .onlymobile {
+        display: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .onlylaptop {
+        display: none !important;
+    }
+}
+
+@media (max-width: 500px) {
+    .books-block {
+        float: none;
+        margin: 7px auto;
+    }
+
+    .bookmb-info {
+        padding: 20px 0;
+        border: 0;
+    }
+
+    .mobilebook {
+        background-color: #fff;
+    }
+    .bookmb-info-top {
+        float: none;
+    }
+    .bookmb-info-top-right {
+        float: left;
+    }
+}
+
